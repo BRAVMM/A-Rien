@@ -1,0 +1,58 @@
+on:
+  push:
+    branches:
+      - main
+      - dev
+      - AR-37-init-back
+
+name: 🚀 Deploy Server on push
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+
+      - name: 📂 Sync files
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/AR-37-init-back'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          local-dir: .
+          server-dir: /home/beafowl/
+
+      - name: 📂 Sync files
+        if: github.ref == 'refs/heads/dev'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 2222
+          local-dir: .
+          server-dir: /home/beafowl/
+
+      - name: executing remote ssh commands using ssh key
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/AR-37-init-back'
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          username: root
+          password: ${{ secrets.FTP_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
+          script: reboot
+
+      - name: executing remote ssh commands using ssh key
+        if: github.ref == 'refs/heads/dev'
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.FTP_SERVER }}
+          username: root
+          password: ${{ secrets.FTP_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 2121
+          script: reboot
