@@ -41,18 +41,18 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.FTP_SERVER }}
-          username: beafowl
+          username: root
           password: ${{ secrets.FTP_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
-          script: echo "${{ secrets.FTP_PASSWORD }}" | sudo -S reboot
+          script: reboot
 
       - name: executing remote ssh commands using ssh key
         if: github.ref == 'refs/heads/dev'
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.FTP_SERVER }}
-          username: beafowl
+          username: root
           password: ${{ secrets.FTP_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
           port: 2121
-          script: echo "${{ secrets.FTP_PASSWORD }}" | sudo -S reboot
+          script: reboot
