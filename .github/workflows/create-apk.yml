@@ -2,12 +2,14 @@ on:
   push:
     branches:
       - main
+      - AR-44-je-veux-que-lutilisateur-puisse-avoir-un-apk-dans-les-releases-automatiquement
 
 name: 🚀 Build APK on push
 jobs:
   web-deploy:
     name: 🎉 Build
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v3
@@ -29,3 +31,26 @@ jobs:
         timeout-minutes: 30
         run: |
           eas build --non-interactive --platform android --profile development
+
+  local-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: setup jdk
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Make Gradle executable
+        run: chmod +x ./gradlew
+
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+
+      - name: Releasing using Hub
+        uses: kyze8439690/action-release-releaseapk@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          APP_FOLDER: ./front
