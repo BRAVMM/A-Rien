@@ -12,14 +12,20 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v3
 
-      - name: 🔒 login to expo
-        uses: expo/expo-github-action@latest
+      - name: install expo-dev-client
+        working-directory: ./front
+        run: |
+          npm install expo-dev-client
+          npm install expo-cli
+
+      - name: 🏗 Setup EAS
+        uses: expo/expo-github-action@v8
         with:
-          expo-version: latest
+          eas-version: latest
           token: ${{ secrets.EXPO_CLI_TOKEN }}
 
       - name: 🔧 execute expo build
+        working-directory: ./front
         timeout-minutes: 30
         run: |
-          cd front
           eas build --non-interactive --platform android --profile development
