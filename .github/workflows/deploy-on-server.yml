@@ -41,8 +41,9 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.FTP_SERVER }}
-          username: root
+          username: beafowl
           password: ${{ secrets.FTP_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
           script: reboot
 
       - name: executing remote ssh commands using ssh key
@@ -50,7 +51,8 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.FTP_SERVER }}
-          username: root
+          username: beafowl
           password: ${{ secrets.FTP_PASSWORD }}
+          key: ${{ secrets.SSH_KEY }}
           port: 2121
           script: reboot
