@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - main
-      - AR-37-init-back
 
 name: 🚀 Build APK on push
 jobs:
