@@ -22,7 +22,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          local-dir: .
+          local-dir: ./
           server-dir: /home/beafowl/
 
       - name: 📂 Sync files
@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 2222
-          local-dir: .
+          local-dir: ./
           server-dir: /home/beafowl/
 
       - name: executing remote ssh commands using ssh key
