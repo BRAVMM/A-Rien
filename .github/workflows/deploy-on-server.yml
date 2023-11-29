@@ -44,7 +44,7 @@ jobs:
           username: beafowl
           password: ${{ secrets.FTP_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
-          script: reboot
+          script: echo "${{ secrets.FTP_PASSWORD }}" | sudo -S reboot
 
       - name: executing remote ssh commands using ssh key
         if: github.ref == 'refs/heads/dev'
