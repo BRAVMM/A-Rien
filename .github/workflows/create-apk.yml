@@ -13,10 +13,11 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v3
 
-      - name: 🏗 Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 21.2.0
+      - name: install expo-dev-client
+        working-directory: ./front
+        run: |
+          npm install expo-dev-client
+          npm install expo-cli
 
       - name: 🏗 Setup EAS
         uses: expo/expo-github-action@v8
@@ -25,7 +26,7 @@ jobs:
           token: ${{ secrets.EXPO_CLI_TOKEN }}
 
       - name: 🔧 execute expo build
+        working-directory: ./front
         timeout-minutes: 30
         run: |
-          cd front
           eas build --non-interactive --platform android --profile development
