@@ -6,8 +6,6 @@ on:
 
 env:
   BRANCH: "main"
-  RAYLIB_TAG: "4.5.0"
-  ZSTD_TAG: "v1.5.5"
 
 jobs:
   release-create:
