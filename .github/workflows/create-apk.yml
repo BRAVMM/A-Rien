@@ -9,7 +9,6 @@ jobs:
   web-deploy:
     name: 🎉 Build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: 🚚 Get latest code
         uses: actions/checkout@v3
@@ -26,18 +25,6 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_CLI_TOKEN }}
 
-      - name: 🔧 execute expo build
-        working-directory: ./front
-        timeout-minutes: 30
-        run: |
-          eas build --non-interactive --platform android --profile development
-
-  local-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout code
-        uses: actions/checkout@v2
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -49,13 +36,8 @@ jobs:
 
       - name: Build Release APK
         working-directory: ./front
+        timeout-minutes: 10
         run: |
           export ANDROID_HOME=/root/.android/sdk
           eas build --non-interactive --platform android --profile development --local
           mv build-*.apk a-rien.apk
-
-#      - name: Releasing using Hub
-#        uses: kyze8439690/action-release-releaseapk@master
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-#          APP_FOLDER: ./front
