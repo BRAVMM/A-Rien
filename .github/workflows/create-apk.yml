@@ -46,11 +46,11 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-        run: export ANDROID_HOME=/root/.android/sdk
 
       - name: Build Release APK
         working-directory: ./front
         run: |
+          export ANDROID_HOME=/root/.android/sdk
           eas build --non-interactive --platform android --profile development --local
           mv build-*.apk a-rien.apk
 
