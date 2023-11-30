@@ -2,7 +2,10 @@ name: Release
 
 on:
   push:
-    branches: [main, dev]
+    branches:
+      - main
+      - dev
+      - AR-44-je-veux-que-lutilisateur-puisse-avoir-un-apk-dans-les-releases-automatiquement
 
 env:
   BRANCH: "main"
