@@ -43,7 +43,7 @@ jobs:
           username: root
           password: ${{ secrets.FTP_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
-          script: reboot
+          script: sh re.sh &
 
       - name: executing remote ssh commands using ssh key
         if: github.ref == 'refs/heads/dev'
@@ -54,4 +54,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
           port: 2121
-          script: reboot
+          script: sh re.sh &
