@@ -1,0 +1,33 @@
+name: "Regression"
+description: If there a regression on the project
+title: "[REGR] - <title>"
+labels: [
+  "regression"
+]
+body:
+  - type: input
+    id: App_version
+    attributes:
+      label: "App version"
+      description: The app version you were testing the app
+      placeholder: Version
+    validations:
+      required: true
+  - type: textarea
+    id: Description
+    attributes:
+      label: "Descripion"
+      description: Description of the anomaly
+      placeholder: Description
+    validations:
+      required: true
+  - type: textarea
+    id: Further_info
+    attributes:
+      label: "Further Informations"
+      description: More information that can be useful to use
+      value: |
+        **Screenshots**
+        **Log file**
+        **Theories on were it can be**
+        **Your environnement of test**

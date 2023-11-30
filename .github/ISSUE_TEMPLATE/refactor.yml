@@ -1,0 +1,22 @@
+name: "Refactor request"
+description: "Issue for indicate the refactor needed"
+title: "[REQUEST] <title>"
+labels: [
+  "refactor"
+]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: What needed to be refactor and why
+      placeholder: "Description"
+    validations:
+      required: false
+  - type: textarea
+    id: techno
+    attributes:
+      label: "Technology"
+      description: On wich technology the refactor will be
+    validations:
+      required: false
