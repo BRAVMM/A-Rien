@@ -38,23 +38,24 @@ jobs:
       - name: checkout code
         uses: actions/checkout@v2
 
-      - name: setup jdk
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
+          java-version: '17'
           distribution: 'temurin'
-          java-version: 17
 
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-
-      - name: Make Gradle executable
-        run: chmod +x ./gradlew
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        run: export ANDROID_HOME=/root/.android/sdk
 
       - name: Build Release APK
-        run: ./gradlew assembleRelease
+        working-directory: ./front
+        run: |
+          eas build --non-interactive --platform android --profile development --local
+          mv build-*.apk a-rien.apk
 
-      - name: Releasing using Hub
-        uses: kyze8439690/action-release-releaseapk@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-          APP_FOLDER: ./front
+#      - name: Releasing using Hub
+#        uses: kyze8439690/action-release-releaseapk@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+#          APP_FOLDER: ./front
