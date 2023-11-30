@@ -30,7 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if [[ "${{ github.ref }}" == 'refs/heads/main' || "${{ github.ref }}" == 'refs/heads/AR-44-je-veux-que-lutilisateur-puisse-avoir-un-apk-dans-les-releases-automatiquement' ]]; then
+          if [[ "${{ github.ref }}" == 'refs/heads/main' ]]; then
             export GITHUB_OUTPUT=$GITHUB_OUTPUT
             bash ./.github/workflows/release.sh "${{ env.BRANCH }}"
           else
