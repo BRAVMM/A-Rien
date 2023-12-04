@@ -32,19 +32,61 @@ TRN-Api-Key: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
 
 ## Endpoints
 
+
 The Tracker.gg API offers several endpoints for different functionalities. Here are some of the most commonly used endpoints:
 
-- `/v1/player/{platform}/{username}`: Retrieve statistics for a specific player.
-- `/v1/leaderboards/{game}`: Get leaderboards for a specific game.
-- `/v1/weapons/{game}/{weapon}`: Access information about a specific weapon.
 
+#### API Apex Legends
+
+```diff
+- Get an Apex Legends player's profile stats (v2) Try it out
+```
+Retrieve career stats for an Apex Legends player.
+```http
+GET https://public-api.tracker.gg/v2/apex/standard/profile/{platform}/{platformUserIdentifier}
+```
+body
+```json
+{
+  "platform": "origin",
+  "platformUserIdentifier": "votre_identifiant"
+}
+```
+Response:
+
+```json
+{
+  "StatusCode": 200,
+  "Description": "SUCCESS",
+  "Response": "Stats for the requested Apex player."
+}
+
+```
+<br> </br>
+```diff
+- Get a stats segment for an Apex Legends player
+```
+
+Retrieve a portion of the stats for an Apex Legends player. We divide stats into logical segments, such as playlists, seasons, heroes, etc.(whatever happens to be useful for a specific game.)
 Refer to the full documentation for the complete list of available endpoints.
+
+```http
+GET https://public-api.tracker.gg/v2/apex/standard/profile/{platform}/{platformUserIdentifier}/segments/{segmentType}
+```
+body
+```json
+{
+  "platform": "battlenet",
+  "platformUserIdentifier": "votre_identifiant",
+  "segmentType": "legend"
+}
+
+```
 
 ## Examples of Requests
 
 Here are some common request examples that you can make using the Tracker.gg API:
 
 ```http
-GET /v1/player/pc/username123
-GET /v1/leaderboards/apex-legends
-GET /v1/weapons/warzone/m16
+GET https://public-api.tracker.gg/v2/apex/standard/profile/{platform}/{platformUserIdentifier}/segments/{segmentType}
+GET https://public-api.tracker.gg/v2/apex/standard/profile/{platform}/{platformUserIdentifier}
