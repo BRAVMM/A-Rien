@@ -82,6 +82,16 @@ body
 }
 
 ```
+Response:
+```json
+{
+  "Status Code": 200,
+  "Description": "SUCCESS",
+  "Response": "Stats for the requested Overwatch player.",
+  "Data": "ApiResponse<Segment[]>"
+}
+
+```
 
 ## Examples of Requests
 
