@@ -1,6 +1,7 @@
 # Twitch API Documentation
 
-Welcome to the Twitch API documentation. This API allows you to 
+Welcome to the Twitch API documentation.
+This API allows you to interact with Twitch data in your own application.
 
 ## Table of Contents
 
@@ -23,7 +24,8 @@ Welcome to the Twitch API documentation. This API allows you to
 
 ## Introduction
 
-The Twitch API provides 
+The Twitch API provides the tools and data used to develop Twitch integrations. The data models and systems are designed to provide relevant data in an easy, consistent, and reliable way. For the full list of endpoints that you can use in your integration, explore the Twitch API Reference.
+The Twitch API uses OAuth 2.0 for authentication.
 
 ## Authentication
 
