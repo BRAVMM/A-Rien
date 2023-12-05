@@ -1,0 +1,18 @@
+name: "Docs improvement"
+description: If you think the code is not clear enough
+title: "[DOCS] - <title>"
+labels: [
+  "documentation"
+]
+body:
+  - type: textarea
+    id: Description
+    attributes:
+      label: "Description"
+      description: Where we must improve ?
+      value: |
+        **File**
+        **Improvement**
+        **File**
+        **Improvement**
+        ...

@@ -1,0 +1,28 @@
+name: "Install Failed"
+description: "When you can't install or have error when installing"
+title: "[FAIL INSTALL] - Title"
+labels: [
+  "bug"
+]
+body:
+  - type: textarea
+    id: os
+    attributes:
+      label: "Operating System"
+      description: "What operating system do you use"
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: "Errors"
+      description: "Errors"
+    validations:
+      required: true
+  - type: textarea
+    id: step
+    attributes:
+      label: "Steps"
+      description: "Steps to reproduce"
+    validations:
+      required: true
