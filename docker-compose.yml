@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  db:
+    build: ./db
+    restart: always
+    environment:
+      DB_PORT: 5432
+    networks:
+      - back-net
+    volumes:
+        - db-data:/var/lib/postgresql/data
+    ports:
+        - "5432:5432"
+
+  back:
+    build: ./back
+    restart: always
+    networks:
+      - back-net
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+    depends_on:
+      - db
+
+  front:
+    build: ./front
+    restart: always
+    networks:
+      - back-net
+    ports:
+      - "19000-19000"
+      - "19006-19006"
+      - "19001-19001"
+      - "19002-19002"
+      - "19005-19005"
+      - "19004-19004"
+      - "19003-19003"
+      - "8081:8081"
+
+networks:
+  back-net:
+    driver: bridge
+
+volumes:
+  db-data:
