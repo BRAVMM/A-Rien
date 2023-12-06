@@ -23,7 +23,7 @@ class User extends Model {
         password: {
           type: DataTypes.STRING,
           allowNull: false,
-          defaultValue: '',
+        },
         },
       },
       {
