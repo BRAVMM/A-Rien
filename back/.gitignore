@@ -141,7 +141,7 @@ docs/pages/versions/*/react-native/REMOVED_*.md
 docs/pages/versions/*/react-native/*.diff
 
 # Home
-/home/dist
+**/dist
 
 # Prebuilds
 /packages/**/*.xcframework
@@ -154,3 +154,4 @@ docs/pages/versions/*/react-native/*.diff
 /ios/build
 **/ios/.xcode.env.local
 /ios/versioned-react-native/*/ReactNative/sdks/hermes-engine/destroot
+**/.env
