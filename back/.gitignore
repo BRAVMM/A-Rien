@@ -155,3 +155,4 @@ docs/pages/versions/*/react-native/*.diff
 **/ios/.xcode.env.local
 /ios/versioned-react-native/*/ReactNative/sdks/hermes-engine/destroot
 **/.env
+package-lock.json
