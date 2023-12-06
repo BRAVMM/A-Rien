@@ -1,24 +1,13 @@
-FROM node:latest
+FROM node:20.9.0-alpine3.17
 
-ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV
+RUN apk add --no-cache bash
+SHELL ["/bin/bash", "-c"]
 
-ARG PORT=19006
-ENV PORT $PORT
-EXPOSE $PORT 19001 19002
+COPY . /app
+WORKDIR /app
 
-ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
-ENV PATH /home/node/.npm-global/bin:$PATH
-RUN npm i --unsafe-perm --allow-root -g npm@latest expo-cli@latest
+RUN npm install -g typescript@4.4.3
 
-RUN mkdir /opt/react_native_app
-WORKDIR /opt/react_native_app
-ENV PATH /opt/react_native_app/.bin:$PATH
-COPY ./package.json ./package-lock.json ./
 RUN npm install
 
-WORKDIR /opt/react_native_app/app
-COPY . .
-
-ENTRYPOINT ["npm", "run"]
-CMD ["web"]
+ENTRYPOINT ["npm", "run", "start"]
