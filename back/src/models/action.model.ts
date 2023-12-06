@@ -27,7 +27,7 @@ class Action extends Model {
         
         },
         reactionsIds: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.STRING,
           allowNull: true,
         },
       },
