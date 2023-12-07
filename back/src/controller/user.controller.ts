@@ -1,36 +1,54 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-
-const db = require("../models/index");
-const User = db.users;
+import db from "../models/index";
 
 dotenv.config();
 
+const User = db.users;
+const SALT_ROUNDS: number = Number(process.env.SALT_ROUNDS) || 10;
+
+
 /**
- * Create user
+ * Register user
  * @param req This is the request object
  * @param res This is the response object
  * @returns {Promise<void>} This returns the user object if successful or an error message if unsuccessful
  */
-const createUser = async (req: any, res: any): Promise<void> => {
-  const { username, password } = req.body;
-  try {
-    const user = await User.create({
-      username,
-      password,
-    });
-    res.status(201).json(user);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
+const register = async (req: any, res: any): Promise<void> => {
+    try {
+        const { username, email, password } = req.body;
+
+        // check if username and password are provided
+        if (!username || !email || !password) {
+            res.status(400).json({ error: "Please provide username, email and password" });
+            return;
+        }
+
+        // check if user already exists
+        if (await User.findOne({ where: { username: username } })
+            || await User.findOne({ where: { email: email } })) {
+            res.status(400).json({ error: "Username or email already exists" });
+            return;
+        }
+
+        const hashedPassword: string = bcrypt.hashSync(password, SALT_ROUNDS);
+        const user = await User.create({
+            username: username,
+            email: email,
+            password: hashedPassword,
+        });
+        res.status(201).json(user);
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
+    }
 }
 
 /**
  * Login user
  * @param req This is the request object
  * @param res This is the response object
- * @returns {Promise<void>} This returns the user object and a token if successful or an error message if unsuccessful
+ * @returns {Promise<void>} This returns the token if successful or an error message if unsuccessful
  */
 const login = async (req: any, res: any): Promise<void> => {
     try {
@@ -68,5 +86,5 @@ const login = async (req: any, res: any): Promise<void> => {
     }
 }
 
-exports.createUser = createUser;
+exports.register = register;
 exports.login = login;
