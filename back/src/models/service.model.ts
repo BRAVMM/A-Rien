@@ -37,7 +37,6 @@ class Service extends Model {
       }
     );
   }
-  
 }
 
 export { Service };
