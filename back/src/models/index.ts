@@ -33,9 +33,4 @@ db.reactions = Reaction.initialize(sequelize);
 db.actionData = ActionData.initialize(sequelize);
 db.reactionData = ReactionData.initialize(sequelize);
 
-
-
-sequelize.sync({ force: true });
-console.log("All models were synchronized successfully.");
-
 export default db;
