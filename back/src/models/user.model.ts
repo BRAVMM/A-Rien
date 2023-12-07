@@ -32,6 +32,5 @@ class User extends Model {
     );
   }
 }
-  
 
 export { User };
