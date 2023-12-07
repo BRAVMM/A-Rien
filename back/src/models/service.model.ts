@@ -22,12 +22,12 @@ class Service extends Model {
           unique: true,
           allowNull: false,
         },
-        actionsId: {
-          type: DataTypes.STRING,
+        actionsIds: {
+          type: DataTypes.ARRAY(DataTypes.INTEGER),
           allowNull: true,
         },
-        reactionsId: {
-          type: DataTypes.STRING,
+        reactionsIds: {
+          type: DataTypes.ARRAY(DataTypes.INTEGER),
           allowNull: true,
         },
       },

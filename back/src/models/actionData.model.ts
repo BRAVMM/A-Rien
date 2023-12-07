@@ -22,7 +22,7 @@ class ActionData extends Model {
         
         },
         reactionsDataIds: {
-          type: DataTypes.STRING,
+          type: DataTypes.ARRAY(DataTypes.INTEGER),
           allowNull: true,
         },
       },

@@ -25,7 +25,6 @@ class User extends Model {
           allowNull: false,
         },
         },
-      },
       {
         sequelize,
         tableName: 'users',
@@ -33,5 +32,6 @@ class User extends Model {
     );
   }
 }
+  
 
 export { User };

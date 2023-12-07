@@ -7,7 +7,8 @@ export const databaseConfig = {
   USER: process.env.DB_USER,
   PASSWORD: process.env.DB_PASS,
   DB: process.env.DB_NAME,
-  dialect: "mysql",
+  PORT: Number(process.env.DB_PORT),
+  dialect: "postgres",
   pool: {
       max: 5, // maximum number of connection in pool
       min: 0, // minimum number of connection in pool

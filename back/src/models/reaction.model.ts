@@ -27,7 +27,7 @@ class Reaction extends Model {
         
         },
         actionIds: {
-          type: DataTypes.STRING,
+          type: DataTypes.ARRAY(DataTypes.INTEGER),
           allowNull: true,
         },
       },

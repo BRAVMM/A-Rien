@@ -7,18 +7,8 @@ import { Reaction } from "./reaction.model";
 import { ActionData } from "./actionData.model";
 import { ReactionData } from "./reactionData.model";
 
-const sequelize = new Sequelize(databaseConfig.DB!, databaseConfig.USER!, databaseConfig.PASSWORD, {
-  host: databaseConfig.HOST,
-  dialect: databaseConfig.dialect,
-  operatorsAliases: false as any, 
-  pool: {
-      max: databaseConfig.pool.max,
-      min: databaseConfig.pool.min, 
-      acquire: databaseConfig.pool.acquire, 
-      idle: databaseConfig.pool.idle
-  },
-  port: 3306 
-});
+const sequelize = new Sequelize(`${databaseConfig.dialect}://${databaseConfig.USER}:${databaseConfig.PASSWORD}@${databaseConfig.HOST}:${databaseConfig.PORT}/${databaseConfig.DB}`);
+  
 
 sequelize
     .authenticate()
