@@ -1,0 +1,35 @@
+.polygon {
+  display : inline-block;
+  position: absolute;
+  left: 30%;
+  top: 30%;
+  border-right : 100px solid transparent;
+  border-bottom : 350px solid #65517E;
+  border-left : 100px solid transparent;
+  opacity: 0.2;
+  transform: rotate(28deg);
+}
+
+.ellipse {
+  position: fixed; /* Changed from absolute to fixed */
+  width: 7%;
+  height: 15%;
+  left: -1%;
+  top: 90%;
+  background: #65517E;
+  opacity: 0.2;
+  border-radius: 50%;
+  z-index: 0; /* Ensure it doesn't overlap other content */
+}
+
+.rectangle {
+  position: absolute;
+  width: 7%;
+  height: 15%;
+  left: 25%;
+  top: 10%;
+  background: #65517E;
+  opacity: 0.2;
+  transform: rotate(-45deg);
+}
+
