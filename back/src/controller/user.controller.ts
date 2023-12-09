@@ -7,6 +7,11 @@ const User = db.users;
 
 dotenv.config();
 
+// CHECK ENV VARS
+if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not defined in the environment variables');
+}
+
 /**
  * Create user
  * @param req This is the request object
@@ -64,7 +69,8 @@ const login = async (req: any, res: any): Promise<void> => {
         const token: string = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
         res.status(200).json({ token });
     } catch (error: any) {
-        res.status(500).json({ error: error.message });
+        console.error(error)
+        res.status(500).json({ error: "An unexpected error occurred" });
     }
 }
 
