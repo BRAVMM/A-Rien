@@ -1,16 +1,14 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-
-const db = require("../models/index");
 import { User } from '../models/user.model';
 
 dotenv.config();
 
-// CHECK ENV VARS
-if (!process.env.JWT_SECRET) {
-    throw new Error('JWT_SECRET is not defined in the environment variables');
-}
+// // CHECK ENV VARS
+// if (!process.env.JWT_SECRET) {
+//     throw new Error('JWT_SECRET is not defined in the environment variables');
+// }
 
 /**
  * Create user
