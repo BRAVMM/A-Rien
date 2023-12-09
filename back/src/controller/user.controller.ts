@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../models/user.model';
+import { Op } from "sequelize";
 
 dotenv.config();
 
@@ -37,14 +38,12 @@ const register = async (req: any, res: any): Promise<void> => {
             return;
         }
 
-        // check if user already exists
-        if (await User.findOne({ where: { username: username } })
-            || await User.findOne({ where: { email: email } })) {
+        if (await User.findOne({ where: { [Op.or]: [{ username: username }, { email: email }] } })) {
             res.status(400).json({ error: "Username or email already exists" });
             return;
         }
 
-        const hashedPassword: string = bcrypt.hashSync(password, SALT_ROUNDS);
+        const hashedPassword: string = await bcrypt.hash(password, SALT_ROUNDS);
         const user = await User.create({
             username: username,
             email: email,
@@ -52,7 +51,8 @@ const register = async (req: any, res: any): Promise<void> => {
         });
         res.status(201).json(user);
     } catch (error: any) {
-        res.status(500).json({ error: error.message });
+        console.error(error);
+        res.status(500).json({ error: "An unexpected error occurred" });
     }
 }
 
@@ -87,7 +87,7 @@ const login = async (req: any, res: any): Promise<void> => {
         }
 
         // check if password matches
-        const match: boolean = bcrypt.compareSync(password, user.password);
+        const match: boolean = await bcrypt.compare(password, user.password);
         if (!match) {
             res.status(401).json({ error: "Incorrect password" });
             return;
@@ -102,5 +102,4 @@ const login = async (req: any, res: any): Promise<void> => {
     }
 }
 
-exports.register = register;
-exports.login = login;
+export { register, login };

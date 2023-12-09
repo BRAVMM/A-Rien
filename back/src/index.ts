@@ -3,8 +3,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import db from './models/index';
 import cors from 'cors';
-
-const UserRouter = require('./route/user.route');
+import UserRouter from './route/user.route';
 
 dotenv.config();
 
