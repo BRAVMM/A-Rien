@@ -8,7 +8,6 @@ import { ActionData } from "./actionData.model";
 import { ReactionData } from "./reactionData.model";
 
 const sequelize = new Sequelize(`${databaseConfig.dialect}://${databaseConfig.USER}:${databaseConfig.PASSWORD}@${databaseConfig.HOST}:${databaseConfig.PORT}/${databaseConfig.DB}`);
-  
 
 sequelize
     .authenticate()
