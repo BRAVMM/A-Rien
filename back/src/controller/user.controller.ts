@@ -1,13 +1,25 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import db from "../models/index";
+import { User } from '../models/user.model';
 
 dotenv.config();
 
-const User = db.users;
-const SALT_ROUNDS: number = Number(process.env.SALT_ROUNDS) || 10;
+// CHECK ENV VARS
+const ENV_VARS = [
+    {"JWT_SECRET": process.env.JWT_SECRET},
+    {"SALT_ROUNDS": process.env.SALT_ROUNDS},
+];
 
+ENV_VARS.forEach((envVar) => {
+    const key = Object.keys(envVar)[0];
+    const value = Object.values(envVar)[0];
+    if (!value) {
+        throw new Error(`${key} is not defined in the environment variables`);
+    }
+});
+
+const SALT_ROUNDS: number = Number(process.env.SALT_ROUNDS);
 
 /**
  * Register user
@@ -51,6 +63,10 @@ const register = async (req: any, res: any): Promise<void> => {
  * @returns {Promise<void>} This returns the token if successful or an error message if unsuccessful
  */
 const login = async (req: any, res: any): Promise<void> => {
+    if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET is not defined in the environment variables');
+    }
+
     try {
         const {username, password} = req.body;
         // check if username and password are provided
@@ -78,11 +94,11 @@ const login = async (req: any, res: any): Promise<void> => {
         }
 
         // create token
-        const jwtSecret: string = process.env.JWT_SECRET || '';
-        const token: string = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+        const token: string = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.status(200).json({ token });
     } catch (error: any) {
-        res.status(500).json({ error: error.message });
+        console.error(error)
+        res.status(500).json({ error: "An unexpected error occurred" });
     }
 }
 

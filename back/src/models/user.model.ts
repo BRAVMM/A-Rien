@@ -15,6 +15,7 @@ class User extends Model {
           type: DataTypes.INTEGER,
           primaryKey: true,
           allowNull: false,
+          autoIncrement: true,
         },
         username: {
           type: DataTypes.STRING,
@@ -36,6 +37,15 @@ class User extends Model {
         tableName: 'users',
       }
     );
+  }
+
+  public static async createOne(userData: { username: string; email: string, password: string }) {
+    try {
+      const user = await User.create(userData);
+      return user;
+    } catch (error: any) {
+      throw new Error(`Error creating user: ${error.message}`);
+    }
   }
 }
 
