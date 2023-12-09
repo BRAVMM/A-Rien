@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 const db = require("../models/index");
-const User = db.users;
+import { User } from '../models/user.model';
 
 dotenv.config();
 
@@ -14,12 +14,9 @@ dotenv.config();
  * @returns {Promise<void>} This returns the user object if successful or an error message if unsuccessful
  */
 const createUser = async (req: any, res: any): Promise<void> => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
   try {
-    const user = await User.create({
-      username,
-      password,
-    });
+    const user = await User.createOne({username: username, email: email, password: password});
     res.status(201).json(user);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
