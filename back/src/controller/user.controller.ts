@@ -1,10 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-const db = require("../models/index");
 import { User } from '../models/user.model';
 
-console.log('Imported User:', User);
 dotenv.config();
 
 // CHECK ENV VARS
