@@ -6,10 +6,11 @@ import { Op } from "sequelize";
 
 dotenv.config();
 
-// CHECK ENV VARS
+// Check if all environment variables are defined
 const ENV_VARS = [
     {"JWT_SECRET": process.env.JWT_SECRET},
     {"SALT_ROUNDS": process.env.SALT_ROUNDS},
+    {"JWT_TOKEN_EXPIRATION": process.env.JWT_TOKEN_EXPIRATION},
 ];
 
 ENV_VARS.forEach((envVar) => {
@@ -20,7 +21,12 @@ ENV_VARS.forEach((envVar) => {
     }
 });
 
+// Get typed environment variables
 const SALT_ROUNDS: number = Number(process.env.SALT_ROUNDS);
+
+if (isNaN(SALT_ROUNDS)) {
+    throw new Error('SALT_ROUNDS environment variable is not a valid number');
+}
 
 /**
  * Register user
@@ -94,7 +100,7 @@ const login = async (req: any, res: any): Promise<void> => {
         }
 
         // create token
-        const token: string = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token: string = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_TOKEN_EXPIRATION });
         res.status(200).json({ token });
     } catch (error: any) {
         console.error(error)
