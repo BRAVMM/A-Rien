@@ -1,31 +1,15 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-
 const db = require("../models/index");
 import { User } from '../models/user.model';
 
+console.log('Imported User:', User);
 dotenv.config();
 
 // CHECK ENV VARS
 if (!process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET is not defined in the environment variables');
-}
-
-/**
- * Create user
- * @param req This is the request object
- * @param res This is the response object
- * @returns {Promise<void>} This returns the user object if successful or an error message if unsuccessful
- */
-const createUser = async (req: any, res: any): Promise<void> => {
-  const { username, email, password } = req.body;
-  try {
-    const user = await User.createOne({username: username, email: email, password: password});
-    res.status(201).json(user);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
 }
 
 /**
@@ -35,6 +19,10 @@ const createUser = async (req: any, res: any): Promise<void> => {
  * @returns {Promise<void>} This returns the user object and a token if successful or an error message if unsuccessful
  */
 const login = async (req: any, res: any): Promise<void> => {
+    if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET is not defined in the environment variables');
+    }
+
     try {
         const {username, password} = req.body;
         // check if username and password are provided
@@ -62,8 +50,7 @@ const login = async (req: any, res: any): Promise<void> => {
         }
 
         // create token
-        const jwtSecret: string = process.env.JWT_SECRET || '';
-        const token: string = jwt.sign({ userId: user.id }, jwtSecret, { expiresIn: '1h' });
+        const token: string = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.status(200).json({ token });
     } catch (error: any) {
         console.error(error)
@@ -71,5 +58,4 @@ const login = async (req: any, res: any): Promise<void> => {
     }
 }
 
-exports.createUser = createUser;
 exports.login = login;
