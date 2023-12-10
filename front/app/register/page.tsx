@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import styles from './login.module.css';
 import logo from '../../public/logo.svg';
 
-export default function Login() {
+export default function Register() {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
