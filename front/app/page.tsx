@@ -1,7 +1,3 @@
-// Make sure to import your CSS file at the top of your _app.js or the specific page
-// import '../styles/globals.css';
-
-import Image from 'next/image';
 import Navbar from './Components/Navbar';
 import TextSection from './Components/TextSection';
 
