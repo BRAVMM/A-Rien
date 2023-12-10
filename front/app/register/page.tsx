@@ -53,12 +53,12 @@ export default function Register() {
         } else {
             // Handle errors here
             console.error('Error:', response);
-            setError('An error occurred. Please try again.');
+            setError('An error occurred:' + response);
         }
     };
 
     return (
-        <div className="h-screen flex bg-custom-gradient overflow-hidden ${styles.frame}">
+         <div className={`h-screen flex bg-custom-gradient overflow-hidden ${styles.frame}`}>
             <div className="absolute top-5/100 left-3/100">
                 <Image src={logo} alt="bravmm-logo" width={70} height={70}/>
             </div>
@@ -101,7 +101,7 @@ export default function Register() {
                             id="username"
                             placeholder="Username"
                             name="username"
-                            type="username"
+                            type="text"
                             autoComplete="username"
                             required
                             className="text-center block w-full rounded-md border-0 py-1.5 text-background shadow-sm ring-2 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 ring-secondary focus:ring-inset focus:ring-indigo-600"
@@ -134,12 +134,12 @@ export default function Register() {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
                                 <input
-                                    id="remember-me"
-                                    name="remember-me"
+                                    id="agree-to-terms"
+                                    name="agree-to-terms"
                                     type="checkbox"
                                     className="h-4 w-4 rounded border-gray-300 text-background focus:ring-indigo-600"
                                 />
-                                <label htmlFor="remember-me" className="ml-3 block text-sm leading-6 text-background">
+                                <label htmlFor="agree-to-terms" className="ml-3 block text-sm leading-6 text-background">
                                     I agree to the terms and conditions
                                 </label>
                             </div>
