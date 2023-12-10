@@ -1,8 +1,52 @@
-import Image from 'next/image'
-import styles from './login.module.css'
-import logo from '../../public/logo.svg'
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import styles from './login.module.css';
+import logo from '../../public/logo.svg';
 
 export default function Login() {
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [rePassword, setRePassword] = useState('');
+    const [error, setError] = useState('');
+    const router = useRouter();
+
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+        if (password !== rePassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        setError(''); // Clear any existing errors
+
+        const data = {
+            email,
+            username,
+            password
+        };
+
+        const response = await fetch("http://127.0.0.1:8080/users/register", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+            // Redirect to home page
+            router.push('/');
+        } else {
+            // Handle errors here
+            router.push('/404');
+            console.error('Error:', response);
+            setError('An error occurred. Please try again.');
+        }
+    };
+
     return (
         <div className="h-screen flex bg-custom-gradient overflow-hidden ${styles.frame}">
             <div className="absolute top-5/100 left-3/100">
@@ -12,7 +56,6 @@ export default function Login() {
             <div className={`${styles.ellipse}`}></div>
             <div className={`${styles.rectangle}`}></div>
 
-            {/* Left side content with logo and welcome text, centered both horizontally and vertically */}
             <div className="z-10 flex-1 flex items-center">
                 <div className="text-center ml-1/10">
                     <h2 className="text-6xl font-extrabold text-white">
@@ -29,62 +72,54 @@ export default function Login() {
                     <h1 className="text-3xl font-extrabold text-background mb-6 text-center">
                         Create an account
                     </h1>
-                    <form className="space-y-6" action="#" method="POST">
-                        <div>
-                            <div className="mt-2">
-                                <input
-                                    id="email"
-                                    placeholder={'Email'}
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
-                                    required
-                                    className="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-2 ring-inset ring-secondary placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary"
-                                />
-                            </div>
-                        </div>
+                    <form className="space-y-6" onSubmit={handleSubmit}>
+                        <input
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            id="email"
+                            placeholder="Email"
+                            name="email"
+                            type="email"
+                            autoComplete="email"
+                            required
+                            className="text-center block w-full rounded-md border-0 py-1.5 text-background shadow-sm ring-2 ring-inset ring-secondary placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary"
+                        />
 
-                        <div>
-                            <div className="mt-2">
-                                <input
-                                    id="username"
-                                    placeholder={'Username'}
-                                    name="username"
-                                    type="username"
-                                    autoComplete="username"
-                                    required
-                                    className="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-2 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 ring-secondary focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
+                        <input
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            id="username"
+                            placeholder="Username"
+                            name="username"
+                            type="username"
+                            autoComplete="username"
+                            required
+                            className="text-center block w-full rounded-md border-0 py-1.5 text-background shadow-sm ring-2 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 ring-secondary focus:ring-inset focus:ring-indigo-600"
+                        />
 
-                        <div>
-                            <div className="mt-2">
-                                <input
-                                    id="password"
-                                    placeholder={'Password'}
-                                    name="password"
-                                    type="password"
-                                    autoComplete="current-password"
-                                    required
-                                    className="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-2 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 ring-secondary focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
+                        <input
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            id="password"
+                            placeholder="Password"
+                            name="password"
+                            type="password"
+                            autoComplete="current-password"
+                            required
+                            className="text-center block w-full rounded-md border-0 py-1.5 text-background shadow-sm ring-2 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 ring-secondary focus:ring-inset focus:ring-indigo-600"
+                        />
 
-                        <div>
-                            <div className="mt-2">
-                                <input
-                                    id="password"
-                                    placeholder={'Password'}
-                                    name="password"
-                                    type="password"
-                                    autoComplete="current-password"
-                                    required
-                                    className="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-2 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 ring-secondary focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                />
-                            </div>
-                        </div>
+                        <input
+                            value={rePassword}
+                            onChange={(e) => setRePassword(e.target.value)}
+                            id="re-password"
+                            placeholder="Repeat Password"
+                            name="re-password"
+                            type="password"
+                            autoComplete="current-password"
+                            required
+                            className="text-center block w-full rounded-md border-0 py-1.5 text-background shadow-sm ring-2 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 ring-secondary focus:ring-inset focus:ring-indigo-600"
+                        />
 
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
@@ -92,7 +127,7 @@ export default function Login() {
                                     id="remember-me"
                                     name="remember-me"
                                     type="checkbox"
-                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                    className="h-4 w-4 rounded border-gray-300 text-background focus:ring-indigo-600"
                                 />
                                 <label htmlFor="remember-me" className="ml-3 block text-sm leading-6 text-background">
                                     I agree to the terms and conditions
@@ -102,14 +137,15 @@ export default function Login() {
                         <div>
                             <button
                                 type="submit"
-                                className="flex w-full justify-center rounded-md bg-primary px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className={`flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${error ? 'bg-red focus-visible:outline-red-600' : 'bg-primary hover:bg-indigo-500 focus-visible:outline-indigo-600'}`}
                             >
                                 Sign in
                             </button>
+                            {error && <p className="text-red text-center mt-2">{error}</p>}
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    )
+    );
 }

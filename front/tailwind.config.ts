@@ -17,6 +17,12 @@ const config: Config = {
       'backgroundsecondary': '#BE9CC7',
       'background': '#404040',
       'white': '#FFFFFF',
+      'red': '#FF0000',
+      'green': '#00FF00',
+      'blue': '#0000FF',
+      'yellow': '#FFFF00',
+      'cyan': '#00FFFF',
+      'black': '#000000',
     },
     extend: {
       inset: {
