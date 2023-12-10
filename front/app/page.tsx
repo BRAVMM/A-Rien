@@ -23,8 +23,8 @@ export default function Home() {
             Register
           </button>
         </div>
-        <div className='flex items-center justify-center h-1/3'>
-          <div className="w-4/6 h-60 border-4 border-black relative rounded-lg snake-container">
+        <div className='flex items-center justify-center h-1/3 mt-10'>
+          <div className="snake-container">
           </div>
         </div>
       </div>
