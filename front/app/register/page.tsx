@@ -12,9 +12,20 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const [rePassword, setRePassword] = useState('');
     const [error, setError] = useState('');
+    const [loginSuccess, setLoginSuccess] = useState(false);
     const router = useRouter();
 
+    useEffect(() => {
+        if (loginSuccess) {
+            // Redirect to the home page
+            router.push('/');
+        }
+    }, [loginSuccess, router]);
+
+
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+
         if (password !== rePassword) {
             setError('Passwords do not match');
             return;
@@ -28,7 +39,7 @@ export default function Login() {
             password
         };
 
-        const response = await fetch("http://127.0.0.1:8080/users/register", {
+        const response = await fetch(process.env.NEXT_PUBLIC_API + "/users/register", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,10 +49,9 @@ export default function Login() {
 
         if (response.ok) {
             // Redirect to home page
-            router.push('/');
+            setLoginSuccess(true);
         } else {
             // Handle errors here
-            router.push('/404');
             console.error('Error:', response);
             setError('An error occurred. Please try again.');
         }
@@ -139,7 +149,7 @@ export default function Login() {
                                 type="submit"
                                 className={`flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${error ? 'bg-red focus-visible:outline-red-600' : 'bg-primary hover:bg-indigo-500 focus-visible:outline-indigo-600'}`}
                             >
-                                Sign in
+                                Register
                             </button>
                             {error && <p className="text-red text-center mt-2">{error}</p>}
                         </div>
