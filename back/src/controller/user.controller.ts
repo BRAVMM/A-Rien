@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../models/user.model';
 import { Op } from "sequelize";
+import { Request, Response } from 'express';
 
 dotenv.config();
 
@@ -30,11 +31,11 @@ if (isNaN(SALT_ROUNDS)) {
 
 /**
  * Login user
- * @param {any} req - This is the request object
- * @param {any} res - This is the response object
+ * @param {Request} req - This is the request object
+ * @param {Response} res - This is the response object
  * @returns {Promise<void>} This returns the user object if successful or an error message if unsuccessful
  */
-const register = async (req: any, res: any): Promise<void> => {
+const register = async (req: Request, res: Response): Promise<void> => {
     try {
         const { username, email, password } = req.body;
 
@@ -64,11 +65,11 @@ const register = async (req: any, res: any): Promise<void> => {
 
 /**
  * Login user
- * @param {any} req - This is the request object
- * @param {any} res - This is the response object
+ * @param {Request} req - This is the request object
+ * @param {Response} res - This is the response object
  * @returns {Promise<void>} This returns the token if successful or an error message if unsuccessful
  */
-const login = async (req: any, res: any): Promise<void> => {
+const login = async (req: Request, res: Response): Promise<void> => {
     if (!process.env.JWT_SECRET) {
         throw new Error('JWT_SECRET is not defined in the environment variables');
     }
@@ -110,11 +111,11 @@ const login = async (req: any, res: any): Promise<void> => {
 
 /**
  * Logout user session
- * @param {any} req - The params of the requests.
- * @param {any} res - The response of the request.
+ * @param {Request} req - This is the request object
+ * @param {Response} res - This is the response object
  * @returns {Promise<void>} For now it returns nothing for a potential future implementation
  */
-const logout = async (req: any, res: any): Promise<void> => {
+const logout = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({ success : "User logout correctly"})
 }
 
