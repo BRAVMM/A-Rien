@@ -108,4 +108,9 @@ const login = async (req: any, res: any): Promise<void> => {
     }
 }
 
-export { register, login };
+const logout = async (req: any, res: any): Promise<void> => {
+    res.status(200).json({ success : "User logout correctly"})
+}
+
+
+export { register, login, logout };
