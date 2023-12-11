@@ -3,10 +3,11 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../models/user.model';
 import { Op } from "sequelize";
+import { Request, Response } from 'express';
 
 dotenv.config();
 
-// Check if all environment variables are defined
+/** Check if all environment variables are defined */
 const ENV_VARS = [
     {"JWT_SECRET": process.env.JWT_SECRET},
     {"SALT_ROUNDS": process.env.SALT_ROUNDS},
@@ -21,7 +22,7 @@ ENV_VARS.forEach((envVar) => {
     }
 });
 
-// Get typed environment variables
+/** Get typed environment variables. */
 const SALT_ROUNDS: number = Number(process.env.SALT_ROUNDS);
 
 if (isNaN(SALT_ROUNDS)) {
@@ -29,12 +30,12 @@ if (isNaN(SALT_ROUNDS)) {
 }
 
 /**
- * Register user
- * @param req This is the request object
- * @param res This is the response object
+ * Login user
+ * @param {Request} req - This is the request object
+ * @param {Response} res - This is the response object
  * @returns {Promise<void>} This returns the user object if successful or an error message if unsuccessful
  */
-const register = async (req: any, res: any): Promise<void> => {
+const register = async (req: Request, res: Response): Promise<void> => {
     try {
         const { username, email, password } = req.body;
 
@@ -64,11 +65,11 @@ const register = async (req: any, res: any): Promise<void> => {
 
 /**
  * Login user
- * @param req This is the request object
- * @param res This is the response object
+ * @param {Request} req - This is the request object
+ * @param {Response} res - This is the response object
  * @returns {Promise<void>} This returns the token if successful or an error message if unsuccessful
  */
-const login = async (req: any, res: any): Promise<void> => {
+const login = async (req: Request, res: Response): Promise<void> => {
     if (!process.env.JWT_SECRET) {
         throw new Error('JWT_SECRET is not defined in the environment variables');
     }
@@ -108,4 +109,14 @@ const login = async (req: any, res: any): Promise<void> => {
     }
 }
 
-export { register, login };
+/**
+ * Logout user session
+ * @param {Request} req - This is the request object
+ * @param {Response} res - This is the response object
+ * @returns {Promise<void>} For now it returns nothing for a potential future implementation
+ */
+const logout = async (req: Request, res: Response): Promise<void> => {
+    res.status(200).json({ success : "User logout correctly"})
+}
+
+export { register, login, logout };
