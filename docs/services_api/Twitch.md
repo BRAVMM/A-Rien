@@ -103,9 +103,9 @@ Set the following x-www-form-urlencoded parameters in the body of the POST.
 The following example shows the parameters in the body of the POST (the parameters are formatted for easier reading).
 
 ```http
-client_id=hof5gwx0su6owfnys0yan9c87zr6t
-    &client_secret=41vpdji4e9gif29md0ouet6fktd2
-    &code=gulfwdmys5lsm6qyz4xiz9q32l10
+client_id=YOUR_CLIENT_ID
+    &client_secret=YOUR_CLIENT_SECRET
+    &code=YOUR_AUTHORIZATION_CODE
     &grant_type=authorization_code
     &redirect_uri=http://localhost:3000
 ```
@@ -165,7 +165,7 @@ const crypto = require('crypto')
 const express = require('express');
 const app = express();
 const port = 8080;
-    
+
 // Notification request headers
 const TWITCH_MESSAGE_ID = 'Twitch-Eventsub-Message-Id'.toLowerCase();
 const TWITCH_MESSAGE_TIMESTAMP = 'Twitch-Eventsub-Message-Timestamp'.toLowerCase();
@@ -182,7 +182,7 @@ const HMAC_PREFIX = 'sha256=';
 
 app.use(express.raw({          // Need raw message body for signature verification
     type: 'application/json'
-}))  
+}))
 
 
 app.post('/eventsub', (req, res) => {
@@ -195,13 +195,13 @@ app.post('/eventsub', (req, res) => {
 
         // Get JSON object from body, so you can process the message.
         let notification = JSON.parse(req.body);
-        
+
         if (MESSAGE_TYPE_NOTIFICATION === req.headers[MESSAGE_TYPE]) {
             // TODO: Do something with the event's data.
 
             console.log(`Event type: ${notification.subscription.type}`);
             console.log(JSON.stringify(notification.event, null, 4));
-            
+
             res.sendStatus(204);
         }
         else if (MESSAGE_TYPE_VERIFICATION === req.headers[MESSAGE_TYPE]) {
@@ -224,22 +224,22 @@ app.post('/eventsub', (req, res) => {
         res.sendStatus(403);
     }
 })
-  
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 })
 
 
 function getSecret() {
-    // TODO: Get secret from secure storage. This is the secret you pass 
+    // TODO: Get secret from secure storage. This is the secret you pass
     // when you subscribed to the event.
     return 'your secret goes here';
 }
 
 // Build the message used to get the HMAC.
 function getHmacMessage(request) {
-    return (request.headers[TWITCH_MESSAGE_ID] + 
-        request.headers[TWITCH_MESSAGE_TIMESTAMP] + 
+    return (request.headers[TWITCH_MESSAGE_ID] +
+        request.headers[TWITCH_MESSAGE_TIMESTAMP] +
         request.body);
 }
 
