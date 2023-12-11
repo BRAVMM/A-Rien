@@ -8,7 +8,7 @@ import logo from "../../public/logo.svg";
 import TextSection from "../Components/TextSection";
 import { loginUser } from "../Utils/callApi";
 
-export default function Register() {
+export default function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
