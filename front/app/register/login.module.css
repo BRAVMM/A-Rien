@@ -1,11 +1,11 @@
 .polygon {
-  display : inline-block;
+  display: inline-block;
   position: absolute;
-  left: 30%;
+  left: 35%;
   top: 30%;
-  border-right : 100px solid transparent;
-  border-bottom : 350px solid #65517E;
-  border-left : 100px solid transparent;
+  border-right: 5vw solid transparent;  /* Adjusted to viewport width percentage */
+  border-bottom: 35vh solid #65517E;   /* Adjusted to viewport height percentage */
+  border-left: 5vw solid transparent;  /* Adjusted to viewport width percentage */
   opacity: 0.2;
   transform: rotate(28deg);
 }

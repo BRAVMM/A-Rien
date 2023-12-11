@@ -77,7 +77,7 @@ export default function Register() {
                 </div>
             </div>
 
-            <div className="w-full lg:w-1/2 flex items-center justify-center">
+            <div className="w-full lg:w-1/2 flex items-center justify-center z-10">
                 <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-24">
                     <h1 className="text-3xl font-extrabold text-background mb-6 text-center">
                         Create an account
