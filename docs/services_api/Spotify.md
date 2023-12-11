@@ -19,7 +19,7 @@
   - Create a new app and get the client secret and ID in the app settings.
 
 2. **Generate token with OAuth 2.0**
-   - Using the OAuth 2.0 grant flow will be used on PC.
+   - The OAuth 2.0 grant flow is used for PC applications.
 
 - To do so, we need to create a route using a redirection to spotify OAuth :
 ```js
