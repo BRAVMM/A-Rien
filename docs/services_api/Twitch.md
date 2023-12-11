@@ -64,7 +64,7 @@ https://id.twitch.tv/oauth2/authorize
     &redirect_uri=http://localhost:3000
     &scope=channel%3Amanage%3Apolls+channel%3Aread%3Apolls
     &state=YOUR_UNIQUE_STATE_STRING
-``
+```
 ```
 
 If the user authorized your app by clicking Authorize, the server sends the authorization code to your redirect URI (see the code query parameter):
