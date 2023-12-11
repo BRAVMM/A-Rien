@@ -60,10 +60,11 @@ Here is an exemple of a request :
 ```http
 https://id.twitch.tv/oauth2/authorize
     ?response_type=code
-    &client_id=hof5gwx0su6owfnys0nyan9c87zr6t
+    &client_id=YOUR_CLIENT_ID
     &redirect_uri=http://localhost:3000
     &scope=channel%3Amanage%3Apolls+channel%3Aread%3Apolls
-    &state=c3ab8aa609ea11e793ae92361f002671
+    &state=YOUR_UNIQUE_STATE_STRING
+``
 ```
 
 If the user authorized your app by clicking Authorize, the server sends the authorization code to your redirect URI (see the code query parameter):
