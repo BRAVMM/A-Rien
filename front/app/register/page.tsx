@@ -53,7 +53,7 @@ export default function Register() {
         } else {
             // Handle errors here
             console.error('Error:', response);
-            setError('An error occurred:' + response);
+            setError('An error occurred, please retry');
         }
     };
 
@@ -137,6 +137,7 @@ export default function Register() {
                                     id="agree-to-terms"
                                     name="agree-to-terms"
                                     type="checkbox"
+                                    required={true}
                                     className="h-4 w-4 rounded border-gray-300 text-background focus:ring-indigo-600"
                                 />
                                 <label htmlFor="agree-to-terms" className="ml-3 block text-sm leading-6 text-background">
