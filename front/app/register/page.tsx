@@ -22,6 +22,10 @@ export default function Register() {
         }
     }, [loginSuccess, router]);
 
+    const handleError = (error: any) => {
+        console.error('Error:', error)
+        setError('An error occurred, please try again')
+    }
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -39,21 +43,24 @@ export default function Register() {
             password
         };
 
-        const response = await fetch(process.env.NEXT_PUBLIC_API + "/users/register", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
+        try {
+            const response = await fetch(process.env.NEXT_PUBLIC_API + "/users/register", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
 
-        if (response.ok) {
-            // Redirect to home page
-            setLoginSuccess(true);
-        } else {
-            // Handle errors here
-            console.error('Error:', response);
-            setError('An error occurred, please retry');
+            if (response.ok) {
+                // Redirect to home page
+                setLoginSuccess(true);
+
+            } else {
+                handleError(response)
+            }
+        } catch (error) {
+            handleError(error)
         }
     };
 
