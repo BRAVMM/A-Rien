@@ -36,7 +36,7 @@ export default function Register() {
 			const json = await loginUser(username, password);
 			setLoginSuccess(true);
 			setToken(json.token);
-			localStorage.setItem("token", json.token);
+			document.cookie = `token=${json.token}`;
 		} catch (error) {
 			handleError(error);
 		}
