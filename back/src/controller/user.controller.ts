@@ -6,7 +6,7 @@ import { Op } from "sequelize";
 
 dotenv.config();
 
-// Check if all environment variables are defined
+/** Check if all environment variables are defined */
 const ENV_VARS = [
     {"JWT_SECRET": process.env.JWT_SECRET},
     {"SALT_ROUNDS": process.env.SALT_ROUNDS},
@@ -21,7 +21,7 @@ ENV_VARS.forEach((envVar) => {
     }
 });
 
-// Get typed environment variables
+/** Get typed environment variables. */
 const SALT_ROUNDS: number = Number(process.env.SALT_ROUNDS);
 
 if (isNaN(SALT_ROUNDS)) {
@@ -29,9 +29,9 @@ if (isNaN(SALT_ROUNDS)) {
 }
 
 /**
- * Register user
- * @param req This is the request object
- * @param res This is the response object
+ * Login user
+ * @param {any} req - This is the request object
+ * @param {any} res - This is the response object
  * @returns {Promise<void>} This returns the user object if successful or an error message if unsuccessful
  */
 const register = async (req: any, res: any): Promise<void> => {
@@ -64,8 +64,8 @@ const register = async (req: any, res: any): Promise<void> => {
 
 /**
  * Login user
- * @param req This is the request object
- * @param res This is the response object
+ * @param {any} req - This is the request object
+ * @param {any} res - This is the response object
  * @returns {Promise<void>} This returns the token if successful or an error message if unsuccessful
  */
 const login = async (req: any, res: any): Promise<void> => {
@@ -108,9 +108,14 @@ const login = async (req: any, res: any): Promise<void> => {
     }
 }
 
+/**
+ * Logout user session
+ * @param {any} req - The params of the requests.
+ * @param {any} res - The response of the request.
+ * @returns {Promise<void>} For now it returns nothing for a potential future implementation
+ */
 const logout = async (req: any, res: any): Promise<void> => {
     res.status(200).json({ success : "User logout correctly"})
 }
-
 
 export { register, login, logout };
