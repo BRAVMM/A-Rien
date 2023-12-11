@@ -200,26 +200,30 @@ app.post('/eventsub', (req, res) => {
             // TODO: Do something with the event's data.
 
             console.log(`Event type: ${notification.subscription.type}`);
-            console.log(JSON.stringify(notification.event, null, 4));
+            try {
+                console.log(`Event data: ${JSON.stringify(notification.event, null, 4)}`);
+            } catch (e) {
+                console.log(`Event data: ${notification.event}`);
+            }
 
             res.sendStatus(204);
-        }
-        else if (MESSAGE_TYPE_VERIFICATION === req.headers[MESSAGE_TYPE]) {
+        } else if (MESSAGE_TYPE_VERIFICATION === req.headers[MESSAGE_TYPE]) {
             res.set('Content-Type', 'text/plain').status(200).send(notification.challenge);
-        }
-        else if (MESSAGE_TYPE_REVOCATION === req.headers[MESSAGE_TYPE]) {
+        } else if (MESSAGE_TYPE_REVOCATION === req.headers[MESSAGE_TYPE]) {
             res.sendStatus(204);
 
             console.log(`${notification.subscription.type} notifications revoked!`);
             console.log(`reason: ${notification.subscription.status}`);
-            console.log(`condition: ${JSON.stringify(notification.subscription.condition, null, 4)}`);
-        }
-        else {
+            try {
+                console.log(`event data: ${JSON.stringify(notification.event, null, 4)}`);
+            } catch (e) {
+                console.log(`event data: ${notification.event}`);
+            }
+        } else {
             res.sendStatus(204);
             console.log(`Unknown message type: ${req.headers[MESSAGE_TYPE]}`);
         }
-    }
-    else {
+    } else {
         console.log('403');    // Signatures didn't match.
         res.sendStatus(403);
     }
