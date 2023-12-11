@@ -17,7 +17,7 @@
 1. **Application Registration**: Required for OAuth 2.0 authentication.
   - Register on the [Spotify Developer Dashboard][dash].
   - Create a new app and get the client secret and ID in the app settings.
-  - WARNING : On mobile we will use a different authentication (PKCE Flow) because it's recommended for mobile app
+
 2. **Generate token with OAuth 2.0**
    - Using the OAuth 2.0 grant flow will be used on PC.
 
@@ -82,100 +82,6 @@ request.post(authOptions, function(error, response, body) {
           }));
       }
     });
-```
-
-3. **Generate token with PKCE**
-
-  - Create a PKCE Code Verifier acording to the [PKCE standard][PKCE]
-
-```js
-const generateRandomString = (length) => {
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const values = crypto.getRandomValues(new Uint8Array(length));
-  return values.reduce((acc, x) => acc + possible[x % possible.length], "");
-}
-
-const codeVerifier  = generateRandomString(64);
-```
-
-  - Do some calculation to get the code challenge data :
-
-```js
-const sha256 = async (plain) => {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(plain)
-  return window.crypto.subtle.digest('SHA-256', data)
-}
-
-const base64encode = (input) => {
-  return btoa(String.fromCharCode(...new Uint8Array(input)))
-    .replace(/=/g, '')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_');
-}
-
-const hashed = await sha256(codeVerifier)
-const codeChallenge = base64encode(hashed);
-```
-
-  - Now we have our code challenge we can get user authorization :
-
-```js
-const clientId = 'YOUR_CLIENT_ID';
-const redirectUri = 'YOUR_REDIRECT_URI';
-
-const scope = 'user-read-private user-read-email';
-const authUrl = new URL("https://accounts.spotify.com/authorize")
-
-// generated in the previous step
-window.localStorage.setItem('code_verifier', codeVerifier);
-
-const params =  {
-  response_type: 'code',
-  client_id: clientId,
-  scope,
-  code_challenge_method: 'S256',
-  code_challenge: codeChallenge,
-  redirect_uri: redirectUri,
-}
-
-authUrl.search = new URLSearchParams(params).toString();
-window.location.href = authUrl.toString();
-```
-
-NOTE : We will need the *code* to request an acces token
-```js
-const urlParams = new URLSearchParams(window.location.search);
-let code = urlParams.get('code');
-```
-
-  - Here's how you get your tokent :
-
-```js
-const getToken = async code => {
-
-  // stored in the previous step
-  let codeVerifier = localStorage.getItem('code_verifier');
-
-  const payload = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({
-      client_id: [YourClientID],
-      grant_type: 'authorization_code',
-      code,
-      redirect_uri: redirectUri,
-      code_verifier: codeVerifier,
-    }),
-  }
-
-  const body = await fetch(url, payload);
-  const response =await body.json();
-
-  localStorage.setItem('access_token', response.access_token);
-}
 ```
 
 You can see all spotify documention [here][spotify].
