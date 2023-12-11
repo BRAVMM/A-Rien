@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import db from './models/index';
 import cors from 'cors';
 import UserRouter from './route/user.route';
+import ServicesRouter from './route/services.route';
 
 dotenv.config();
 
@@ -26,6 +27,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', UserRouter);
+
+app.use('/services', ServicesRouter)
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
