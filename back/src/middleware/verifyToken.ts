@@ -27,7 +27,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction): Pro
             res.status(401).json({error: 'Unauthorized'})
         }
     } else {
-        res.status(511).json({error: 'Network Authentication Required'})
+        res.status(401).json({error: 'Authorization header is missing'})
     }
 }
 
