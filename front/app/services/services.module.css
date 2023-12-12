@@ -1,0 +1,16 @@
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: green #ffffff; /* Couleur de la barre de défilement et de la poignée (thumb) */
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: green; /* Couleur de la poignée (thumb) */
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background-color: #ffffff; /* Couleur de la piste (track) */
+}
