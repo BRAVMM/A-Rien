@@ -77,7 +77,7 @@ A good bug report shouldn't leave others needing to chase you up for more inform
 <!-- omit in toc -->
 #### How Do I Submit a Good Bug Report?
 
-> You must never report security related issues, vulnerabilities or bugs including sensitive information to the issue tracker, or elsewhere in public. Instead sensitive bugs must be sent by email to admins.
+> You must never report security related issues, vulnerabilities or bugs including sensitive information to the issue tracker, or elsewhere in public. Instead if you think you have found a security issue please contact an administrator via a private communication channel.
 
 We use GitHub issues to track bugs and errors. If you run into an issue with the project:
 
@@ -195,7 +195,8 @@ MAJOR
 
 ## Join The Project Team
 
-If you are interested in joining the project team, please contact a project administrator.
+If you are interested in joining the project team, please open an issue in the project's issue tracker indicating your interest and any relevant experience or contributions you have made. A project administrator will review your request and get in touch with you through the issue.
+
 
 <!-- omit in toc -->
 ## Attribution
