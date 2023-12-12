@@ -1,17 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { Secret } from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { TokenData } from "../interfaces/token.interface";
+import { CustomRequest } from "../interfaces/request.interface";
 
 dotenv.config();
-
-/**
- * Data of a verified and decoded token.
- */
-interface TokenData {
-    userId: number;
-    iat: number;
-    exp: number;
-}
 
 /**
  * Method that verify a token and then pass some informations to the next request.
@@ -22,21 +15,19 @@ interface TokenData {
 const verifyToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     
     if (req.headers && req.headers.authorization) {
-        const secret : any = process.env.JWT_SECRET;
+        const secret : Secret = process.env.JWT_SECRET as Secret;
 
         try {
-            const token = req.headers.authorization.split(' ')[1]
-            const decodedToken = jwt.verify(token, secret) as TokenData
+            const token : string = req.headers.authorization.split(' ')[1]
+            const decodedToken : TokenData = jwt.verify(token, secret) as TokenData
 
-            req.body.tokenData = decodedToken
+            (req as CustomRequest).user = decodedToken
             next()
         } catch (error) {
             res.status(401).json({error: 'Unauthorized'})
-            next("[ERROR] : 401, unauthorized")
         }
     } else {
         res.status(511).json({error: 'Network Authentication Required'})
-        next("[ERROR] : 511, Network Authentication Required")
     }
 }
 
