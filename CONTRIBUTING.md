@@ -141,6 +141,12 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/BRAVMM
 
 ### Branch Naming Convention
 
+A set of rules for git branch names have been defined.
+This leads to more readable branch names that are easy to follow when looking through the project history.
+Moreover, it allows link the branch to a Jira ticket.
+The branch describe the part of the project you are working on, the ticket nbr and the name of the ticket.
+The branch name should be structured as follows:
+
 - Name of the branch
 
   ```md
@@ -154,6 +160,14 @@ git checkout -b DB/AR-19-mettre-en-place-les-schemas-de-db
 ```
 
 ### Commit Message Convention
+
+A set of rules for git commit messages have been defined.  
+This leads to more readable messages that are easy to follow when looking through the project history. But also, it allows to generate a changelog from the commit messages.
+Every commit message should consist of a **header**, a **body** and a **footer**.  
+The header describe the part of the project you are working on and the action you are doing.
+The body contain a more detailed description of the commit.
+The footer contain the type of the commit (MAJOR, MINOR, PATCH). It is used to generate the changelog.
+The commit message should be structured as follows:
 
 - Name of the commit
 
