@@ -39,7 +39,7 @@ export default function Login() {
 			setToken(json.token);
       Cookies.set('token', json.token, { secure: true, sameSite: 'strict' });
 		} catch (error) {
-      handleError(error);
+        handleError(error);
     }
 	};
 
