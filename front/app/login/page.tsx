@@ -7,6 +7,7 @@ import styles from "./login.module.css";
 import logo from "../../public/logo.svg";
 import TextSection from "../Components/TextSection";
 import { loginUser } from "../Utils/callApi";
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const [username, setUsername] = useState<string>("");
@@ -36,10 +37,10 @@ export default function Login() {
 			const json = await loginUser(username, password);
 			setLoginSuccess(true);
 			setToken(json.token);
-			document.cookie = `token=${json.token}`;
+      Cookies.set('token', json.token, { secure: true, sameSite: 'strict' });
 		} catch (error) {
-			handleError(error);
-		}
+      handleError(error);
+    }
 	};
 
   return (
