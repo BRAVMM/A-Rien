@@ -143,7 +143,7 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/BRAVMM
 
 A set of rules for git branch names have been defined.
 This leads to more readable branch names that are easy to follow when looking through the project history.
-Moreover, it allows link the branch to a Jira ticket.
+Moreover, it allows linking the branch to a Jira ticket.
 The branch describe the part of the project you are working on, the ticket nbr and the name of the ticket.
 The branch name should be structured as follows:
 
