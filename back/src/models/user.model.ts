@@ -31,6 +31,11 @@ class User extends Model {
           type: DataTypes.STRING,
           allowNull: false,
         },
+        oauthTokens: {
+          type: DataTypes.ARRAY(DataTypes.JSON),
+          allowNull: true,
+          defaultValue: [],
+        },
         },
       {
         sequelize,
