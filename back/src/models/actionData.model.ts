@@ -3,6 +3,13 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
 
 class ActionData extends Model {
+    public id!: number;
+    public owner_id!: number;
+    public data!: JSON;
+    public reactionsDataIds!: number[];
+    public actionId!: number;
+    public title!: string;
+    public isActivated!: boolean;
 
   public static initialize(sequelize: Sequelize) {
     ActionData.init(
@@ -19,7 +26,6 @@ class ActionData extends Model {
         data: {
           type: DataTypes.JSON,
           allowNull: true,
-        
         },
         reactionsDataIds: {
           type: DataTypes.ARRAY(DataTypes.INTEGER),

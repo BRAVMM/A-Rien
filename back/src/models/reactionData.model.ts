@@ -3,6 +3,10 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
 
 class ReactionData extends Model {
+    public id!: number;
+    public owner_id!: number;
+    public data!: JSON;
+    public actionsDataIds!: number[];
 
   public static initialize(sequelize: Sequelize) {
     ReactionData.init(
