@@ -30,12 +30,7 @@ class User extends Model {
         password: {
           type: DataTypes.STRING,
           allowNull: false,
-        },
-        oauthTokens: {
-          type: DataTypes.ARRAY(DataTypes.JSON),
-          allowNull: true,
-          defaultValue: [],
-        },
+        }
         },
       {
         sequelize,
