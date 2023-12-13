@@ -25,6 +25,19 @@ class ActionData extends Model {
           type: DataTypes.ARRAY(DataTypes.INTEGER),
           allowNull: true,
         },
+        actionId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+        },
+        Title: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
+        isActivated: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: true,
+        },
       },
       {
         sequelize,
