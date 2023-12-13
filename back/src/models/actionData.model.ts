@@ -29,7 +29,7 @@ class ActionData extends Model {
           type: DataTypes.INTEGER,
           allowNull: false,
         },
-        Title: {
+        title: {
           type: DataTypes.STRING,
           allowNull: false,
         },
