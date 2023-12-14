@@ -24,7 +24,7 @@ const SECRET_KEY: string = process.env.CRYPTO_SECRET; // Must be 256 bytes (32 c
  */
 namespace EncryptionService {
     /**
-     * Decrypt a text
+     * Encrypt a text
      * @param text - The text to encrypt
      * @returns {{iv: string; content: string}} - The encrypted text
      */
