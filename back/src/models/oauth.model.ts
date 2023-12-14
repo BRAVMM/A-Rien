@@ -6,7 +6,8 @@ class OAuth extends Model {
 
     public id!: number;
     public serviceId!: number;
-    public oauthToken!: string;
+    public encryptedOAuthToken!: string;
+    public iv!: string;
     public ownerID!: number;
 
     public static initialize(sequelize: Sequelize) {
@@ -22,13 +23,17 @@ class OAuth extends Model {
                     unique: true,
                     allowNull: false,
                 },
-                oauthToken: {
+                encryptedOAuthToken: {
                     type: DataTypes.STRING,
-                    allowNull: true,
+                    allowNull: false,
+                },
+                iv: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
                 },
                 ownerID: {
                     type: DataTypes.INTEGER,
-                    allowNull: true,
+                    allowNull: false,
                 },
             },
             {

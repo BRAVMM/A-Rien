@@ -2,11 +2,8 @@
  * @fileOverview Spotify reactions services
  */
 
-/* Models */
-import {OAuth} from "../../../models/oauth.model";
-
-/* Middleware */
-import {OAuthMiddleware} from "../../../middleware/oauth.middleware";
+/* Services */
+import {OAuthService} from "../../oauth.service";
 
 /**
  * @namespace SpotifyReactions
@@ -22,14 +19,14 @@ namespace SpotifyReactions {
      * @returns {Promise<boolean>} - The result of the reaction
      */
     export const reactionSpotifyAddToPlaylist = async (ownerId: number, oauthId: number, actionData: JSON, reactionData: JSON): Promise<boolean> => {
-        const oauth: OAuth | null = await OAuthMiddleware.getOAuthFromId(oauthId, ownerId);
+        const oauthToken: string | null = await OAuthService.getDecryptedOAuthTokenFromId(oauthId, ownerId);
 
-        if (oauth === null) {
-            console.error("OAuth not found");
+        if (oauthToken === null) {
+            console.error("OAuth token not found");
             return false;
         }
         console.log(ownerId);
-        console.log(oauth.oauthToken); // to remove when the OAuth is implemented
+        console.log(oauthToken); // to remove when the OAuth is implemented
         console.log(actionData);
         console.log(reactionData);
         return true;

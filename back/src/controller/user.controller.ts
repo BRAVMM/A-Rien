@@ -1,11 +1,9 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import { User } from '../models/user.model';
 import { Op } from "sequelize";
 import { Request, Response } from 'express';
 
-dotenv.config();
 
 /** Check if all environment variables are defined */
 const ENV_VARS = [

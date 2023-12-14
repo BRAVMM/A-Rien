@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { Secret } from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import { TokenData } from "../interfaces/token.interface";
 import { CustomRequest } from "../interfaces/request.interface";
 
-dotenv.config();
+/* Check environment variables */
+if (!process.env.JWT_SECRET) {
+    throw new Error('No secret key defined');
+}
 
 /**
  * Method that verify a token and then pass some informations to the next request.

@@ -1,12 +1,12 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+dotenv.config();
+import bodyParser from 'body-parser';
 import db from './models/index';
 import cors from 'cors';
 import UserRouter from './route/user.route';
 import { TaskScheduler } from './services/taskScheduler';
 
-dotenv.config();
 
 const app = express();
 app.use(cors());
