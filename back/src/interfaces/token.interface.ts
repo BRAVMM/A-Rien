@@ -7,4 +7,4 @@ interface TokenData {
     exp: number;
 }
 
-export { TokenData }
+export {TokenData}

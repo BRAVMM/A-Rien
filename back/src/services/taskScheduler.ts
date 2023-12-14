@@ -4,20 +4,21 @@
  */
 
 /* Models */
-import { ActionData } from '../models/actionData.model';
-import { ReactionData } from "../models/reactionData.model";
+import {ActionData} from '../models/actionData.model';
+import {ReactionData} from "../models/reactionData.model";
 
 /* Middleware */
-import { TriggersMiddleware } from "../middleware/triggers.middleware";
+import {TriggersMiddleware} from "../middleware/triggers.middleware";
 
 /* Interfaces */
 /* Interface for the task scheduler */
-import { actionFunction, reactionFunction } from '../interfaces/taskScheduler.interface';
+import {actionFunction, reactionFunction} from '../interfaces/taskScheduler.interface';
 /* Import all triggers functions */
-import { SpotifyTriggers } from "./servicesApps/triggers/spotify.triggers.servicesApp";
+import {SpotifyTriggers} from "./servicesApps/triggers/spotify.triggers.servicesApp";
 /* Import all reactions functions */
-import { SpotifyReactions } from "./servicesApps/reactions/spotify.reactions.servicesApp";
+import {SpotifyReactions} from "./servicesApps/reactions/spotify.reactions.servicesApp";
 
+/* Constants */
 const ACTIONS_FUNCTIONS: actionFunction = {
     1: SpotifyTriggers.checkSpotifyNewSavedSong,
     2: SpotifyTriggers.checkSpotifyNewSavedAlbum,
@@ -42,11 +43,18 @@ namespace TaskScheduler {
     const executeReactionsFromActionData = async (actionData: ActionData): Promise<void> => {
         try {
             for (const reactionDataId of actionData.reactionsDataIds) {
-                const reactionData: ReactionData | null = await TriggersMiddleware.getReactionDataFromId(reactionDataId);
-                const reactionFunction = REACTIONS_FUNCTIONS[reactionDataId];
+                const reactionData: ReactionData | null = await TriggersMiddleware.getReactionDataFromId(actionData.ownerId, reactionDataId);
+
+                if (!reactionData) {
+                    console.error('Reaction data not found');
+                    continue;
+                }
+                const reactionFunction = REACTIONS_FUNCTIONS[reactionData.reactionId];
 
                 if (reactionData && reactionFunction) {
-                    await reactionFunction(actionData.data, reactionData.data);
+                    await reactionFunction(actionData.ownerId, reactionData.oauthId, actionData.data, reactionData.data);
+                } else {
+                    console.error('Reaction function not found');
                 }
             }
         } catch (error) {
@@ -66,12 +74,14 @@ namespace TaskScheduler {
             const actionFunction = ACTIONS_FUNCTIONS[actionData.actionId];
 
             if (actionFunction) {
-                if (await actionFunction(actionData.data)) {
+                if (await actionFunction(actionData.ownerId, actionData.oauthId, actionData.data)) {
                     await executeReactionsFromActionData(actionData);
                 }
+            } else {
+                console.error('Action function not found');
             }
         }
     }
 }
 
-export { TaskScheduler };
+export {TaskScheduler};

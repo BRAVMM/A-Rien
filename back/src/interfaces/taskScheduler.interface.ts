@@ -9,7 +9,7 @@
  * @param {function} action - The function to execute related to the action id
  */
 interface actionFunction {
-    [key: number]: (actionData: JSON) => Promise<boolean>;
+    [key: number]: (ownerId: number, oauthId: number, actionData: JSON) => Promise<boolean>;
 }
 
 /**
@@ -19,7 +19,7 @@ interface actionFunction {
  * @param {function} reaction - The function to execute related to the reaction id
  */
 interface reactionFunction {
-    [key: number]: (actionData: JSON, reactionData: JSON) => Promise<boolean>;
+    [key: number]: (ownerId: number, oauthId: number, actionData: JSON, reactionData: JSON) => Promise<boolean>;
 }
 
-export { actionFunction, reactionFunction };
+export {actionFunction, reactionFunction};

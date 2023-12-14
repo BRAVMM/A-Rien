@@ -24,8 +24,7 @@ namespace TriggersMiddleware {
                     }
                 }
             );
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
             return [];
         }
@@ -36,11 +35,17 @@ namespace TriggersMiddleware {
      * @param reactionDataId - The id of the reaction data
      * @returns {Promise<ReactionData | null>} - The reaction data
      */
-    export const getReactionDataFromId = async (reactionDataId: number): Promise<ReactionData | null> => {
+    export const getReactionDataFromId = async (owenerId: number, reactionDataId: number): Promise<ReactionData | null> => {
         try {
-            return await ReactionData.findByPk(reactionDataId);
-        }
-        catch (error) {
+            return await ReactionData.findOne(
+                {
+                    where: {
+                        id: reactionDataId,
+                        ownerId: owenerId
+                    }
+                }
+            );
+        } catch (error) {
             console.log(error);
             return null;
         }
@@ -54,12 +59,11 @@ namespace TriggersMiddleware {
     export const getActionFromActionData = async (actionData: ActionData): Promise<Action | null> => {
         try {
             return await Action.findByPk(actionData.actionId);
-        }
-        catch (error) {
+        } catch (error) {
             console.log(error);
             return null;
         }
     }
 }
 
-export { TriggersMiddleware };
+export {TriggersMiddleware};

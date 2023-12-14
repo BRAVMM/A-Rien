@@ -34,9 +34,10 @@ app.use('/users', UserRouter);
  */
 setInterval(async () => {
     try {
+        console.log('Checking triggers... at ' + new Date().toLocaleString());
         await TaskScheduler.checkTriggers();
     } catch (error) {
-        console.error('Erreur lors de la vérification des triggers:', error);
+        console.error('Error during trigger check:', error);
     }
 }, INTERVAL); // 60000 ms = 1 minute
 
