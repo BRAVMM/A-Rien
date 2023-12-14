@@ -14,7 +14,8 @@ function Navbar() {
         <ul className="flex-grow flex space-x-4 sm:space-x-8 lg:space-x-32 items-center justify-center"> {/* Utibuttonsez flex-grow pour centrer la buttonste */}
           <button
             onClick={handleProductClick}
-          className="text-white text-xl">Product</button>
+            className="text-white text-xl">
+            Product</button>
           <button className="text-white text-xl">Forums</button>
           <button className="text-white text-xl">Documentation</button>
           <button className="text-white text-xl">FAQ</button>
