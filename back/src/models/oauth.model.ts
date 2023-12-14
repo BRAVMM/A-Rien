@@ -1,45 +1,42 @@
-// reactionData.model.ts
+// oauth.model.ts
 
 import { Sequelize, DataTypes, Model } from 'sequelize';
 
-class ReactionData extends Model {
-    public id!: number;
-    public owner_id!: number;
-    public data!: JSON;
-    public actionsDataIds!: number[];
+class Oauth extends Model {
+  
+  public id!: number;
+  public serviceId!: number;
+  public oauthtToken!: string;
+  public ownerID!: number;
 
   public static initialize(sequelize: Sequelize) {
-    ReactionData.init(
+    Oauth.init(
       {
         id: {
           type: DataTypes.INTEGER,
           primaryKey: true,
           allowNull: false,
         },
-        owner_id: {
+        serviceId: {
           type: DataTypes.INTEGER,
+          unique: true,
           allowNull: false,
         },
-        data: {
-          type: DataTypes.JSON,
-          allowNull: true,
-        
-        },
-        actionsDataIds: {
-          type: DataTypes.ARRAY(DataTypes.INTEGER),
+        oauthtToken: {
+          type: DataTypes.STRING,
           allowNull: true,
         },
-        oauthId : {
+        ownerID: {
           type: DataTypes.INTEGER,
           allowNull: true,
         },
       },
       {
         sequelize,
-        tableName: 'reactionData',
+        tableName: 'oauth',
       }
     );
   }
 }
 
-export { ReactionData };
+export { Oauth };

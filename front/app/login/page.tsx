@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import styles from "./login.module.css";
@@ -19,9 +19,16 @@ export default function Login() {
 
   useEffect(() => {
     if (loginSuccess) {
-      router.push("/");
+      router.push("/services");
     }
   }, [loginSuccess, router]);
+
+  useEffect(() => {
+    if (token) {
+      Cookies.set('token', token);
+    }
+  }
+  , [token]);
 
   const handleError = (error: any) => {
     console.error("Error:", error);
@@ -37,7 +44,6 @@ export default function Login() {
 			const json = await loginUser(username, password);
 			setLoginSuccess(true);
 			setToken(json.token);
-      Cookies.set('token', json.token, { secure: true, sameSite: 'strict' });
 		} catch (error) {
         handleError(error);
     }

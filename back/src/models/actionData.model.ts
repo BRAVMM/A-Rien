@@ -42,7 +42,10 @@ class ActionData extends Model {
         isActivated: {
           type: DataTypes.BOOLEAN,
           allowNull: false,
-          defaultValue: true,
+        },
+        oauthId: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
         },
       },
       {
