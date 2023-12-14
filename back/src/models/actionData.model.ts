@@ -20,7 +20,7 @@ class ActionData extends Model {
                     primaryKey: true,
                     allowNull: false,
                 },
-                owner_id: {
+                ownerId: {
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },

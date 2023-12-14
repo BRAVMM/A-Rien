@@ -27,7 +27,7 @@ namespace OAuthMiddleware {
                 }
             );
         } catch (error) {
-            console.log(error);
+            console.error(`Error retrieving OAuth with ID ${oauthId} for owner ${ownerId}:`, error);
             return null;
         }
     }

@@ -17,7 +17,6 @@ if (!process.env.CRYPTO_SECRET) {
 /* Constants */
 const ALGORITHM: string = process.env.CRYPTO_ALGO;
 const SECRET_KEY: string = process.env.CRYPTO_SECRET; // Must be 256 bytes (32 characters)
-const IV: Buffer = crypto.randomBytes(16); // Initialization vector
 
 /**
  * @namespace EncryptionService
@@ -30,11 +29,12 @@ namespace EncryptionService {
      * @returns {{iv: string; content: string}} - The encrypted text
      */
     export const encrypt = (text: crypto.BinaryLike): { iv: string; content: string } => {
-        const cipher: crypto.Cipher = crypto.createCipheriv(ALGORITHM, SECRET_KEY, IV);
+        const iv: Buffer = crypto.randomBytes(16); // Generate a new IV for each encryption
+        const cipher: crypto.Cipher = crypto.createCipheriv(ALGORITHM, SECRET_KEY, iv);
         const encrypted: Buffer = Buffer.concat([cipher.update(text), cipher.final()]);
 
         return {
-            iv: IV.toString('hex'),
+            iv: iv.toString('hex'),
             content: encrypted.toString('hex')
         };
     };

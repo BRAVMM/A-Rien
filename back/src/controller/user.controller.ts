@@ -13,8 +13,8 @@ const ENV_VARS = [
 ];
 
 ENV_VARS.forEach((envVar) => {
-    const key = Object.keys(envVar)[0];
-    const value = Object.values(envVar)[0];
+    const [key, value] = Object.entries(envVar)[0];
+
     if (!value) {
         throw new Error(`${key} is not defined in the environment variables`);
     }

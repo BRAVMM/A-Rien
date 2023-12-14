@@ -5,11 +5,11 @@ import { CustomRequest } from "../interfaces/request.interface";
 
 /* Check environment variables */
 if (!process.env.JWT_SECRET) {
-    throw new Error('No secret key defined');
+    throw new Error('JWT_SECRET environment variable is not defined');
 }
 
 /**
- * Method that verify a token and then pass some informations to the next request.
+ * Method that verify a token and then pass some information to the next request.
  * @param {Request} req - This is the request object
  * @param {Response} res - This is the response object
  * @param {NextFunction} next - This is the next request that will be called

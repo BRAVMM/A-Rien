@@ -22,7 +22,7 @@ namespace OAuthService {
 
         if (EncryptedOAuth === null) {
             console.error("OAuth not found");
-            return null;
+            throw new Error("OAuth not found in database [OAuthService.getDecryptedOAuthTokenFromId]");
         }
         return EncryptionService.decrypt(EncryptedOAuth.iv, EncryptedOAuth.encryptedOAuthToken);
     }

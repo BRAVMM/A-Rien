@@ -1,11 +1,12 @@
 import express from 'express';
 import dotenv from 'dotenv';
+
 dotenv.config();
 import bodyParser from 'body-parser';
 import db from './models/index';
 import cors from 'cors';
 import UserRouter from './route/user.route';
-import { TaskScheduler } from './services/taskScheduler';
+import {TaskScheduler} from './services/taskScheduler';
 
 
 const app = express();
@@ -14,17 +15,21 @@ app.use(bodyParser.json());
 const port = process.env.PORT || 8080;
 const INTERVAL: number = Number(process.env.INTERVAL);
 
+if (isNaN(INTERVAL)) {
+    throw new Error('Invalid INTERVAL value. Please check your environment variable.');
+}
+
 // Initialize the database connection
 db.sequelize.sync()
     .then(() => {
-      console.log('Database sync completed.');
+        console.log('Database sync completed.');
     })
     .catch((err: any) => {
-      console.error('Error syncing the database:', err);
+        console.error('Error syncing the database:', err);
     });
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+    res.send('Hello World!');
 });
 
 app.use('/users', UserRouter);
@@ -42,5 +47,5 @@ setInterval(async () => {
 }, INTERVAL); // 60000 ms = 1 minute
 
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+    console.log(`Server running on http://localhost:${port}`);
 });
