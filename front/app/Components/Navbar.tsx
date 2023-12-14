@@ -3,13 +3,10 @@ import { useRouter } from 'next/navigation';
 import Image from "next/image"; // Import de next/image
 
 function Navbar() {
-
   const router = useRouter();
-
   const handleProductClick = () => {
     router.push('/services');
   }
-
   return (
     <nav className="bg-transparent p-4">
       <div className="container mx-auto flex items-center justify-between">
