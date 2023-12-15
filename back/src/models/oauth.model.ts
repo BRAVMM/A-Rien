@@ -1,42 +1,46 @@
 // oauth.model.ts
 
-import { Sequelize, DataTypes, Model } from 'sequelize';
+import {Sequelize, DataTypes, Model} from 'sequelize';
 
-class Oauth extends Model {
-  
-  public id!: number;
-  public serviceId!: number;
-  public oauthtToken!: string;
-  public ownerID!: number;
+class OAuth extends Model {
+    public id!: number;
+    public serviceId!: number;
+    public encryptedOAuthToken!: string;
+    public iv!: string;
+    public ownerID!: number;
 
-  public static initialize(sequelize: Sequelize) {
-    Oauth.init(
-      {
-        id: {
-          type: DataTypes.INTEGER,
-          primaryKey: true,
-          allowNull: false,
-        },
-        serviceId: {
-          type: DataTypes.INTEGER,
-          unique: true,
-          allowNull: false,
-        },
-        oauthtToken: {
-          type: DataTypes.STRING,
-          allowNull: true,
-        },
-        ownerID: {
-          type: DataTypes.INTEGER,
-          allowNull: true,
-        },
-      },
-      {
-        sequelize,
-        tableName: 'oauth',
-      }
-    );
-  }
+    public static initialize(sequelize: Sequelize) {
+        OAuth.init(
+            {
+                id: {
+                    type: DataTypes.INTEGER,
+                    primaryKey: true,
+                    allowNull: false,
+                },
+                serviceId: {
+                    type: DataTypes.INTEGER,
+                    unique: true,
+                    allowNull: false,
+                },
+                encryptedOAuthToken: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                iv: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                ownerID: {
+                    type: DataTypes.INTEGER,
+                    allowNull: false,
+                },
+            },
+            {
+                sequelize,
+                tableName: 'oauth',
+            }
+        );
+    }
 }
 
-export { Oauth };
+export {OAuth};
