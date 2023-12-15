@@ -38,6 +38,16 @@ interface ServiceActionInterface {
 
 
         // REACTION
+    
+/**
+ * @interface ReactionJsonArray
+ * @description Interface for ReactionJsonArray
+ */
+interface ReactionJsonArray {
+    title: string;
+    type: string;
+}
+
 
 
 
@@ -48,7 +58,7 @@ interface ServiceActionInterface {
 interface ServiceReactionInterface {
     id: number;
     name: string;
-    args: Record<string, any>[]; 
+    args: ReactionJsonArray[];
     actionIds: number[];
 }
 
