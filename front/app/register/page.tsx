@@ -24,7 +24,7 @@ export default function Register() {
 
   const handleError = (error: any) => {
     console.error("Error:", error);
-    setError("An error occurred, please try again");
+    setError(error.error);
   };
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
@@ -59,7 +59,7 @@ export default function Register() {
         // Redirect to home page
         setLoginSuccess(true);
       } else {
-        handleError(response);
+        handleError(await response.json());
       }
     } catch (error) {
       handleError(error);

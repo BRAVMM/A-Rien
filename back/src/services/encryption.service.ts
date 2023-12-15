@@ -4,6 +4,7 @@
  */
 
 import crypto from 'crypto';
+import bcrypt from "bcrypt";
 
 /* Check environment variables */
 if (!process.env.CRYPTO_ALGO) {
@@ -14,9 +15,18 @@ if (!process.env.CRYPTO_SECRET) {
     throw new Error('No secret key defined');
 }
 
+if (!process.env.SALT_ROUNDS) {
+    throw new Error('No salt rounds defined');
+}
+
 /* Constants */
 const ALGORITHM: string = process.env.CRYPTO_ALGO;
 const SECRET_KEY: string = process.env.CRYPTO_SECRET; // Must be 256 bytes (32 characters)
+const SALT_ROUNDS: number = Number(process.env.SALT_ROUNDS);
+
+if (isNaN(SALT_ROUNDS)) {
+    throw new Error('SALT_ROUNDS environment variable is not a valid number');
+}
 
 /**
  * @namespace EncryptionService
@@ -50,6 +60,14 @@ namespace EncryptionService {
         const decrypted: Buffer = Buffer.concat([decipher.update(Buffer.from(content, 'hex')), decipher.final()]);
 
         return decrypted.toString();
+    }
+
+    export const bcryptHash = async (text: string): Promise<string> => {
+        return await bcrypt.hash(text, SALT_ROUNDS);
+    }
+
+    export const bcryptCompare = async (text: string, hash: string): Promise<boolean> => {
+        return await bcrypt.compare(text, hash);
     }
 }
 

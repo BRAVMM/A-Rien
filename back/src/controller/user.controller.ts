@@ -1,31 +1,17 @@
+import {Request, Response} from 'express';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { User } from '../models/user.model';
-import { Op } from "sequelize";
-import { Request, Response } from 'express';
 
+/* Models */
+import {User} from '../models/user.model';
 
-/** Check if all environment variables are defined */
-const ENV_VARS = [
-    {"JWT_SECRET": process.env.JWT_SECRET},
-    {"SALT_ROUNDS": process.env.SALT_ROUNDS},
-    {"JWT_TOKEN_EXPIRATION": process.env.JWT_TOKEN_EXPIRATION},
-];
+/* Middleware */
+import {UserMiddleware} from "../middleware/user.middleware";
 
-ENV_VARS.forEach((envVar) => {
-    const [key, value] = Object.entries(envVar)[0];
+/* Services */
+import {JwtService} from "../services/jwt.service";
+import {EncryptionService} from "../services/encryption.service";
+import {UserService} from "../services/user.service";
 
-    if (!value) {
-        throw new Error(`${key} is not defined in the environment variables`);
-    }
-});
-
-/** Get typed environment variables. */
-const SALT_ROUNDS: number = Number(process.env.SALT_ROUNDS);
-
-if (isNaN(SALT_ROUNDS)) {
-    throw new Error('SALT_ROUNDS environment variable is not a valid number');
-}
 
 /**
  * Login user
@@ -35,29 +21,34 @@ if (isNaN(SALT_ROUNDS)) {
  */
 const register = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { username, email, password } = req.body;
+        const {username, email, password} = req.body;
 
         // check if username and password are provided
         if (!username || !email || !password) {
-            res.status(400).json({ error: "Please provide username, email and password" });
+            res.status(400).json({error: "Please provide username, email and password"});
+            return;
+        }
+        if (!UserService.isEmailValid(email)) {
+            res.status(400).json({error: "Please provide a valid email"});
+            return;
+        }
+        if (await UserMiddleware.checkIfUserExists(username, email)) {
+            res.status(400).json({error: "Username or email already exists"});
             return;
         }
 
-        if (await User.findOne({ where: { [Op.or]: [{ username: username }, { email: email }] } })) {
-            res.status(400).json({ error: "Username or email already exists" });
-            return;
-        }
-
-        const hashedPassword: string = await bcrypt.hash(password, SALT_ROUNDS);
-        const user = await User.create({
+        const hashedPassword: string = await EncryptionService.bcryptHash(password);
+        const hashedEmail: string = await EncryptionService.bcryptHash(email);
+        const user: User = await User.create({
             username: username,
-            email: email,
+            email: hashedEmail,
             password: hashedPassword,
         });
-        res.status(201).json(user);
+        const token: string = JwtService.generateToken(user.id);
+        res.status(201).json({token});
     } catch (error: any) {
         console.error(error);
-        res.status(500).json({ error: "An unexpected error occurred" });
+        res.status(500).json({error: "An unexpected error occurred"});
     }
 }
 
@@ -68,42 +59,35 @@ const register = async (req: Request, res: Response): Promise<void> => {
  * @returns {Promise<void>} This returns the token if successful or an error message if unsuccessful
  */
 const login = async (req: Request, res: Response): Promise<void> => {
-    if (!process.env.JWT_SECRET) {
-        throw new Error('JWT_SECRET is not defined in the environment variables');
-    }
-
     try {
         const {username, password} = req.body;
+
         // check if username and password are provided
         if (!username || !password) {
-            res.status(400).json({ error: "Please provide username and password" });
+            res.status(400).json({error: "Please provide username and password"});
             return;
         }
-        const user = await User.findOne({
-            where: {
-                username: username,
-            }
-        });
+        const user: User | null = await UserMiddleware.getUserFromUsername(username);
 
         // check if user exists
         if (!user) {
-            res.status(401).json({ error: "User not found" });
+            res.status(401).json({error: "User not found"});
             return;
         }
 
         // check if password matches
         const match: boolean = await bcrypt.compare(password, user.password);
         if (!match) {
-            res.status(401).json({ error: "Incorrect password" });
+            res.status(401).json({error: "Incorrect password"});
             return;
         }
 
         // create token
-        const token: string = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_TOKEN_EXPIRATION });
-        res.status(200).json({ token });
+        const token: string = JwtService.generateToken(user.id);
+        res.status(200).json({token});
     } catch (error: any) {
         console.error(error)
-        res.status(500).json({ error: "An unexpected error occurred" });
+        res.status(500).json({error: "An unexpected error occurred"});
     }
 }
 
@@ -114,7 +98,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
  * @returns {Promise<void>} For now it returns nothing for a potential future implementation
  */
 const logout = async (req: Request, res: Response): Promise<void> => {
-    res.status(200).json({ success : "User logout correctly"})
+    res.status(200).json({success: "User logout correctly"})
 }
 
-export { register, login, logout };
+export {register, login, logout};
