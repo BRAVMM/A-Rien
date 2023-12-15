@@ -11,9 +11,17 @@ const ModalUI: React.FC<{
   ModalData: ModalDataInterface | undefined;
 }> = ({ isOpen, onClose, ModalData }) => {
 
+  enum Step {
+    SELECT_SERVICE_ACTION,
+    SELECT_SERVICE_ACTION_DATA,
+    SELECT_SERVICE_REACTION,
+    SELECT_SERVICE_REACTION_DATA,
+    VALIDATE_OR_ADD_FORM
+  }
 
 
-  const [step, setStep] = useState<number>(1);
+
+  const [step, setStep] = useState<number>(Step.SELECT_SERVICE_ACTION);
   const [action, setAction] = useState<ServiceActionInterface>();
   const [actionDatas, setActionDatas] = useState<string>("");
   const [reactions, setReactions] = useState<ServiceReactionInterface[]>();
@@ -29,7 +37,7 @@ const ModalUI: React.FC<{
 
   useEffect(() => {
     if (actionDatas !== "") {
-      setStep(3);
+      setStep(Step.SELECT_SERVICE_REACTION);
     }
   }, [actionDatas]);
 
@@ -40,7 +48,7 @@ const ModalUI: React.FC<{
       // console.log("reactionDatas", reactionDatas);
 
       // onClose();
-      setStep(5);
+      setStep(Step.VALIDATE_OR_ADD_FORM);
     }
   }, [reactionDatas]);
 
@@ -73,9 +81,8 @@ const ModalUI: React.FC<{
                 type="button"
                 onClick={() => {
                   setAction(action);
-                  setStep(2);
-                }
-                }
+                  setStep(Step.SELECT_SERVICE_ACTION_DATA)
+                }}
                 className={`flex items-center justify-center bg-[#382B59] text-white font-semibold py-2 px-4 rounded-lg w-32 text-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-primary hover:bg-indigo-500 focus-visible:outline-indigo-600`}
               >
                 {action.name}
@@ -128,7 +135,7 @@ const ModalUI: React.FC<{
                 type="button"
                 onClick={() => {
                   console.log(reaction);
-                  setStep(4);
+                  setStep(Step.SELECT_SERVICE_REACTION_DATA);
                   updateReaction(reaction);
                 }
                 }
@@ -164,7 +171,7 @@ const ModalUI: React.FC<{
     // CALL API TO STORE AREA
     console.log("actionDatas", actionDatas);
     console.log("reactionDatas", reactionDatas);
-    setStep(1);
+    setStep(Step.SELECT_SERVICE_ACTION);
     clearDatas();
     onClose();
   }
@@ -174,7 +181,7 @@ const ModalUI: React.FC<{
     return (
       <div className="flex flex-col items-center justify-center">
         <button
-          onClick={() => setStep(3)}
+          onClick={() => setStep(Step.SELECT_SERVICE_REACTION)}
         >
           Add an other reaction
         </button>
@@ -194,7 +201,7 @@ const ModalUI: React.FC<{
           <button
             className="text-gray-500 hover:text-gray-700 focus:outline-none"
             onClick={() => {
-              setStep(1);
+              setStep(Step.SELECT_SERVICE_ACTION);
               clearDatas();
               onClose();
             }}
@@ -204,11 +211,11 @@ const ModalUI: React.FC<{
         </div>
         <div className="mt-4">
           <div className="flex flex-col items-center justify-center">
-            {step === 1 && HTMLselectServiceAction()}
-            {step === 2 && HTMLselectServiceDataActionForm()}
-            {step === 3 && HTMLselectReaction()}
-            {step === 4 && HTMLselectServiceReactionDataForm()}
-            {step === 5 && HTMLvalidateOrAddForm()}
+            {step === Step.SELECT_SERVICE_ACTION && HTMLselectServiceAction()}
+            {step === Step.SELECT_SERVICE_ACTION_DATA && HTMLselectServiceDataActionForm()}
+            {step === Step.SELECT_SERVICE_REACTION && HTMLselectReaction()}
+            {step === Step.SELECT_SERVICE_REACTION_DATA && HTMLselectServiceReactionDataForm()}
+            {step === Step.VALIDATE_OR_ADD_FORM && HTMLvalidateOrAddForm()}
           </div>
         </div>
       </div>
