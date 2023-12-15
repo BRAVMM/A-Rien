@@ -2,8 +2,6 @@
  * @fileoverview Type for ModalData
  */
 
-import { MouseEventHandler } from "react";
-
 /**
  * @interface ModalDataInterface
  * @description Interface for ActionJson
@@ -17,5 +15,41 @@ interface ModalDataInterface {
     reactionIds: number[];
 }
 
+/**
+ * @interface ActionJsonArray
+ * @description Interface for ActionJsonArray
+ */
+interface ActionJsonArray {
+    title: string;
+    type: string;
+}
 
-export type { ModalDataInterface };
+/**
+ * @interface ServiceActionInterface
+ * @description Interface for ServiceActionInterface
+ */
+interface ServiceActionInterface {
+    id: number;
+    name: string;
+    args: ActionJsonArray[];
+    reactionIds: number[];
+}
+
+
+
+        // REACTION
+
+
+
+/**
+ * @interface ServiceReactionInterface
+ * @description Interface for ServiceReactionInterface
+ */
+interface ServiceReactionInterface {
+    id: number;
+    name: string;
+    args: Record<string, any>[]; 
+    actionIds: number[];
+}
+
+export type { ModalDataInterface, ServiceActionInterface, ServiceReactionInterface };
