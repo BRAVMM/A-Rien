@@ -16,6 +16,7 @@ class OAuth extends Model {
                     type: DataTypes.INTEGER,
                     primaryKey: true,
                     allowNull: false,
+                    autoIncrement: true,
                 },
                 serviceId: {
                     type: DataTypes.INTEGER,
