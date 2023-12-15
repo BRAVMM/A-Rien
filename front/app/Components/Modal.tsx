@@ -2,6 +2,7 @@ import React, { use, useEffect, useState } from "react";
 import { ModalDataInterface, ServiceActionInterface, ServiceReactionInterface } from "../Interfaces/ModalData.interface";
 import AREAForm from "./AREAForm";
 import { on } from "events";
+import { clear } from "console";
 
 
 const ModalUI: React.FC<{
@@ -15,9 +16,16 @@ const ModalUI: React.FC<{
   const [step, setStep] = useState<number>(1);
   const [action, setAction] = useState<ServiceActionInterface>();
   const [actionDatas, setActionDatas] = useState<string>("");
-  const [reaction, setReaction] = useState<ServiceReactionInterface>();
-  const [reactionDatas, setReactionDatas] = useState<string>("");
+  const [reactions, setReactions] = useState<ServiceReactionInterface[]>();
+  const [reactionDatas, setReactionDatas] = useState<string[]>();
 
+
+  const clearDatas = () => {
+    setAction(undefined);
+    setActionDatas("");
+    setReactions(undefined);
+    setReactionDatas(undefined);
+  }
 
   useEffect(() => {
     if (actionDatas !== "") {
@@ -26,12 +34,13 @@ const ModalUI: React.FC<{
   }, [actionDatas]);
 
   useEffect(() => {
-    if (reactionDatas !== "") {
+    if (reactionDatas !== undefined) {
       // CALL API TO STORE AREA
-      console.log("actionDatas", actionDatas);
-      console.log("reactionDatas", reactionDatas);
+      // console.log("actionDatas", actionDatas);
+      // console.log("reactionDatas", reactionDatas);
 
-      onClose();
+      // onClose();
+      setStep(5);
     }
   }, [reactionDatas]);
 
@@ -101,6 +110,12 @@ const ModalUI: React.FC<{
     }
   ];
 
+  const updateReaction = (reaction: ServiceReactionInterface) => {
+    const newReaction: ServiceReactionInterface[] = [reaction, ...reactions || []];
+    console.log(newReaction);
+    setReactions(newReaction);
+  }
+
 
   const HTMLselectReaction = () => {
     return (
@@ -114,7 +129,7 @@ const ModalUI: React.FC<{
                 onClick={() => {
                   console.log(reaction);
                   setStep(4);
-                  setReaction(reaction);
+                  updateReaction(reaction);
                 }
                 }
                 className={`flex items-center justify-center bg-[#382B59] text-white font-semibold py-2 px-4 rounded-lg w-32 text-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-primary hover:bg-indigo-500 focus-visible:outline-indigo-600`}
@@ -128,12 +143,47 @@ const ModalUI: React.FC<{
     );
   }
 
+  const updateReactionDatas = (data: string) => {
+    const newReactionDatas: string[] = [data, ...reactionDatas || []];
+    console.log(newReactionDatas);
+    setReactionDatas(newReactionDatas);
+  }
+
   const HTMLselectServiceReactionDataForm = () => {
     return (
       <AREAForm
-        fields={reaction?.args || []}
-        setDatas={(data: string) => setReactionDatas(data)}
+        fields={reactions?.[0].args || []}
+        setDatas={(data: string) => updateReactionDatas(data)}
       ></AREAForm>
+    );
+  }
+
+
+
+  const submitAREA = () => {
+    // CALL API TO STORE AREA
+    console.log("actionDatas", actionDatas);
+    console.log("reactionDatas", reactionDatas);
+    setStep(1);
+    clearDatas();
+    onClose();
+  }
+
+
+  const HTMLvalidateOrAddForm = () => {
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <button
+          onClick={() => setStep(3)}
+        >
+          Add an other reaction
+        </button>
+        <button
+          onClick={() => submitAREA()}
+        >
+          Submit AREA
+        </button>
+      </div>
     );
   }
 
@@ -143,7 +193,11 @@ const ModalUI: React.FC<{
         <div className="flex justify-end">
           <button
             className="text-gray-500 hover:text-gray-700 focus:outline-none"
-            onClick={onClose}
+            onClick={() => {
+              setStep(1);
+              clearDatas();
+              onClose();
+            }}
           >
             X
           </button>
@@ -154,6 +208,7 @@ const ModalUI: React.FC<{
             {step === 2 && HTMLselectServiceDataActionForm()}
             {step === 3 && HTMLselectReaction()}
             {step === 4 && HTMLselectServiceReactionDataForm()}
+            {step === 5 && HTMLvalidateOrAddForm()}
           </div>
         </div>
       </div>
