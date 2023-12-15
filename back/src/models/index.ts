@@ -6,6 +6,7 @@ import { Action } from "./action.model";
 import { Reaction } from "./reaction.model";
 import { ActionData } from "./actionData.model";
 import { ReactionData } from "./reactionData.model";
+import { OAuth } from "./oauth.model";
 
 const sequelize = new Sequelize(`${databaseConfig.dialect}://${databaseConfig.USER}:${databaseConfig.PASSWORD}@${databaseConfig.HOST}:${databaseConfig.PORT}/${databaseConfig.DB}`);
 
@@ -31,5 +32,6 @@ db.actions = Action.initialize(sequelize);
 db.reactions = Reaction.initialize(sequelize);
 db.actionData = ActionData.initialize(sequelize);
 db.reactionData = ReactionData.initialize(sequelize);
+db.oauth = OAuth.initialize(sequelize);
 
 export default db;
