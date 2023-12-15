@@ -3,7 +3,6 @@
 import {Sequelize, DataTypes, Model} from 'sequelize';
 
 class OAuth extends Model {
-
     public id!: number;
     public serviceId!: number;
     public encryptedOAuthToken!: string;

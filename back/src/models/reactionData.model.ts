@@ -24,7 +24,6 @@ class ReactionData extends Model {
                 data: {
                     type: DataTypes.JSON,
                     allowNull: true,
-
                 },
                 reactionId: {
                     type: DataTypes.INTEGER,

@@ -3,7 +3,6 @@
 import {Sequelize, DataTypes, Model} from 'sequelize';
 
 class Service extends Model {
-
     public id!: number;
     public name!: string;
     public actionsId!: number[];
