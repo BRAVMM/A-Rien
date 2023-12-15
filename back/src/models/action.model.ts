@@ -24,7 +24,6 @@ class Action extends Model {
                 args: {
                     type: DataTypes.JSON,
                     allowNull: true,
-
                 },
                 reactionsIds: {
                     type: DataTypes.ARRAY(DataTypes.INTEGER),
