@@ -13,37 +13,23 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v3
 
-      - name: 📂 Sync files
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/AR-37-init-back'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          local-dir: ./
-          server-dir: /home/beafowl/
-
-      - name: 📂 Sync files
-        if: github.ref == 'refs/heads/dev'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 2222
-          local-dir: ./
-          server-dir: /home/beafowl/
-
       - name: executing remote ssh commands using ssh key
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/AR-37-init-back'
+        if: github.ref == 'refs/heads/main'
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.FTP_SERVER }}
           username: root
           password: ${{ secrets.FTP_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
-          script: sh re.sh &
+          script: |
+            git clone https://github.com/BRAVMM/A-Rien.git
+            cd A-Rien
+            git switch main
+            git pull origin main
+            cp -r ./* /home/beafowl/A-Rien
+            cp /root/.env /home/beafowl/A-Rien/back
+            cp /root/.env.development /home/beafowl/A-Rien/front
+            sh /home/beafowl/re.sh &
 
       - name: executing remote ssh commands using ssh key
         if: github.ref == 'refs/heads/dev'
@@ -54,4 +40,12 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           key: ${{ secrets.SSH_KEY }}
           port: 2121
-          script: sh re.sh &
+          script: |
+            git clone https://github.com/BRAVMM/A-Rien.git
+            cd A-Rien
+            git switch dev
+            git pull origin dev
+            cp -r ./* /home/beafowl/A-Rien
+            cp /root/.env /home/beafowl/A-Rien/back
+            cp /root/.env.development /home/beafowl/A-Rien/front
+            sh /home/beafowl/re.sh &
