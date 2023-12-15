@@ -13,7 +13,7 @@ import {ActionJsonArray} from "@/app/Interfaces/ActionJson.interface";
  * @return {JSX.Element} AREAForm component with fields to display
  * @note This component is used to display a form with fields and submit button that will return the data in JSON format
  */
-const AREAForm: React.FC<{ fields: ActionJsonArray , setDatas: any}> = ({fields, setDatas}) => {
+const AREAForm: React.FC<{ fields: ActionJsonArray , setDatas: (data: string) => void}> = ({fields, setDatas}) => {
     const [formData, setFormData] = useState<{ [key: string]: string }>({});
     const [error, setError] = useState<string | null>(null);
 
