@@ -21,7 +21,6 @@ namespace JwtService {
     export function generateToken(id: number): string {
         return jwt.sign({userId: id}, JWT_SECRET, {expiresIn: JWT_TOKEN_EXPIRATION});
     }
-
 }
 
 export {JwtService}
