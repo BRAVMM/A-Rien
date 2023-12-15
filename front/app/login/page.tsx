@@ -45,7 +45,6 @@ export default function Login() {
             setLoginSuccess(true);
             setToken(json.token);
         } catch (error) {
-            console.log("erroooooor = ");
             handleError(error);
         }
     };

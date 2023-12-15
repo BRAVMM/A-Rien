@@ -46,7 +46,6 @@ export async function loginUser(username: string, password: string): Promise<any
     }
   } catch (error) {
     // Handle any exceptions that may occur during the request
-    console.error("cacaaaa + " + error);
     throw error;
   }
 }
