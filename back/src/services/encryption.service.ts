@@ -22,7 +22,7 @@ if (!process.env.SALT_ROUNDS) {
 /* Constants */
 const ALGORITHM: string = process.env.CRYPTO_ALGO;
 const SECRET_KEY: string = process.env.CRYPTO_SECRET; // Must be 256 bytes (32 characters)
-const SALT_ROUNDS: number = Number(process.env.SALT_ROUNDS);
+const SALT_ROUNDS: number = parseInt(process.env.SALT_ROUNDS, 10);
 
 if (isNaN(SALT_ROUNDS)) {
     throw new Error('SALT_ROUNDS environment variable is not a valid number');

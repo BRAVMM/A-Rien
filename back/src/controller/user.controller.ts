@@ -76,7 +76,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
         }
 
         // check if password matches
-        const match: boolean = await bcrypt.compare(password, user.password);
+        const match: boolean = await EncryptionService.bcryptCompare(password, user.password);;
         if (!match) {
             res.status(401).json({error: "Incorrect password"});
             return;

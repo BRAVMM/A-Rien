@@ -14,7 +14,7 @@ namespace UserService {
      * @returns {boolean} - This returns true if the email is valid or false if the email is invalid
      */
     export const isEmailValid = (email: string): boolean => {
-        const regexEmail: RegExp = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        const regexEmail: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regexEmail.test(email);
     }
 }

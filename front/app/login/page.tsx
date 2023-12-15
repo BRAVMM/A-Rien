@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState, useEffect, use} from "react";
+import React, {useState, useEffect} from "react";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import styles from "./login.module.css";
@@ -35,7 +35,7 @@ export default function Login() {
         setError(error.message);
     };
 
-    const handleSubmit = async (e: { preventDefault: () => void }) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setError("");
@@ -53,13 +53,12 @@ export default function Login() {
         <div
             className={`h-screen flex bg-custom-gradient overflow-hidden ${styles.frame}`}
         >
-            <button className="absolute top-5/100 left-3/100">
+            <button className="absolute top-5/100 left-3/100" onClick={() => router.push("/")}>
                 <Image
                     src={logo}
                     alt="bravmm-logo"
                     width={70}
                     height={70}
-                    onClick={() => router.push("/")}
                 />
             </button>
             <div className={`${styles.polygon}`}></div>
@@ -80,10 +79,10 @@ export default function Login() {
                         <input
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            id="email"
-                            placeholder="Email"
-                            name="email"
-                            type="data"
+                            id="username"
+                            placeholder="Username"
+                            name="username"
+                            type="text"
                             required
                             className="text-center block w-full rounded-md border-0 py-1.5 text-background shadow-sm ring-2 ring-inset ring-secondary placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary"
                         />
