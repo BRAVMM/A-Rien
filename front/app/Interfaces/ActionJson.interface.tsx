@@ -17,9 +17,8 @@ interface ActionJsonInterface {
  * @interface ActionJsonArrayType
  * @description Interface for ActionJsonArray
  * @extends {Array<ActionJsonInterface>}
- * @property {string} title
- * @property {string} type
  * @see {ActionJsonInterface}
+ */
  */
 interface ActionJsonArray extends Array<ActionJsonInterface> {}
 
