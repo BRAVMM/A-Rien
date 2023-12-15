@@ -23,4 +23,3 @@ interface ActionJsonInterface {
 interface ActionJsonArray extends Array<ActionJsonInterface> {}
 
 export type { ActionJsonInterface, ActionJsonArray };
-
