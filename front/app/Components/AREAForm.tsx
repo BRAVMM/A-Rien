@@ -6,6 +6,12 @@ import React, {useState} from 'react';
 /* Interfaces */
 import {ActionJsonArray} from "@/app/Interfaces/ActionJson.interface";
 
+/**
+ * @component AREAForm component
+ * @param {ActionJsonArray} fields - Fields to display
+ * @return {JSX.Element} AREAForm component with fields to display
+ * @note This component is used to display a form with fields and submit button that will return the data in JSON format
+ */
 const AREAForm: React.FC<{ fields: ActionJsonArray }> = ({fields}) => {
     const [formData, setFormData] = useState<{ [key: string]: string }>({});
     const [error, setError] = useState<string | null>(null);
