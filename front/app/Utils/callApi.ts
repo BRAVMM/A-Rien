@@ -85,7 +85,7 @@ export async function registerTokenService(token: string, serviceRoute : string)
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer bearer`,
+        "Authorization": `Bearer ${bearer}`,
       },
       body: JSON.stringify(data),
       
