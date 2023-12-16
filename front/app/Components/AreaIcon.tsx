@@ -10,8 +10,9 @@ interface AreaIconProps {
 function AreaIcon({ image, name, status }: AreaIconProps) {
   return (
     <div className="flex items-center container flex-col aspect-square bg-[#382B59]">
-      <div className="basis-1/3 place-items-end flex-row-reverse">
-        <div className="basis-1/3 items-center justify-center space-x-16">
+      <div className="flex basis-1/3 w-full flex-row">
+        <div className="flex basis-2/3"/>
+        <div className="flex basis-1/3 items-center justify-center space-x-16">
           <Pastille status={status} />
         </div>
       </div>
