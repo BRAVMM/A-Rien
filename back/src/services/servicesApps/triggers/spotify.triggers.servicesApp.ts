@@ -36,7 +36,8 @@ namespace SpotifyTriggers {
         const response: Response = await fetch(url, {
             method: "GET",
             headers: {
-                "Authorization": "Bearer " + oauthToken
+                "Authorization": "Bearer " + oauthToken,
+                "Content-Type": "application/json"
             }
         });
         if (!response.ok) {
