@@ -14,7 +14,7 @@ interface AreaDetails {
 }
 
 function getAreas() {
-  let _areas: [AreaDetails] = [
+  let _areas: AreaDetails[] = [
     {
       name: "Discord",
       image: "/logo.svg",
@@ -67,7 +67,7 @@ function getAreas() {
 
 
 export default function Services() {
-  const [areas, setAreas] = useState<[AreaDetails]>([]);
+  const [areas, setAreas] = useState<AreaDetails[]>([]);
   const router = useRouter();
 
   useEffect(() => {
