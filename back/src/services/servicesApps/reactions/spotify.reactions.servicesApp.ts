@@ -25,8 +25,8 @@ namespace SpotifyReactions {
                 console.error("OAuth token not found");
                 return false;
             }
-            const actionDataParsed: any = JSON.parse(JSON.stringify(actionData));
-            const reactionDataParsed: any = JSON.parse(JSON.stringify(reactionData));
+            const actionDataParsed: any = actionData;
+            const reactionDataParsed: any = reactionData;
             const response: any = await fetch("https://api.spotify.com/v1/users/" + actionDataParsed.userId + "/playlists/" + reactionDataParsed.playlistId + "/tracks?uris=" + actionDataParsed.trackUri, {
                 method: "POST",
                 headers: {
@@ -36,7 +36,8 @@ namespace SpotifyReactions {
             const json: any = await response.json();
             console.log(json);
         } catch (e) {
-            console.error(e);
+            console.error("Error in reactionSpotifyAddToPlaylist:", e);
+            return false;
         }
         return true;
     }
