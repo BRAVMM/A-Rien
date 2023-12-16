@@ -15,15 +15,23 @@ const registerToken = async (req: Request, res: Response): Promise<void> => {
     const userInfo : TokenData = (req as CustomRequest).user
 
     if (!token) {
-        res.status(401)
+        res.status(401).send({"message" : "error"})
     }
-    const encryptedToken : { iv: string; content: string } = EncryptionService.encrypt(token)
-    const user = await OAuth.create({
-        serviceId : SPOTIFY_ID,
-        encryptedOAuthToken : encryptedToken.content,
-        iv : encryptedToken.iv,
-        ownerId : userInfo.userId,
-    });
+    console.log(userInfo.userId)
+    console.log(token)
+    try {
+        const encryptedToken : { iv: string; content: string } = EncryptionService.encrypt(token)
+        const user = await OAuth.create({
+            serviceId : SPOTIFY_ID,
+            encryptedOAuthToken : encryptedToken.content,
+            iv : encryptedToken.iv,
+            ownerID : userInfo.userId,
+        });
+        res.status(200).send({"message" : "success"})
+    } catch (error) {
+        console.log(error)
+        res.status(401).send({"message": "error"})
+    }
 }
 
 export { registerToken };

@@ -1,9 +1,11 @@
 "use client";
 
+import { registerTokenService } from '@/app/Utils/callApi';
 import React, { useEffect, useState } from 'react';
 
 const AUTH_ENDPOINT: string = "https://accounts.spotify.com/authorize";
 const RESPONSE_TYPE: string = "token";
+const REGISTER_TOKEN_ROUTE: string = "/services/spotify/registerToken"
 
 const SpotifyButtonOAuth: React.FC = () => {
     const [token, setToken] = useState('');
@@ -15,8 +17,7 @@ const SpotifyButtonOAuth: React.FC = () => {
         if (!token && hash) {
             token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token"))!.split("=")[1];
 
-            window.location.hash = "";
-            window.localStorage.setItem("token", token);
+            registerTokenService(token, REGISTER_TOKEN_ROUTE)
         }
 
         setToken(token ?? "");

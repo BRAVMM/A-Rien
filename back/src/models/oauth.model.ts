@@ -20,11 +20,10 @@ class OAuth extends Model {
                 },
                 serviceId: {
                     type: DataTypes.INTEGER,
-                    unique: true,
                     allowNull: false,
                 },
                 encryptedOAuthToken: {
-                    type: DataTypes.STRING,
+                    type: DataTypes.STRING(1024),
                     allowNull: false,
                 },
                 iv: {
