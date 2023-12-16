@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import TextSection from "../Components/TextSection";
 
 interface AreaDetails {
+  id: number;
   image: string;
   name: string;
   status: boolean;
@@ -16,46 +17,55 @@ interface AreaDetails {
 function getAreas() {
   let _areas: AreaDetails[] = [
     {
+      id: 1,
       name: "Discord",
       image: "/logo.svg",
       status: true,
     },
     {
+      id: 2,
       name: "Twitter",
       image: "/logo.svg",
       status: true,
     },
     {
+      id: 3,
       name: "Instagram",
       image: "/logo.svg",
       status: true,
     },
     {
+      id: 4,
       name: "Twitch",
       image: "/logo.svg",
       status: true,
     },
     {
+      id: 5,
       name: "Youtube",
       image: "/logo.svg",
       status: true,
     },
     {
+      id: 6,
       name: "Github",
       image: "/logo.svg",
       status: true,
     },
     {
+      id: 7,
       name: "Spotify",
       image: "/logo.svg",
       status: true,
     },
     {
+      id: 8,
       name: "TikTok",
       image: "/logo.svg",
       status: true,
     },
     {
+      id: 9,
       name: "Facebook",
       image: "/logo.svg",
       status: true,
@@ -101,9 +111,9 @@ export default function Services() {
             </div>
 
             <div className="snake-container basis-5/6">
-              <div className="grid grid-cols-5 gap-4 space-x-4 space-y-4">
-                {areas.map((area: AreaDetails, index: number) => (
-                  <div key={index} className="p-4 rounded">
+              <div className="grid sm:grid-cols-5 lg:grid-cols-25 gap-4 space-x-4 space-y-4">
+                {areas.map((area: AreaDetails) => (
+                  <div key={area.id} className="p-4 rounded">
                     <AreaIcon image={area.image} name={area.name} status={area.status} />
                   </div>
                 ))}
