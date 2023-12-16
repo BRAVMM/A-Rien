@@ -40,11 +40,12 @@ export async function loginUser(username: string, password: string): Promise<any
     // Check if the response is OK (HTTP status code 2xx)
     if (response.ok) {
       // Parse the JSON response and return it if successful
-      const json = await response.json();
-      return json;
+      return await response.json();
     } else {
       // If the response is not OK, throw an error with a message
-      throw new Error("Login failed");
+    //   throw the error
+      const error = await response.json();
+      throw new Error(error.error);
     }
   } catch (error) {
     // Handle any exceptions that may occur during the request
