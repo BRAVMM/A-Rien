@@ -19,16 +19,25 @@ namespace SpotifyReactions {
      * @returns {Promise<boolean>} - The result of the reaction
      */
     export const reactionSpotifyAddToPlaylist = async (ownerId: number, oauthId: number, actionData: JSON, reactionData: JSON): Promise<boolean> => {
-        const oauthToken: string | null = await OAuthService.getDecryptedOAuthTokenFromId(oauthId, ownerId);
-
-        if (oauthToken === null) {
-            console.error("OAuth token not found");
-            return false;
+        try {
+            const oauthToken: string | null = await OAuthService.getDecryptedOAuthTokenFromId(oauthId, ownerId);
+            if (oauthToken === null) {
+                console.error("OAuth token not found");
+                return false;
+            }
+            const actionDataParsed: any = JSON.parse(JSON.stringify(actionData));
+            const reactionDataParsed: any = JSON.parse(JSON.stringify(reactionData));
+            const response: any = await fetch("https://api.spotify.com/v1/users/" + actionDataParsed.userId + "/playlists/" + reactionDataParsed.playlistId + "/tracks?uris=" + actionDataParsed.trackUri, {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + oauthToken
+                }
+            });
+            const json: any = await response.json();
+            console.log(json);
+        } catch (e) {
+            console.error(e);
         }
-        console.log(ownerId);
-        console.log(oauthToken); // to remove when the OAuth is implemented
-        console.log(actionData);
-        console.log(reactionData);
         return true;
     }
 }
