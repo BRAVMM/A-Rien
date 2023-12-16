@@ -15,22 +15,20 @@ const registerToken = async (req: Request, res: Response): Promise<void> => {
     const userInfo : TokenData = (req as CustomRequest).user
 
     if (!token) {
-        res.status(401).send({"message" : "error"})
+        res.status(400).json({ error: "No token provided" })
     }
-    console.log(userInfo.userId)
-    console.log(token)
     try {
         const encryptedToken : { iv: string; content: string } = EncryptionService.encrypt(token)
-        const user = await OAuth.create({
+        const OAuthData = await OAuth.create({
             serviceId : SPOTIFY_ID,
             encryptedOAuthToken : encryptedToken.content,
             iv : encryptedToken.iv,
             ownerID : userInfo.userId,
         });
-        res.status(200).send({"message" : "success"})
+        res.status(201).json(OAuthData)
     } catch (error) {
         console.log(error)
-        res.status(401).send({"message": "error"})
+        res.status(500).json({ error: "An unexpected error occurred" })
     }
 }
 
