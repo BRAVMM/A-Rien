@@ -46,7 +46,7 @@ const refreshTokens = async (req: Request, res: Response, next: NextFunction): P
     const userInfo : TokenData = (req as CustomRequest).user
 
     if (!userInfo) {
-        res.status(401).json({error: "User not found"})
+        return res.status(401).json({error: "User not found"});
     }
     try {
         const { serviceId } = req.body
