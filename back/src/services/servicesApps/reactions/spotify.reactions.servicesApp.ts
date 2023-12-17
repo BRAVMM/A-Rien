@@ -18,22 +18,26 @@ namespace SpotifyReactions {
      * @param reactionData - The reaction data
      * @returns {Promise<boolean>} - The result of the reaction
      */
-    export const reactionSpotifyAddToPlaylist = async (ownerId: number, oauthId: number, actionData: JSON, reactionData: JSON): Promise<boolean> => {
+    export const reactionSpotifyAddToPlaylist = async (ownerId: number, oauthId: number, actionData: ActionType, reactionData: ReactionType): Promise<boolean> => {
         try {
             const oauthToken: string | null = await OAuthService.getDecryptedOAuthTokenFromId(oauthId, ownerId);
             if (oauthToken === null) {
                 console.error("OAuth token not found");
                 return false;
             }
-            const actionDataParsed: any = actionData;
-            const reactionDataParsed: any = reactionData;
+            const actionDataParsed = actionData;
+            const reactionDataParsed = reactionData;
+            if (!actionDataParsed.userId || !actionDataParsed.trackUri || !reactionDataParsed.playlistId) {
+                console.error("Missing data in reactionSpotifyAddToPlaylist");
+                return false;
+            }
             const response: any = await fetch("https://api.spotify.com/v1/users/" + actionDataParsed.userId + "/playlists/" + reactionDataParsed.playlistId + "/tracks?uris=" + actionDataParsed.trackUri, {
                 method: "POST",
                 headers: {
                     "Authorization": "Bearer " + oauthToken
                 }
             });
-            const json: any = await response.json();
+            const json = await response.json();
             console.log(json);
         } catch (e) {
             console.error("Error in reactionSpotifyAddToPlaylist:", e);
