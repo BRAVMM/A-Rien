@@ -51,7 +51,7 @@ namespace SpotifyTriggers {
         if (!usersSpotifyTriggerData[userId]) {
             usersSpotifyTriggerData[userId] = {
                 userId: userId,
-                SoundLikedLength: 0,
+                TrackLikedLength: 0,
                 AlbumLikedLength: 0,
                 ArtistLikedLength: 0,
                 PlaylistLikedLength: 0
@@ -71,12 +71,11 @@ namespace SpotifyTriggers {
         try {
             const json = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + "/me/tracks");
             const userData = getOrCreateUserData(ownerId);
-            if (userData.SoundLikedLength !== json.items.length) {
-                userData.SoundLikedLength = json.items.length;
+            if (userData.TrackLikedLength !== json.items.length) {
+                userData.TrackLikedLength = json.items.length;
             } else {
                 return false;
             }
-            console.log(json);
         } catch (e) {
             console.error("Error in checkSpotifyNewSavedSong:", e);
             return false;
@@ -100,7 +99,6 @@ namespace SpotifyTriggers {
             } else {
                 return false;
             }
-            console.log(json);
         } catch (e) {
             console.error("Error in checkSpotifyNewSavedAlbum:", e);
             return false;
@@ -124,7 +122,6 @@ namespace SpotifyTriggers {
             } else {
                 return false;
             }
-            console.log(json);
         } catch (e) {
             console.error("Error in checkSpotifyNewSavedArtist:", e);
             return false;
@@ -148,7 +145,6 @@ namespace SpotifyTriggers {
             } else {
                 return false;
             }
-            console.log(json);
         } catch (e) {
             console.error("Error in checkSpotifyNewSavedPlaylist:", e);
             return false;

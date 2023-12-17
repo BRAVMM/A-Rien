@@ -8,7 +8,7 @@
  */
 interface SpotifyTriggerData {
     userId: string;
-    SoundLikedLength: number;
+    TrackLikedLength: number;
     AlbumLikedLength: number;
     ArtistLikedLength: number;
     PlaylistLikedLength: number;
