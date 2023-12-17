@@ -29,7 +29,19 @@ type RefreshTokenCallback = (tokens: OAuth[]) => Promise<void>;
  * const tokens = await OAuth.findAll({ where: { serviceId }});
  * await refreshTokenCallbacks[serviceId](tokens);
  * 
+<<<<<<< HEAD
  * // This will invoke the refreshSpotifyTokens function with the retrieved tokens.
+=======
+ * // Successful execution (No direct response, but forwards control to the next middleware)
+ * 
+ * // Error response for missing user or serviceId
+ * Status: 401
+ * Response Body: { "error": "User not found" } or { "error": "Unknown service" } or { "error": "Unknown service" }
+ *
+ * // Error response for unexpected error
+ * Status: 500
+ * Response Body: { "error": "Unexpected error was caught" }
+>>>>>>> 1614702a420b93b7a377579fd29f02b718c6e546
  */
 const refreshTokenCallbacks: { [serviceId: number]: RefreshTokenCallback } = {
     1: async (tokens) => { 
@@ -101,7 +113,7 @@ const refreshTokens = async (req: Request, res: Response, next: NextFunction): P
     const userInfo : TokenData = (req as CustomRequest).user
 
     if (!userInfo) {
-        res.status(401).json({error: "User not found"})
+        res.status(401).json({error: "User not found"});
     }
     try {
         const { serviceId } = req.body
