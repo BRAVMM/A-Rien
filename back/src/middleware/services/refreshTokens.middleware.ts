@@ -27,7 +27,7 @@ import refreshSpotifyTokens from "./refreshCallback/spotifyRefresh.middleware";
  * 
  * // Error response for missing user or serviceId
  * Status: 401
- * Response Body: { "error": "User not found" } or { "error": "Unknown service" } or { "error": "Unknow service" }
+ * Response Body: { "error": "User not found" } or { "error": "Unknown service" } or { "error": "Unknown service" }
  *
  * // Error response for unexpected error
  * Status: 500
