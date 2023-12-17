@@ -31,7 +31,7 @@ namespace SpotifyReactions {
                 console.error("Missing data in reactionSpotifyAddToPlaylist");
                 return false;
             }
-            const response: any = await fetch("https://api.spotify.com/v1/users/" + actionDataParsed.userId + "/playlists/" + reactionDataParsed.playlistId + "/tracks?uris=" + actionDataParsed.trackUri, {
+            const response = await fetch("https://api.spotify.com/v1/users/" + actionDataParsed.userId + "/playlists/" + reactionDataParsed.playlistId + "/tracks?uris=" + actionDataParsed.trackUri, {
                 method: "POST",
                 headers: {
                     "Authorization": "Bearer " + oauthToken
