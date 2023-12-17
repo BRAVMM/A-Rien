@@ -5,8 +5,11 @@ import {Sequelize, DataTypes, Model} from 'sequelize';
 class OAuth extends Model {
     public id!: number;
     public serviceId!: number;
-    public encryptedOAuthToken!: string;
-    public iv!: string;
+    public encryptedAccessToken!: string;
+    public encryptedRefreshToken!: string;
+    public ivAccess!: string;
+    public ivRefresh!: string;
+    public expiresIn!: number;
     public ownerID!: number;
 
     public static initialize(sequelize: Sequelize) {
@@ -22,12 +25,24 @@ class OAuth extends Model {
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },
-                encryptedOAuthToken: {
+                encryptedAccessToken: {
                     type: DataTypes.STRING(1024),
                     allowNull: false,
                 },
-                iv: {
+                encryptedRefreshToken: {
+                    type: DataTypes.STRING(1024),
+                    allowNull: false,
+                },
+                ivAccess: {
                     type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                ivRefresh: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                expiresIn: {
+                    type: DataTypes.INTEGER,
                     allowNull: false,
                 },
                 ownerID: {

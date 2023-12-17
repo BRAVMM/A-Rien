@@ -7,4 +7,11 @@ interface TokenData {
     exp: number;
 }
 
-export {TokenData}
+interface OAuthData {
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: number;
+    serviceId: number;
+}
+
+export {TokenData, OAuthData}

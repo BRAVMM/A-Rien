@@ -11,23 +11,28 @@ import { EncryptionService } from '../../services/encryption.service';
 const SPOTIFY_ID : number = 1
 
 const registerToken = async (req: Request, res: Response): Promise<void> => {
-    const { token } = req.body
     const userInfo : TokenData = (req as CustomRequest).user
 
-    if (!token) {
-        res.status(400).json({ error: "No token provided" })
-    }
     try {
-        const encryptedToken : { iv: string; content: string } = EncryptionService.encrypt(token)
+        const { accessToken, refreshToken, expiresIn, serviceId} = req.body
+        const encryptedAccessToken : { iv: string; content: string } = EncryptionService.encrypt(accessToken)
+        const encryptedRefreshToken : { iv: string; content: string } = EncryptionService.encrypt(refreshToken)
+
+        if (!accessToken || !refreshToken || !expiresIn) {
+            res.status(400).json({ error: "No tokens provided" })
+        }
         const OAuthData = await OAuth.create({
             serviceId : SPOTIFY_ID,
-            encryptedOAuthToken : encryptedToken.content,
-            iv : encryptedToken.iv,
+            encryptedAccessToken : encryptedAccessToken.content,
+            encryptedRefreshToken: encryptedRefreshToken.content,
+            ivAccess : encryptedAccessToken.iv,
+            ivRefresh : encryptedRefreshToken.iv,
+            expiresIn : expiresIn,
             ownerID : userInfo.userId,
         });
-        res.status(201).json(OAuthData)
+        console.log(refreshToken)
+        res.status(201).json({id: OAuthData.id})
     } catch (error) {
-        console.log(error)
         res.status(500).json({ error: "An unexpected error occurred" })
     }
 }
