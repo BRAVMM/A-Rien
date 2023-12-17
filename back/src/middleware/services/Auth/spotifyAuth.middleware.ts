@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { OAuthData } from "../../../interfaces/token.interface";
 import { OAuth } from "../../../models/oauth.model";
 import { EncryptionService } from "../../../services/encryption.service";
+import getUserEmail from "../../../services/API/Spotify/getUserEmail.service";
+import authenticateUser from "../../../services/API/Spotify/authService.service";
 
 /**
  * Middleware that authenticates with Spotify using an authorization code.
@@ -25,40 +27,17 @@ import { EncryptionService } from "../../../services/encryption.service";
  * Response Body: { "error": "Unexpected error was caught" }
  */
 const spotifyAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const SERVICE_ID = 1
 
     try {
-        const code = req.body.code;
-        const SPOTIFY_REDIRECT_URI : string = process.env.SPOTIFY_REDIRECT_URI ?? ''
+        const code : string = req.body.code;
 
         if (!code) {
             res.status(401).json({error: "Code not found in the request."})
         }
-        const spotifyResponse = await fetch('https://accounts.spotify.com/api/token', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')
-            },
-            body: new URLSearchParams({
-                code: code,
-                redirect_uri: SPOTIFY_REDIRECT_URI,
-                grant_type: 'authorization_code'
-            }).toString()
-        });
-
-        const data = await spotifyResponse.json();
-        const oauthData: OAuthData = {
-            accessToken: data.access_token,
-            refreshToken: data.refresh_token,
-            expiresIn: data.expires_in,
-            serviceId: SERVICE_ID,
-        }
-        
-        req.body = oauthData 
+        req.body = await authenticateUser(code)
         next()
     } catch (err) {
-        res.status(500).json({error: 'Unexpected error was caught.'})
+        res.status(500).json({error: 'Spotify authentication failed.'})
     }
 }
 
@@ -81,25 +60,15 @@ const spotifyAlreadyAuth = async (tokens: OAuth[], newToken: string): Promise<vo
     var newUserEmail: string = ''
 
     try {
-        const newUserReponse = await fetch('https://api.spotify.com/v1/me', {
-            headers: { 'Authorization': `Bearer ${newToken}` }
-        });
-        const newUserData = await newUserReponse.json();
-
-        newUserEmail = newUserData.email
+        newUserEmail = await getUserEmail(newToken)
     } catch (error) {
         throw new Error('Failed to fetch new user')
     }
 
     try {
         for (const token of tokens) {
-            const accessToken = EncryptionService.decrypt(token.ivAccess, token.encryptedAccessToken);
-            const response = await fetch('https://api.spotify.com/v1/me', {
-                headers: { 'Authorization': `Bearer ${accessToken}` }
-            });
-
-            const userData = await response.json();
-            const userEmail = userData.email;
+            const accessToken: string = EncryptionService.decrypt(token.ivAccess, token.encryptedAccessToken);
+            const userEmail: string = await getUserEmail(accessToken)
 
             if (newUserEmail === userEmail) {
                 throw new Error('User already logged in')

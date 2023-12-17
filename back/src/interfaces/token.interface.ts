@@ -7,6 +7,9 @@ interface TokenData {
     exp: number;
 }
 
+/**
+ * Data of the request for routes to register a new token.
+ */
 interface OAuthData {
     accessToken: string;
     refreshToken: string;

@@ -8,9 +8,40 @@ import { TokenData } from '../../interfaces/token.interface';
 import { CustomRequest } from '../../interfaces/request.interface';
 import { EncryptionService } from '../../services/encryption.service';
 
-const SPOTIFY_ID : number = 1
-
-const registerToken = async (req: Request, res: Response): Promise<void> => {
+/**
+ * Middleware to register OAuth tokens for a user.
+ * This function takes access token, refresh token, and expiry time from the request body,
+ * encrypts these tokens, and then stores them in the database along with the service ID and user ID.
+ * It assumes the user has been authenticated and their information is available in the request.
+ *
+ * @param {Request} req - The Express request object containing the user's information and the OAuth tokens.
+ * @param {Response} res - The Express response object used for sending responses.
+ * 
+ * @throws Will send a 400 (Bad Request) response if any of the required tokens (access or refresh) or expiresIn is not provided in the request.
+ * @throws Will send a 500 (Internal Server Error) response if there is an unexpected error during the process.
+ *
+ * @example
+ * POST /api/registerToken
+ * Body: {
+ *   "accessToken": "user_access_token",
+ *   "refreshToken": "user_refresh_token",
+ *   "expiresIn": 3600,
+ *   "serviceId": 1
+ * }
+ * 
+ * // Successful response
+ * Status: 201
+ * Response Body: { "id": new_oauth_data_id }
+ * 
+ * // Error response for missing data
+ * Status: 400
+ * Response Body: { "error": "No tokens provided" }
+ *
+ * // Error response for server error
+ * Status: 500
+ * Response Body: { "error": "An unexpected error occurred" }
+ */
+const registerToken = async (req: Request, res: Response): Promise<Response> => {
     const userInfo : TokenData = (req as CustomRequest).user
 
     try {
@@ -19,10 +50,10 @@ const registerToken = async (req: Request, res: Response): Promise<void> => {
         const encryptedRefreshToken : { iv: string; content: string } = EncryptionService.encrypt(refreshToken)
 
         if (!accessToken || !refreshToken || !expiresIn) {
-            res.status(400).json({ error: "No tokens provided" })
+            return res.status(400).json({ error: "No tokens provided" })
         }
         const OAuthData = await OAuth.create({
-            serviceId : SPOTIFY_ID,
+            serviceId : serviceId,
             encryptedAccessToken : encryptedAccessToken.content,
             encryptedRefreshToken: encryptedRefreshToken.content,
             ivAccess : encryptedAccessToken.iv,
@@ -30,10 +61,9 @@ const registerToken = async (req: Request, res: Response): Promise<void> => {
             expiresIn : expiresIn,
             ownerID : userInfo.userId,
         });
-        console.log(refreshToken)
-        res.status(201).json({id: OAuthData.id})
+        return res.status(201).json({id: OAuthData.id})
     } catch (error) {
-        res.status(500).json({ error: "An unexpected error occurred" })
+        return res.status(500).json({ error: "An unexpected error occurred" })
     }
 }
 

@@ -9,7 +9,6 @@ import UserRouter from './route/user.route';
 import ServicesRouter from './route/services.route';
 import {TaskScheduler} from './services/taskScheduler';
 
-
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -21,7 +20,7 @@ if (isNaN(INTERVAL)) {
 }
 
 // Initialize the database connection
-db.sequelize.sync()
+db.sequelize.sync({force: true})
     .then(() => {
         console.log('Database sync completed.');
     })

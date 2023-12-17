@@ -1,4 +1,5 @@
 import { OAuth } from "../../../models/oauth.model";
+import getRefreshedToken from "../../../services/API/Spotify/refreshToken.service";
 import { EncryptionService } from "../../../services/encryption.service";
 
 /**
@@ -19,24 +20,11 @@ import { EncryptionService } from "../../../services/encryption.service";
  * // On failure, an error is thrown with the message "Could not refresh spotify tokens".
  */
 const refreshSpotifyTokens = async (tokens : OAuth[]): Promise<void> => {
-
     for (const token of tokens) {
-        const spotifyResponse = await fetch('https://accounts.spotify.com/api/token', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + Buffer.from(`${process.env.SPOTIFY_CLIENT_ID}:${process.env.SPOTIFY_CLIENT_SECRET}`).toString('base64')
-            },
-            body: new URLSearchParams({
-                refresh_token: EncryptionService.decrypt(token.ivRefresh, token.encryptedRefreshToken),
-                grant_type: 'refresh_token',
-            }).toString()
-        });
+        const newAccessToken = await getRefreshedToken(EncryptionService.decrypt(token.ivRefresh, token.encryptedRefreshToken))
 
-        const data = await spotifyResponse.json()
-
-        if (data.access_token) {
-            const encryptedAccessToken : {iv: string, content: string} = EncryptionService.encrypt(data.access_token)
+        if (newAccessToken) {
+            const encryptedAccessToken : {iv: string, content: string} = EncryptionService.encrypt(newAccessToken)
 
             token.update({
                 encryptedAccessToken: encryptedAccessToken.content,

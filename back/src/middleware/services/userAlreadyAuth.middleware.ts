@@ -6,7 +6,6 @@ import { EncryptionService } from "../../services/encryption.service";
 import refreshSpotifyTokens from "./refreshCallback/spotifyRefresh.middleware";
 import { spotifyAlreadyAuth } from "./Auth/spotifyAuth.middleware";
 
-
 /**
  * Type definition for a callback function used to check if a user is already authenticated.
  * This function takes an array of OAuth tokens and a new access token as parameters
@@ -75,6 +74,7 @@ const userAlreadyAuth = async (req: Request, res: Response, next: NextFunction):
 
         const tokens : OAuth[] = await OAuth.findAll({
             where: {
+                ownerID: userInfo.userId,
                 serviceId: serviceId,
             }
         });
