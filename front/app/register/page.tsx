@@ -44,7 +44,6 @@ export default function Register() {
     };
 
     try {
-      console.log(process.env.NEXT_PUBLIC_API)
       const response = await fetch(
         process.env.NEXT_PUBLIC_API + "/users/register",
         {
