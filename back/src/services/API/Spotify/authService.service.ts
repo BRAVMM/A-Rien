@@ -15,6 +15,10 @@ const authenticateUser = async (code: string): Promise<OAuthData> => {
     const SERVICE_ID = 1
     const SPOTIFY_REDIRECT_URI : string = process.env.SPOTIFY_REDIRECT_URI ?? ''
 
+    if (!process.env.SPOTIFY_REDIRECT_URI && !process.env.SPOTIFY_CLIENT_ID && SPOTIFY_REDIRECT_URI.length === 0) {
+        throw new Error ("Bad env configuration")
+    }
+
     const spotifyResponse = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
         headers: {

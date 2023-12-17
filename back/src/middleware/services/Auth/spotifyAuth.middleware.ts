@@ -62,7 +62,7 @@ const spotifyAlreadyAuth = async (tokens: OAuth[], newToken: string): Promise<vo
     try {
         newUserEmail = await getUserEmail(newToken)
     } catch (error) {
-        throw new Error('Failed to fetch new user')
+        throw error
     }
 
     try {
@@ -75,7 +75,7 @@ const spotifyAlreadyAuth = async (tokens: OAuth[], newToken: string): Promise<vo
             }
         }
     } catch (error) {
-        throw new Error('User already logged in')
+        throw error
     }
 }
 
