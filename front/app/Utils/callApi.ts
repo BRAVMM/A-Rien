@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import DataBody from './interface/dataBody.interface';
 
 
 /**
@@ -72,37 +73,20 @@ export async function loginUser(username: string, password: string): Promise<any
  * }
  * ```
  */
-export async function registerTokenService(token: string, serviceRoute : string): Promise<any> {
-  // Prepare the request data
-  const data = {
-    token: token,
-  };
+export async function registerTokenService(data : DataBody, serviceRoute : string): Promise<any> {
   
-  const bearer = Cookies.get('token')
   try {
-    // Make a POST request to the services endpoint with the provided data
+    const bearer = Cookies.get('token')
+
     const response = await fetch(process.env.NEXT_PUBLIC_API + serviceRoute, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${bearer}`,
       },
-      body: JSON.stringify(data),
-      
+      body: data.getString(),
     });
-
-    // Check if the response is OK (HTTP status code 2xx)
-    if (response.ok) {
-      // Parse the JSON response and return it if successful
-      const json = await response.json();
-      return json;
-    } else {
-      console.log(response)
-      // If the response is not OK, throw an error with a message
-      throw new Error("Token register failed");
-    }
   } catch (error) {
-    // Handle any exceptions that may occur during the request
     throw error;
   }
 }

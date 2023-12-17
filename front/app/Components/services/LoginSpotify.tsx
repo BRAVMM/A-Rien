@@ -1,40 +1,33 @@
 "use client";
 
 import { registerTokenService } from '@/app/Utils/callApi';
+import { SpotifyDataBody } from '@/app/Utils/interface/dataBody.interface';
 import React, { useEffect, useState } from 'react';
 
-const AUTH_ENDPOINT: string = "https://accounts.spotify.com/authorize";
-const RESPONSE_TYPE: string = "token";
-const REGISTER_TOKEN_ROUTE: string = "/services/spotify/registerToken"
+const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
+const RESPONSE_TYPE = "code";
+const REGISTER_TOKEN_ROUTE = "/services/spotify/registerToken";
 
 const SpotifyButtonOAuth: React.FC = () => {
-    const [token, setToken] = useState('');
+    const [code, setCode] = useState<string>('');
 
     useEffect(() => {
-        const hash: string = window.location.hash;
-        let token: string | null = window.localStorage.getItem("token");
+        const queryParams = new URLSearchParams(window.location.search);
+        const queryCode: string | null = queryParams.get('code');
 
-        if (!token && hash) {
-            token = hash.substring(1).split("&").find(elem => elem.startsWith("access_token"))!.split("=")[1];
-
-            registerTokenService(token, REGISTER_TOKEN_ROUTE)
+        if (queryCode && queryCode !== code) {
+            try {
+                registerTokenService(new SpotifyDataBody(queryCode), REGISTER_TOKEN_ROUTE);
+            } catch(error) {
+                console.log(error)
+            }
         }
-
-        setToken(token ?? "");
-
-    }, []);
-
-    const logout = (): void => {
-        setToken("");
-        window.localStorage.removeItem("token");
-    };
+    }, [code]);
 
     return (
         <div className="App">
             <header className="App-header">
-                {!token ?
-                    <a href={`${AUTH_ENDPOINT}?client_id=${process.env.SPOTIFY_CLIENT_ID}&redirect_uri=${process.env.SPOTIFY_REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Login to Spotify</a>
-                    : <button onClick={logout}>Logout</button>}
+                <a href={`${AUTH_ENDPOINT}?client_id=${process.env.NEXT_SPOTIFY_CLIENT_ID}&redirect_uri=${process.env.NEXT_SPOTIFY_REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>Login to Spotify</a>
             </header>
         </div>
     );
