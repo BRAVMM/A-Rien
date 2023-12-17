@@ -12,6 +12,7 @@ class SpotifyDataBody implements DataBody {
         return JSON.stringify({code : this.code})
     }
 }
+
 export type { DataBody };
 
 export { SpotifyDataBody };

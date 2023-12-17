@@ -1,7 +1,6 @@
 import Cookies from 'js-cookie';
 import DataBody from './interface/dataBody.interface';
 
-
 /**
  * loginUser - Function to perform a user login by making an API call.
  *
