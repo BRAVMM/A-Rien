@@ -7,6 +7,7 @@ import AreaIcon from "../Components/AreaIcon";
 import { useRouter } from "next/navigation";
 import TextSection from "../Components/TextSection";
 import { AreaDetailsInterface } from "../Interfaces/ActionReaction..Interface";
+import SpotifyButtonOAuth from "../Components/services/LoginSpotify";
 
 function getAreas() {
   let _areas: AreaDetailsInterface[] = [
@@ -69,7 +70,6 @@ function getAreas() {
   return _areas;
 }
 
-
 export default function Services() {
   const [areas, setAreas] = useState<AreaDetailsInterface[]>([]);
   const router = useRouter();
@@ -84,6 +84,7 @@ export default function Services() {
         <div className="flex items-center justify-start ml-[8%] mt-[5%] h-1/6 w-full">
           <Image src="/logo1.svg" alt="Logo" width={100} height={100} />
         </div>
+        <SpotifyButtonOAuth/>
         <div className="flex items-center justify-center h-1/6 text-white text-3xl truncate">
           <p>Select a service</p>
         </div>

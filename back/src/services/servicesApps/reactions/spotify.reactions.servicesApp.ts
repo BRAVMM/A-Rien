@@ -19,7 +19,7 @@ namespace SpotifyReactions {
      * @returns {Promise<boolean>} - The result of the reaction
      */
     export const reactionSpotifyAddToPlaylist = async (ownerId: number, oauthId: number, actionData: JSON, reactionData: JSON): Promise<boolean> => {
-        const oauthToken: string | null = await OAuthService.getDecryptedOAuthTokenFromId(oauthId, ownerId);
+        const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
 
         if (oauthToken === null) {
             console.error("OAuth token not found");
