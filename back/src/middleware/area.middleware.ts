@@ -6,6 +6,7 @@
 import {Service} from "../models/service.model";
 import {Action} from "../models/action.model";
 import {Reaction} from "../models/reaction.model";
+import {OAuth} from "../models/oauth.model";
 
 /**
  * @namespace AreaMiddleware
@@ -21,6 +22,78 @@ namespace AreaMiddleware {
             return await Service.findAll();
         } catch (error) {
             console.error('Error retrieving services:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Get Service from id
+     * @param serviceId - The id of the service
+     * @returns {Promise<Service | null>}
+     */
+    export const getServiceFromId = async (serviceId: number): Promise<Service | null> => {
+        try {
+            return await Service.findOne(
+                {
+                    where: {
+                        id: serviceId
+                    }
+                }
+            );
+        } catch (error) {
+            console.error(`Error retrieving service with ID ${serviceId}:`, error);
+            return null;
+        }
+    }
+
+    /**
+     * Get Service from action id
+     * @param actionId - The id of the action
+     * @returns {Promise<Service | null>}
+     */
+    export const getServiceFromActionId = async (actionId: number): Promise<Service | null> => {
+        try {
+            const services: Service[] | null = await Service.findAll();
+
+            if (!services) {
+                return null;
+            }
+            let service: Service | null = null;
+
+            services.forEach((s) => {
+                if (s.actionsIds.includes(actionId)) {
+                    service = s;
+                }
+            });
+            return service;
+        } catch (error) {
+            console.error(`Error retrieving service with action ID ${actionId}:`, error);
+            return null;
+        }
+    }
+
+    /**
+     * Get Service from reaction id
+     * @param reactionId - The id of the reaction
+     * @returns {Promise<Service | null>}
+     */
+    export const getServiceFromReactionId = async (reactionId: number): Promise<Service | null> => {
+        try {
+            const services: Service[] | null = await Service.findAll();
+
+            if (!services) {
+                return null;
+            }
+            let service: Service | null = null;
+
+            services.forEach((s) => {
+                if (s.reactionsIds.includes(reactionId)) {
+                    service = s;
+                }
+            });
+            return service;
+        } catch (error) {
+            console.error(`Error retrieving service with reaction ID ${reactionId}:`, error);
             return null;
         }
     }
@@ -82,7 +155,7 @@ namespace AreaMiddleware {
             if (!service) {
                 return null;
             }
-            const actions: number[] = service.actionsId
+            const actions: number[] = service.actionsIds;
             return await Action.findAll(
                 {
                     where: {
@@ -132,6 +205,39 @@ namespace AreaMiddleware {
             );
         } catch (error) {
             console.error(`Error retrieving reaction with ID ${reactionId}:`, error);
+            return null;
+        }
+    }
+
+    /**
+     * Get Oauth ids from service id
+     * @param serviceId - The id of the service
+     * @param ownerId - The id of the owner
+     * @returns {Promise<number[] | null>}
+     * @throws {Error} If the service is not found
+     */
+    export const getOauthIdsFromServiceId = async (serviceId: number, ownerId: number): Promise<number[] | null> => {
+        try {
+            let oauthIds: number[] = [];
+
+            const OAuths: OAuth[] | null = await OAuth.findAll(
+                {
+                    where: {
+                        serviceId: serviceId,
+                        ownerId: ownerId,
+                    }
+                }
+            );
+            console.log("OAUTHs : " + OAuths);
+            if (!OAuths) {
+                return null;
+            }
+            OAuths.forEach((OAuth) => {
+                oauthIds.push(OAuth.id);
+            });
+            return oauthIds;
+        } catch (error) {
+            console.error(`Error retrieving oauthIds with service ID ${serviceId}:`, error);
             return null;
         }
     }

@@ -3,6 +3,7 @@ import { ModalDataInterface, ServiceActionInterface, ServiceReactionInterface } 
 import AREAForm from "./AREAForm";
 
 import actionReactionJsonDataService from "../Utils/actionReactionJsonData.service";
+import {storeArea} from "@/app/Utils/callApi";
 
 
 const ModalUI: React.FC<{
@@ -16,21 +17,19 @@ const ModalUI: React.FC<{
     SELECT_SERVICE_ACTION_DATA,
     SELECT_SERVICE_REACTION,
     SELECT_SERVICE_REACTION_DATA,
+    ENTER_AREA_NAME_AND_VALIDATE,
     VALIDATE_OR_ADD_FORM
   }
 
+  const [userId, setUserId] = useState<number>();
   const [actionJsonData, setActionJsonDatas] = useState<ServiceActionInterface[]>();
   const [reactionJsonData, setReactionJsonDatas] = useState<ServiceReactionInterface[]>();
   const [step, setStep] = useState<number>(Step.SELECT_SERVICE_ACTION);
   const [action, setAction] = useState<ServiceActionInterface>();
-  const [actionTokenIds, setActionTokenIds] = useState<number[]>();
+  const [actionTokenIds, setActionTokenIds] = useState<number[]>([]);
   const [actionDatas, setActionDatas] = useState<string>("");
   const [reactions, setReactions] = useState<ServiceReactionInterface[]>();
   const [reactionDatas, setReactionDatas] = useState<string[]>();
-
-  if (!isOpen || !ModalData) {
-    return null;
-  }
 
   /* Clear functions */
   /**
@@ -116,6 +115,10 @@ const ModalUI: React.FC<{
     const newReactionDatas: string[] = [data, ...reactionDatas || []];
 
     setReactionDatas(newReactionDatas);
+  }
+
+  if (!isOpen || !ModalData) {
+    return null;
   }
 
   // const actionJson: ServiceActionInterface[] = [
@@ -253,10 +256,28 @@ const ModalUI: React.FC<{
           Add an other reaction
         </button>
         <button
-          onClick={() => submitAREA()}
+          onClick={() => setStep(Step.ENTER_AREA_NAME_AND_VALIDATE)}
         >
           Submit AREA
         </button>
+      </div>
+    );
+  }
+
+  const HTMLenterAreaName = () => {
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <AREAForm
+            fields={[
+                {
+                title: "AREA name",
+                type: "string"
+                }
+            ]}
+            setDatas={(data: string) => {
+              submitAREA(data);
+            }}
+        ></AREAForm>
       </div>
     );
   }
@@ -266,15 +287,33 @@ const ModalUI: React.FC<{
    * @function submitAREA
    * @description Submit AREA to API and close modal
    */
-  const submitAREA = () => {
+  const submitAREA = async (name: string) => {
     // CALL API TO STORE AREA
     console.log("action", action);
     console.log("reactions", reactions);
     console.log("actionDatas", actionDatas);
     console.log("reactionDatas", reactionDatas);
-    setStep(Step.SELECT_SERVICE_ACTION);
-    clearDatas();
+    if (action === undefined || reactions === undefined || actionDatas === "" || reactionDatas === undefined) {
+      console.error("Error in submitAREA");
+      return;
+    }
+    let newActionTokenIds: number[] = [];
+
+    newActionTokenIds.push((await actionReactionJsonDataService.getOauthIdsFromActionId(action.id))[0]);
+    for (const reaction of reactions) {
+      newActionTokenIds.push((await actionReactionJsonDataService.getOauthIdsFromReactionId(reaction.id))[0]);
+    }
+    console.log("newActionTokenIds", newActionTokenIds);
+    console.log("actionTokenIds", actionTokenIds);
+    const reactionIds: number[] = reactions.map(reaction => reaction.id);
+
+    if (newActionTokenIds.length === 0) {
+        console.error("Error in submitAREA: actionTokenIds is empty");
+        return;
+    }
     onClose();
+    await storeArea(name, action.id, reactionIds, actionDatas, reactionDatas, newActionTokenIds);
+    clearDatas();
   }
 
   return (
@@ -299,6 +338,7 @@ const ModalUI: React.FC<{
             {step === Step.SELECT_SERVICE_REACTION && HTMLselectReaction()}
             {step === Step.SELECT_SERVICE_REACTION_DATA && HTMLselectServiceReactionDataForm()}
             {step === Step.VALIDATE_OR_ADD_FORM && HTMLvalidateOrAddForm()}
+            {step === Step.ENTER_AREA_NAME_AND_VALIDATE && HTMLenterAreaName()}
           </div>
         </div>
       </div>

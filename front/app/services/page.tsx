@@ -117,7 +117,7 @@ export default function Services() {
 
     services.then((services) => {
       setServicesList(services);
-      console.log("services", services);
+      console.log("services = ", services);
     });
   }, []);
 

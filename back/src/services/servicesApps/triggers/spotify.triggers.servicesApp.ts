@@ -64,8 +64,10 @@ namespace SpotifyTriggers {
      * @param ownerId - The id of the owner
      * @returns {SpotifyTriggerData} - The data of the Spotify trigger
      */
-    function getOrCreateUserData(ownerId: number): SpotifyTriggerData {
+    function getOrCreateUserData(ownerId: number): {userData: SpotifyTriggerData, isNew: boolean} {
         const userId = ownerId.toString();
+        let isNew = false;
+
         if (!usersSpotifyTriggerData[userId]) {
             usersSpotifyTriggerData[userId] = {
                 userId: userId,
@@ -74,8 +76,9 @@ namespace SpotifyTriggers {
                 artistLikedLength: 0,
                 playlistLikedLength: 0
             };
+            isNew = true;
         }
-        return usersSpotifyTriggerData[userId];
+        return {userData: usersSpotifyTriggerData[userId], isNew: isNew};
     }
 
     /**
@@ -85,20 +88,25 @@ namespace SpotifyTriggers {
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
-    export const checkSpotifyNewSavedSong = async (ownerId: number, oauthId: number): Promise<boolean> => {
+    export const checkSpotifyNewSavedSong = async (ownerId: number, oauthId: number): Promise<{result: boolean, data: any}> => {
         try {
-            const {length} = await getSpotifyEntityLength(oauthId, ownerId, "/me/tracks");
-            const userData = getOrCreateUserData(ownerId);
+            const {length, json} = await getSpotifyEntityLength(oauthId, ownerId, "/me/tracks");
+            const {userData, isNew} = getOrCreateUserData(ownerId);
+
             if (userData.trackLikedLength < length) {
                 userData.trackLikedLength = length;
+                if (isNew) {
+                    return {result: false, data: null};
+                }
             } else {
-                return false;
+                return {result: false, data: null};
             }
+            const lastTrackData = json.items[0].track;
+            return {result: true, data: lastTrackData};
         } catch (e) {
             console.error("Error in checkSpotifyNewSavedSong:", e);
-            return false;
+            return {result: false, data: null};
         }
-        return true;
     }
 
     /**
@@ -108,20 +116,24 @@ namespace SpotifyTriggers {
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
-    export const checkSpotifyNewSavedAlbum = async (ownerId: number, oauthId: number): Promise<boolean> => {
+    export const checkSpotifyNewSavedAlbum = async (ownerId: number, oauthId: number): Promise<{result: boolean, data: any}> => {
         try {
-            const {length} = await getSpotifyEntityLength(oauthId, ownerId, "/me/albums");
-            const userData = getOrCreateUserData(ownerId);
+            const {length, json} = await getSpotifyEntityLength(oauthId, ownerId, "/me/albums");
+            const {userData, isNew} = getOrCreateUserData(ownerId);
+
             if (userData.albumLikedLength < length) {
                 userData.albumLikedLength = length;
+                if (isNew) {
+                    return {result: false, data: null};
+                }
             } else {
-                return false;
+                return {result: false, data: null};
             }
+            return {result: true, data: json.items[0]};
         } catch (e) {
             console.error("Error in checkSpotifyNewSavedAlbum:", e);
-            return false;
+            return {result: false, data: null};
         }
-        return true;
     }
 
     /**
@@ -131,17 +143,21 @@ namespace SpotifyTriggers {
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
-    export const checkSpotifyNewSavedArtist = async (ownerId: number, oauthId: number, data: any): Promise<boolean> => {
+    export const checkSpotifyNewSavedArtist = async (ownerId: number, oauthId: number, data: any): Promise<{result: boolean, data: any}> => {
         try {
             const {length, json} = await getSpotifyEntityLength(oauthId, ownerId, "/me/albums");
-            const userData = getOrCreateUserData(ownerId);
+            const {userData, isNew} = getOrCreateUserData(ownerId);
+
             if (data.gender) {
                 for (const artist of json.artists.items) {
                     if (artist.genres.includes(data.gender)) {
                         if (userData.artistLikedLength < length) {
                             userData.artistLikedLength = length;
+                            if (isNew) {
+                                return {result: false, data: null};
+                            }
                         } else {
-                            return false;
+                            return {result: false, data: null};
                         }
                     }
                 }
@@ -149,13 +165,14 @@ namespace SpotifyTriggers {
             if (userData.artistLikedLength < length) {
                 userData.artistLikedLength = length;
             } else {
-                return false;
+                return {result: false, data: null};
             }
+            const artist = json.items[0];
+            return {result: true, data: artist};
         } catch (e) {
             console.error("Error in checkSpotifyNewSavedArtist:", e);
-            return false;
+            return {result: false, data: null};
         }
-        return true;
     }
 
     /**
@@ -164,20 +181,30 @@ namespace SpotifyTriggers {
      * @param oauthId - The oauth id of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
-    export const checkSpotifyNewSavedPlaylist = async (ownerId: number, oauthId: number): Promise<boolean> => {
+    export const checkSpotifyNewSavedPlaylist = async (ownerId: number, oauthId: number): Promise<{result: boolean, data: any}> => {
         try {
-            const {length} = await getSpotifyEntityLength(oauthId, ownerId, "/me/playlists");
-            const userData = getOrCreateUserData(ownerId);
+            const {length, json} = await getSpotifyEntityLength(oauthId, ownerId, "/me/playlists");
+            const {userData, isNew} = getOrCreateUserData(ownerId);
+
             if (userData.playlistLikedLength < length) {
                 userData.playlistLikedLength = length;
+                if (isNew) {
+                    return {result: false, data: null};
+                }
             } else {
-                return false;
+                return {result: false, data: null};
             }
+            if (!json.items[0]) {
+                return {result: false, data: null};
+            }
+            const playlist = json.items[0];
+            let data = playlist;
+            data.playlistUri = playlist.uri;
+            return {result: true, data: data};
         } catch (e) {
             console.error("Error in checkSpotifyNewSavedPlaylist:", e);
-            return false;
+            return {result: false, data: null};
         }
-        return true;
     }
 }
 

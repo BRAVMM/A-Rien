@@ -39,7 +39,6 @@ const getActionsFromServiceId = async (req: Request, res: Response): Promise<voi
     try {
         const {serviceId} = req.params;
 
-
         if (!serviceId || isNaN(parseInt(serviceId))) {
             res.status(400).json({error: "Please provide serviceId"});
             return;
@@ -86,17 +85,101 @@ const getReactionsFromActionId = async (req: Request, res: Response): Promise<vo
     }
 }
 
+const getOauthIdsFromServiceId = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const {serviceId} = req.params;
+        const ownerId = (req as CustomRequest).user.userId;
+
+        if (!serviceId || isNaN(parseInt(serviceId)) || !ownerId) {
+            res.status(400).json({error: "Please provide serviceId"});
+            return;
+        }
+        const service: Service | null = await AreaMiddleware.getServiceFromId(parseInt(serviceId));
+
+        if (!service) {
+            res.status(400).json({error: "Service not found"});
+            return;
+        }
+        const oauthIds: number[] | null = await AreaMiddleware.getOauthIdsFromServiceId(parseInt(serviceId), ownerId);
+
+        if (!oauthIds) {
+            res.status(400).json({error: "OauthIds not found"});
+            return;
+        }
+        res.status(200).json(oauthIds);
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
+const getOauthIdsFromActionId = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const {actionId} = req.params;
+        const ownerId = (req as CustomRequest).user.userId;
+
+        if (!actionId || isNaN(parseInt(actionId)) || !ownerId) {
+            res.status(400).json({error: "Please provide serviceId"});
+            return;
+        }
+        const service: Service | null = await AreaMiddleware.getServiceFromActionId(parseInt(actionId));
+
+        if (!service) {
+            res.status(400).json({error: "Service not found"});
+            return;
+        }
+        const oauthIds: number[] | null = await AreaMiddleware.getOauthIdsFromServiceId(service.id, ownerId);
+
+        if (!oauthIds) {
+            res.status(400).json({error: "OauthIds not found"});
+            return;
+        }
+        res.status(200).json(oauthIds);
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
+const getOauthIdsFromReactionId = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const {reactionId} = req.params;
+        const ownerId = (req as CustomRequest).user.userId;
+
+        if (!reactionId || isNaN(parseInt(reactionId)) || !ownerId) {
+            res.status(400).json({error: "Please provide serviceId"});
+            return;
+        }
+        const service: Service | null = await AreaMiddleware.getServiceFromReactionId(parseInt(reactionId));
+
+        if (!service) {
+            res.status(400).json({error: "Service not found"});
+            return;
+        }
+        const oauthIds: number[] | null = await AreaMiddleware.getOauthIdsFromServiceId(service.id, ownerId);
+
+        if (!oauthIds) {
+            res.status(400).json({error: "OauthIds not found"});
+            return;
+        }
+        res.status(200).json(oauthIds);
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
 const storeArea = async (req: Request, res: Response): Promise<void> => {
     try {
         const user: TokenData = (req as CustomRequest).user;
         const name: string = req.body.name;
         const actionId: number = req.body.actionId;
-        const reactionId: number = req.body.reactionId;
+        const reactionIds: number[] = req.body.reactionIds;
         const actionData: ActionData[] = req.body.actionData;
         const reactionsData: ReactionData[] = req.body.reactionsData;
         const oauthTokens: number[] = req.body.oauthTokens;
 
-        if (!name || !actionId || !reactionId || !actionData || !reactionsData || !oauthTokens) {
+        if (!name || !actionId || !reactionIds || !actionData || !reactionsData || !oauthTokens) {
             res.status(400).json({error: "Please provide name, actionId, reactionId, actionData and reactionData"});
             return;
         }
@@ -106,11 +189,13 @@ const storeArea = async (req: Request, res: Response): Promise<void> => {
             res.status(400).json({error: "Action not found"});
             return;
         }
-        const reaction: Reaction | null = await AreaMiddleware.getReactionFromId(reactionId);
 
-        if (!reaction) {
-            res.status(400).json({error: "Reaction not found"});
-            return;
+        for (let i: number = 0; i < reactionIds.length; i++) {
+            const reaction: Reaction | null = await AreaMiddleware.getReactionFromId(reactionIds[i]);
+            if (!reaction) {
+                res.status(400).json({error: "Reaction not found"});
+                return;
+            }
         }
         let reactionDataIds: number[] = [];
 
@@ -119,7 +204,7 @@ const storeArea = async (req: Request, res: Response): Promise<void> => {
             const reactionDataIdTemp: number = await ReactionData.create({
                 ownerId: user.userId,
                 data: reactionData,
-                reactionId: reactionId,
+                reactionId: reactionIds[i],
                 title: name,
                 isActivated: true,
                 oauthId: oauthTokens[i + 1]
@@ -143,4 +228,4 @@ const storeArea = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
-export {getActionsFromServiceId, getReactionsFromActionId, getServices};
+export {getActionsFromServiceId, getReactionsFromActionId, getServices, storeArea, getOauthIdsFromServiceId, getOauthIdsFromActionId, getOauthIdsFromReactionId};
