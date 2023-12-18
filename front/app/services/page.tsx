@@ -6,7 +6,7 @@ import IconService from "../Components/IconService";
 import AreaIcon from "../Components/AreaIcon";
 import { useRouter } from "next/navigation";
 import TextSection from "../Components/TextSection";
-import { AreaDetailsInterface } from "../Interfaces/ActionReaction..Interface";
+import { AreaDetailsInterface } from "../Interfaces/AreaDetails.Interface";
 import SpotifyButtonOAuth from "../Components/services/LoginSpotify";
 
 function getAreas() {

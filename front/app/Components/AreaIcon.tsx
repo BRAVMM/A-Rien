@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image"; // Import from next/image
-import { AreaDetailsInterface } from "../Interfaces/ActionReaction..Interface";
+import { AreaDetailsInterface } from "../Interfaces/AreaDetails.Interface";
 
 function AreaIcon({ id, image, name, status }: AreaDetailsInterface) {
   return (
@@ -14,7 +14,7 @@ function AreaIcon({ id, image, name, status }: AreaDetailsInterface) {
       <div className="flex-row basis-2/3">
         <Image src={image} alt="Logo" width={100} height={100} />
       </div>
-      <p className="text-3xl font-bold justify-center basis-1/3">{name}</p>
+      <p className="text-3xl font-bold text-center basis-1/3">{name}</p>
     </div>
   );
 }
