@@ -17,13 +17,33 @@ const usersSpotifyTriggerData: Record<string, SpotifyTriggerData> = {};
  */
 namespace SpotifyTriggers {
     /**
+     * Get the length of the saved playlist
+     * @private - The length of the saved playlist
+     * @returns {Promise<number>} - The length of the saved playlist
+     */
+    async function getSpotifyEntityLength(oauthId: number, ownerId: number, url: string): Promise<{length: number, json: any}> {
+        let offset = 0;
+        let total = 0;
+        let length = 0;
+        let json: any;
+
+        do {
+            json = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + url + "?limit=50" + "&offset=" + offset);
+            total = json.total;
+            offset += 50;
+            length += total;
+        } while (total === 50);
+        return {length, json};
+    }
+
+    /**
      * Fetch data from the Spotify API with OAuth
      * @param oauthId - The id of the OAuth
      * @param ownerId - The id of the owner
      * @param url - The url to fetch
      * @returns {Promise<any>} - The response of the fetch
      */
-    async function fetchWithOAuth(oauthId: number, ownerId: number, url: string): Promise<any> {
+    async function fetchWithOAuth(oauthId: number, ownerId: number, url: string): Promise<number> {
         const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
         if (oauthToken === null) {
             throw new Error("OAuth token not found");
@@ -38,7 +58,7 @@ namespace SpotifyTriggers {
         if (!response.ok) {
             throw new Error(`Spotify API responded with status: ${response.status}`);
         }
-        return response.json();
+        return await response.json();
     }
 
     /**
@@ -69,10 +89,10 @@ namespace SpotifyTriggers {
      */
     export const checkSpotifyNewSavedSong = async (ownerId: number, oauthId: number): Promise<boolean> => {
         try {
-            const json = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + "/me/tracks");
+            const {length} = await getSpotifyEntityLength(oauthId, ownerId, "/me/tracks");
             const userData = getOrCreateUserData(ownerId);
-            if (userData.TrackLikedLength !== json.items.length) {
-                userData.TrackLikedLength = json.items.length;
+            if (userData.TrackLikedLength < length) {
+                userData.TrackLikedLength = length;
             } else {
                 return false;
             }
@@ -92,10 +112,10 @@ namespace SpotifyTriggers {
      */
     export const checkSpotifyNewSavedAlbum = async (ownerId: number, oauthId: number): Promise<boolean> => {
         try {
-            const json = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + "/me/albums");
+            const {length} = await getSpotifyEntityLength(oauthId, ownerId, "/me/albums");
             const userData = getOrCreateUserData(ownerId);
-            if (userData.AlbumLikedLength !== json.items.length) {
-                userData.AlbumLikedLength = json.items.length;
+            if (userData.AlbumLikedLength !== length) {
+                userData.AlbumLikedLength = length;
             } else {
                 return false;
             }
@@ -115,21 +135,21 @@ namespace SpotifyTriggers {
      */
     export const checkSpotifyNewSavedArtist = async (ownerId: number, oauthId: number, data: any): Promise<boolean> => {
         try {
-            const json = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + "/me/following?type=artist");
+            const {length, json} = await getSpotifyEntityLength(oauthId, ownerId, "/me/albums");
             const userData = getOrCreateUserData(ownerId);
-            if (data.gendre) {
+            if (data.gender) {
                 for (const artist of json.artists.items) {
-                    if (artist.genres.includes(data.gendre)) {
-                        if (userData.ArtistLikedLength !== json.artists.items.length) {
-                            userData.ArtistLikedLength = json.artists.items.length;
+                    if (artist.genres.includes(data.gender)) {
+                        if (userData.ArtistLikedLength !== length) {
+                            userData.ArtistLikedLength = length;
                         } else {
                             return false;
                         }
                     }
                 }
             }
-            if (userData.ArtistLikedLength !== json.artists.items.length) {
-                userData.ArtistLikedLength = json.artists.items.length;
+            if (userData.ArtistLikedLength !== length) {
+                userData.ArtistLikedLength = length;
             } else {
                 return false;
             }
@@ -144,15 +164,14 @@ namespace SpotifyTriggers {
      * Check if a new playlist has been saved
      * @param ownerId - The owner id of the trigger
      * @param oauthId - The oauth id of the trigger
-     * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
     export const checkSpotifyNewSavedPlaylist = async (ownerId: number, oauthId: number): Promise<boolean> => {
         try {
-            const json = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + "/me/playlists");
+            const {length} = await getSpotifyEntityLength(oauthId, ownerId, "/me/playlists");
             const userData = getOrCreateUserData(ownerId);
-            if (userData.PlaylistLikedLength !== json.items.length) {
-                userData.PlaylistLikedLength = json.items.length;
+            if (userData.PlaylistLikedLength !== length) {
+                userData.PlaylistLikedLength = length;
             } else {
                 return false;
             }

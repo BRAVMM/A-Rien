@@ -46,6 +46,7 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
 
     try {
         const { accessToken, refreshToken, expiresIn, serviceId} = req.body
+        console.log(accessToken)
         const encryptedAccessToken : { iv: string; content: string } = EncryptionService.encrypt(accessToken)
         const encryptedRefreshToken : { iv: string; content: string } = EncryptionService.encrypt(refreshToken)
 
