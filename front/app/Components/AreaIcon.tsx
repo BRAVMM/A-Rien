@@ -1,5 +1,5 @@
 import React from "react";
-import Image from "next/image"; // Import de next/image
+import Image from "next/image"; // Import from next/image
 import { AreaDetailsInterface } from "../Interfaces/ActionReaction..Interface";
 
 function AreaIcon({ id, image, name, status }: AreaDetailsInterface) {
