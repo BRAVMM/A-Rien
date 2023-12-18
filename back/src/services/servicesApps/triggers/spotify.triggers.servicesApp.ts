@@ -43,7 +43,7 @@ namespace SpotifyTriggers {
      * @param url - The url to fetch
      * @returns {Promise<any>} - The response of the fetch
      */
-    async function fetchWithOAuth(oauthId: number, ownerId: number, url: string): Promise<number> {
+    async function fetchWithOAuth(oauthId: number, ownerId: number, url: string): Promise<any> {
         const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
         if (oauthToken === null) {
             throw new Error("OAuth token not found");
@@ -71,10 +71,10 @@ namespace SpotifyTriggers {
         if (!usersSpotifyTriggerData[userId]) {
             usersSpotifyTriggerData[userId] = {
                 userId: userId,
-                TrackLikedLength: 0,
-                AlbumLikedLength: 0,
-                ArtistLikedLength: 0,
-                PlaylistLikedLength: 0
+                trackLikedLength: 0,
+                albumLikedLength: 0,
+                artistLikedLength: 0,
+                playlistLikedLength: 0
             };
         }
         return usersSpotifyTriggerData[userId];
@@ -91,8 +91,8 @@ namespace SpotifyTriggers {
         try {
             const {length} = await getSpotifyEntityLength(oauthId, ownerId, "/me/tracks");
             const userData = getOrCreateUserData(ownerId);
-            if (userData.TrackLikedLength < length) {
-                userData.TrackLikedLength = length;
+            if (userData.trackLikedLength < length) {
+                userData.trackLikedLength = length;
             } else {
                 return false;
             }
@@ -114,8 +114,8 @@ namespace SpotifyTriggers {
         try {
             const {length} = await getSpotifyEntityLength(oauthId, ownerId, "/me/albums");
             const userData = getOrCreateUserData(ownerId);
-            if (userData.AlbumLikedLength !== length) {
-                userData.AlbumLikedLength = length;
+            if (userData.albumLikedLength < length) {
+                userData.albumLikedLength = length;
             } else {
                 return false;
             }
@@ -140,16 +140,16 @@ namespace SpotifyTriggers {
             if (data.gender) {
                 for (const artist of json.artists.items) {
                     if (artist.genres.includes(data.gender)) {
-                        if (userData.ArtistLikedLength !== length) {
-                            userData.ArtistLikedLength = length;
+                        if (userData.artistLikedLength < length) {
+                            userData.artistLikedLength = length;
                         } else {
                             return false;
                         }
                     }
                 }
             }
-            if (userData.ArtistLikedLength !== length) {
-                userData.ArtistLikedLength = length;
+            if (userData.artistLikedLength < length) {
+                userData.artistLikedLength = length;
             } else {
                 return false;
             }
@@ -170,8 +170,8 @@ namespace SpotifyTriggers {
         try {
             const {length} = await getSpotifyEntityLength(oauthId, ownerId, "/me/playlists");
             const userData = getOrCreateUserData(ownerId);
-            if (userData.PlaylistLikedLength !== length) {
-                userData.PlaylistLikedLength = length;
+            if (userData.playlistLikedLength < length) {
+                userData.playlistLikedLength = length;
             } else {
                 return false;
             }

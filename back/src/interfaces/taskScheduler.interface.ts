@@ -2,8 +2,6 @@
  * @fileoverview Interfaces for the task scheduler
  */
 
-import {ActionData} from "../models/actionData.model";
-
 /**
  * Interface for the task scheduler
  * @interface actionFunction

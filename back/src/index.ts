@@ -20,7 +20,7 @@ if (isNaN(INTERVAL)) {
 }
 
 // Initialize the database connection
-db.sequelize.sync({force: true})
+db.sequelize.sync()
     .then(() => {
         console.log('Database sync completed.');
     })
