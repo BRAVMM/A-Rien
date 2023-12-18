@@ -7,5 +7,6 @@ import verifyToken from '../middleware/verifyToken';
 router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.post('/logout', verifyToken, userController.logout);
+router.get('/me', verifyToken, userController.getUserInfo);
 
 export default router;
