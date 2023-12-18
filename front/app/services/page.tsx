@@ -110,13 +110,15 @@ export default function Services() {
               <TextSection title="Services" content="" />
             </div>
 
-            <div className="snake-container basis-5/6">
-              <div className="grid sm:grid-cols-5 lg:grid-cols-25 gap-4">
-                {areas.map((area: AreaDetails) => (
-                  <div key={area.id} className="p-4 rounded">
+            <div className="basis-5/6 pl-3 overflow-y-scroll">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-20">
+                {areas.length > 0 ? areas.map((area: AreaDetails) => (
+                  <div key={area.id} className="h-56 w-56">
                     <AreaIcon image={area.image} name={area.name} status={area.status} />
                   </div>
-                ))}
+                ))
+                  : <p className="font-bold justify-center" >No areas</p>
+              }
               </div>
             </div>
           </div>
