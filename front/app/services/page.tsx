@@ -5,34 +5,25 @@ import React, { useState, useEffect } from "react";
 import IconService from "../Components/IconService";
 import ModalUI from "../Components/Modal";
 import { ModalDataInterface } from "../Interfaces/ModalData.interface";
+import actionReactionJsonDataService from "@/app/Utils/actionReactionJsonData.service";
 
 export default function Services() {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [servicesList, setServicesList] = useState<ModalDataInterface[]>();
   const [service, setService] = useState<ModalDataInterface>();
 
   const servicePicture : {[key: string]: string} = {
-    "Spotify": "./Spotify_logo_without_text.svg",
-    "Teams": "./Spotify_logo_without_text.svg",
+    "Discord": "./Discord_logo.svg",
+    "Twitch": "./Twitch_logo.svg",
+    "Spotify": "./Spotify_logo.svg",
+    "Teams": "./Teams_logo.svg",
+    "Gmail": "./Gmail_logo.svg",
+    "Outlook": "./Outlook_logo.svg",
+    "TrackerGG": "./TrackerGG_logo.svg",
+    "Onedrive": "./OneDrive_logo.svg",
+    "Weather": "./Weather_logo.svg"
   }
-
-  const json = {
-    "services": [
-      {
-        "name": "Spotify",
-        "id": 1,
-        "actionIds": [1, 2, 3],
-        "reactionIds": [1, 2, 3]
-      },
-      {
-        "name": "Teams",
-        "id": 2,
-        "actionIds": [1, 2, 3],
-        "reactionIds": [1, 2, 3]
-      }
-    ]
-  };
-
 
   const handleModal = (service: ModalDataInterface) => {
     setIsModalOpen(true);
@@ -40,11 +31,24 @@ export default function Services() {
     console.log(service);
   };
 
+  /**
+   * @function useEffect
+   * @description useEffect to fetch actionJsonData when ModalData is defined
+   */
   useEffect(() => {
     if (isModalOpen) {
       console.log("Modal is open");
     }
   }, [isModalOpen]);
+
+  useEffect(() => {
+    const services = actionReactionJsonDataService.getServices();
+
+    services.then((services) => {
+      setServicesList(services);
+      console.log("services", services);
+    });
+  }, []);
 
 
   return (
@@ -62,7 +66,7 @@ export default function Services() {
           <p>Select a service</p>
         </div>
         <div className="overflow-hidden flex flex-col justify-center items-center space-y-5">
-          {json.services.map((service) => (
+          {servicesList?.map((service) => (
             <button
               key={service.id}
               className="w-full h-1/2 flex items-center justify-center"

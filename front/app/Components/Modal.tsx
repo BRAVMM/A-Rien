@@ -4,6 +4,8 @@ import AREAForm from "./AREAForm";
 import { on } from "events";
 import { clear } from "console";
 
+import actionReactionJsonDataService from "../Utils/actionReactionJsonData.service";
+
 
 const ModalUI: React.FC<{
   isOpen: boolean;
@@ -20,7 +22,8 @@ const ModalUI: React.FC<{
   }
 
 
-
+  const [actionJsonData, setActionJsonDatas] = useState<ServiceActionInterface[]>();
+  const [reactionJsonData, setReactionJsonDatas] = useState<ServiceReactionInterface[]>();
   const [step, setStep] = useState<number>(Step.SELECT_SERVICE_ACTION);
   const [action, setAction] = useState<ServiceActionInterface>();
   const [actionDatas, setActionDatas] = useState<string>("");
@@ -35,36 +38,84 @@ const ModalUI: React.FC<{
     setReactionDatas(undefined);
   }
 
+  /**
+   * @function useEffect
+   * @description useEffect to clear datas when modal is open
+   */
+  useEffect(() => {
+    if (isOpen) {
+      clearDatas();
+    }
+  }, [isOpen]);
+
+  /**
+   * @function useEffect
+   * @description useEffect to fetch actionJsonData when ModalData is defined
+   */
+  useEffect(() => {
+    if (ModalData === undefined) {
+      console.error("ModalData is undefined");
+      return;
+    }
+    const actionJsonData: Promise<ServiceActionInterface[]> = actionReactionJsonDataService.getActionJsonData(ModalData.id);
+    const reactionJsonData: Promise<ServiceReactionInterface[]> = actionReactionJsonDataService.getReactionJsonData(ModalData.id);
+
+    actionJsonData.then((actionJsonData) => {
+        setActionJsonDatas(actionJsonData);
+    });
+    reactionJsonData.then((reactionJsonData) => {
+        setReactionJsonDatas(reactionJsonData);
+    });
+
+  }, [ModalData]);
+
+  /**
+   * @function useEffect
+   * @description useEffect to change step when action is defined
+   */
   useEffect(() => {
     if (actionDatas !== "") {
       setStep(Step.SELECT_SERVICE_REACTION);
     }
   }, [actionDatas]);
 
+  /**
+   * @function useEffect
+   * @description useEffect to store area when reactionDatas is defined
+   */
   useEffect(() => {
     if (reactionDatas !== undefined) {
-      // CALL API TO STORE AREA
-      // console.log("actionDatas", actionDatas);
-      // console.log("reactionDatas", reactionDatas);
-
-      // onClose();
       setStep(Step.VALIDATE_OR_ADD_FORM);
     }
   }, [reactionDatas]);
 
-  const json: ServiceActionInterface[] = [
-    {
-      "id": 1,
-      "name": "Play a song",
-      "args": [
-        {
-          "title": "Song",
-          "type": "string"
-        },
-      ],
-      "reactionIds": [1, 2, 3]
-    }
-  ];
+  // const actionJson: ServiceActionInterface[] = [
+  //   {
+  //     "id": 1,
+  //     "name": "Play a song",
+  //     "args": [
+  //       {
+  //         "title": "Song",
+  //         "type": "string"
+  //       },
+  //     ],
+  //     "reactionIds": [1, 2, 3]
+  //   }
+  // ];
+  //
+  // const reactionJson: ServiceReactionInterface[] = [
+  //   {
+  //     "id": 1,
+  //     "name": "Send a message",
+  //     "args": [
+  //       {
+  //         "title": "Message",
+  //         "type": "string"
+  //       },
+  //     ],
+  //     actionIds: [1, 2, 3]
+  //   }
+  // ];
 
   if (!isOpen || !ModalData) {
     return null;
@@ -75,7 +126,7 @@ const ModalUI: React.FC<{
       <div className="flex flex-col items-center justify-center">
         {ModalData.name}
         <div className="flex flex-col items-center justify-center">
-          {json.map(action => (
+          {actionJsonData?.map(action => (
             <div key={action.id}>
               <button
                 type="button"
@@ -103,23 +154,9 @@ const ModalUI: React.FC<{
     );
   }
 
-  const reactionJson: ServiceReactionInterface[] = [
-    {
-      "id": 1,
-      "name": "Send a message",
-      "args": [
-        {
-          "title": "Message",
-          "type": "string"
-        },
-      ],
-      actionIds: [1, 2, 3]
-    }
-  ];
-
   const updateReaction = (reaction: ServiceReactionInterface) => {
     const newReaction: ServiceReactionInterface[] = [reaction, ...reactions || []];
-    console.log(newReaction);
+
     setReactions(newReaction);
   }
 
@@ -129,12 +166,11 @@ const ModalUI: React.FC<{
       <div className="flex flex-col items-center justify-center">
         {ModalData.name}
         <div className="flex flex-col items-center justify-center">
-          {reactionJson.map(reaction => (
+          {reactionJsonData?.map(reaction => (
             <div key={reaction.id}>
               <button
                 type="button"
                 onClick={() => {
-                  console.log(reaction);
                   setStep(Step.SELECT_SERVICE_REACTION_DATA);
                   updateReaction(reaction);
                 }
@@ -152,7 +188,7 @@ const ModalUI: React.FC<{
 
   const updateReactionDatas = (data: string) => {
     const newReactionDatas: string[] = [data, ...reactionDatas || []];
-    console.log(newReactionDatas);
+
     setReactionDatas(newReactionDatas);
   }
 
@@ -169,6 +205,8 @@ const ModalUI: React.FC<{
 
   const submitAREA = () => {
     // CALL API TO STORE AREA
+    console.log("action", action);
+    console.log("reactions", reactions);
     console.log("actionDatas", actionDatas);
     console.log("reactionDatas", reactionDatas);
     setStep(Step.SELECT_SERVICE_ACTION);
