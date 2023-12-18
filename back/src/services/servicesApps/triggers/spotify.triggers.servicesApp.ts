@@ -23,16 +23,14 @@ namespace SpotifyTriggers {
      */
     async function getSpotifyEntityLength(oauthId: number, ownerId: number, url: string): Promise<{length: number, json: any}> {
         let offset = 0;
-        let total = 0;
         let length = 0;
         let json: any;
 
         do {
             json = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + url + "?limit=50" + "&offset=" + offset);
-            total = json.total;
             offset += 50;
-            length += total;
-        } while (total === 50);
+            length += json.total;
+        } while (json.total === 50);
         return {length, json};
     }
 
