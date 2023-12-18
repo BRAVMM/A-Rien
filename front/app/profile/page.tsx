@@ -59,7 +59,6 @@ export default function Profile() {
     };
 
     fetchData();
-    console.log(user);
   }, []);
 
 
