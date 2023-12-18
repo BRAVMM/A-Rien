@@ -1,3 +1,6 @@
+import Cookies from 'js-cookie';
+import DataBody from '../Interfaces/dataBody.interface';
+
 /**
  * loginUser - Function to perform a user login by making an API call.
  *
@@ -46,6 +49,46 @@ export async function loginUser(username: string, password: string): Promise<any
     }
   } catch (error) {
     // Handle any exceptions that may occur during the request
+    throw error;
+  }
+}
+
+/**
+ * registerTokenService - Function that take a login token of a service and store it inside the database with an API call.
+ *
+ * @param {string} token - The token of the service logged in.
+ * @param {string} serviceRoute - The route to store the token.
+ * @returns {Promise<any>} - A Promise that resolves to the JSON response from the API if successful, or rejects with an error if login fails.
+ *
+ * @throws {Error} If the registerToken request fails.
+ *
+ * Usage:
+ * ```
+ * try {
+ *   const json = await registerTokenService(token, serviceRoute);
+ *   // Handle successful login here
+ * } catch (error) {
+ *   // Handle login error here
+ * }
+ * ```
+ */
+export async function registerTokenService(data : DataBody, serviceRoute : string): Promise<any> {
+  try {
+    const bearer = Cookies.get('token')
+
+    const response = await fetch(process.env.NEXT_PUBLIC_API + serviceRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${bearer}`,
+      },
+      body: data.getString(),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error);
+    }
+  } catch (error) {
     throw error;
   }
 }

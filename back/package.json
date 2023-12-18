@@ -18,6 +18,7 @@
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
+    "request": "^2.88.2",
     "sequelize": "^6.35.1"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.10.3",
+    "@types/request": "^2.48.12",
     "typescript": "^5.3.2"
   }
 }
