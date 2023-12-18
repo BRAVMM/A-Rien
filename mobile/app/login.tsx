@@ -2,6 +2,7 @@ import { useNavigation } from "expo-router";
 import { withExpoSnack, styled } from "nativewind";
 import React, { useEffect, useState } from "react";
 import { Image, Text, View, TextInput, TouchableOpacity } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -20,7 +21,6 @@ const Login = () => {
   useEffect(() => {
     if (loginSuccess) {
       // Redirect to the home page
-      router.navigate("home" as never);
     }
   }
   , [loginSuccess, router]);
@@ -59,6 +59,10 @@ const Login = () => {
       if (response.ok) {
         // Redirect to home page
         setLoginSuccess(true);
+        // save token
+        const token = await response.json();
+        console.log("token", token);
+        await AsyncStorage.setItem("token", token);
       } else {
         // Handle non-ok response
         const errorResponse = await response.json(); // You may need to parse the response body
