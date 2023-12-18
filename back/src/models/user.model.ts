@@ -6,7 +6,8 @@ class User extends Model {
     public id!: number;
     public username!: string;
     public password!: string;
-    public email!: string;
+    public encryptedEmail!: string;
+    public ivEmail!: string;
 
     public static initialize(sequelize: Sequelize) {
         User.init(
@@ -22,9 +23,13 @@ class User extends Model {
                     unique: true,
                     allowNull: false,
                 },
-                email: {
+                encryptedEmail: {
                     type: DataTypes.STRING,
                     unique: true,
+                    allowNull: false,
+                },
+                ivEmail: {
+                    type: DataTypes.STRING,
                     allowNull: false,
                 },
                 password: {
