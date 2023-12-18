@@ -3,7 +3,7 @@ interface DataBody {
 }
 
 class SpotifyDataBody implements DataBody {
-    code: string;
+    readonly code: string;
     constructor(code: string) {
         this.code = code
     }

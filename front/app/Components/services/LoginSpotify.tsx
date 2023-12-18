@@ -1,7 +1,7 @@
 "use client";
 
 import { registerTokenService } from '@/app/Utils/callApi';
-import { SpotifyDataBody } from '@/app/Utils/interface/dataBody.interface';
+import { SpotifyDataBody } from '@/app/Interfaces/dataBody.interface';
 import React, { useEffect, useState } from 'react';
 
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
@@ -22,7 +22,7 @@ const SpotifyButtonOAuth: React.FC = () => {
                 console.log(error)
             }
         }
-    }, [code]);
+    }, []);
 
     return (
         <div className="App">

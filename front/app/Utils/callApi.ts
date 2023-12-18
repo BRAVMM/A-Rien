@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import DataBody from './interface/dataBody.interface';
+import DataBody from '../Interfaces/dataBody.interface';
 
 /**
  * loginUser - Function to perform a user login by making an API call.
@@ -73,7 +73,6 @@ export async function loginUser(username: string, password: string): Promise<any
  * ```
  */
 export async function registerTokenService(data : DataBody, serviceRoute : string): Promise<any> {
-  
   try {
     const bearer = Cookies.get('token')
 
@@ -85,6 +84,10 @@ export async function registerTokenService(data : DataBody, serviceRoute : strin
       },
       body: data.getString(),
     });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error);
+    }
   } catch (error) {
     throw error;
   }
