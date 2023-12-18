@@ -114,9 +114,6 @@ const getUserInfo = async (req: Request, res: Response): Promise<void> => {
     }
     try {
         const userId: number = (req as any).user.userId;
-
-        console.log(userId);
-
         const user: User | null = await UserMiddleware.getUserFromId(userId);
         if (!user) {
             res.status(401).json({error: "User not found"});
