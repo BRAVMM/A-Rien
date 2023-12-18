@@ -26,7 +26,7 @@ export default function Register() {
 
     useEffect(() => {
         if (token) {
-            Cookies.set("token", token);
+            Cookies.set("token", token, { secure: true, sameSite: 'strict' });
         }
     }, [token]);
 
