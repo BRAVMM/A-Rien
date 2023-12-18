@@ -111,7 +111,7 @@ export default function Services() {
             </div>
 
             <div className="snake-container basis-5/6">
-              <div className="grid sm:grid-cols-5 lg:grid-cols-25 gap-4 space-x-4 space-y-4">
+              <div className="grid sm:grid-cols-5 lg:grid-cols-25 gap-4">
                 {areas.map((area: AreaDetails) => (
                   <div key={area.id} className="p-4 rounded">
                     <AreaIcon image={area.image} name={area.name} status={area.status} />
