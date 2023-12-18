@@ -6,16 +6,10 @@ import IconService from "../Components/IconService";
 import AreaIcon from "../Components/AreaIcon";
 import { useRouter } from "next/navigation";
 import TextSection from "../Components/TextSection";
-
-interface AreaDetails {
-  id: number;
-  image: string;
-  name: string;
-  status: boolean;
-}
+import { AreaDetailsInterface } from "../Interfaces/ActionReaction..Interface";
 
 function getAreas() {
-  let _areas: AreaDetails[] = [
+  let _areas: AreaDetailsInterface[] = [
     {
       id: 1,
       name: "Discord",
@@ -77,7 +71,7 @@ function getAreas() {
 
 
 export default function Services() {
-  const [areas, setAreas] = useState<AreaDetails[]>([]);
+  const [areas, setAreas] = useState<AreaDetailsInterface[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -112,9 +106,9 @@ export default function Services() {
 
             <div className="basis-5/6 pl-3 overflow-y-scroll">
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-20">
-                {areas.length > 0 ? areas.map((area: AreaDetails) => (
+                {areas.length > 0 ? areas.map((area: AreaDetailsInterface) => (
                   <div key={area.id} className="h-56 w-56">
-                    <AreaIcon image={area.image} name={area.name} status={area.status} />
+                    <AreaIcon id={area.id} image={area.image} name={area.name} status={area.status} />
                   </div>
                 ))
                   : <p className="font-bold justify-center" >No areas</p>
