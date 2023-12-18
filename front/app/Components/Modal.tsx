@@ -1,8 +1,6 @@
 import React, { use, useEffect, useState } from "react";
 import { ModalDataInterface, ServiceActionInterface, ServiceReactionInterface } from "../Interfaces/ModalData.interface";
 import AREAForm from "./AREAForm";
-import { on } from "events";
-import { clear } from "console";
 
 import actionReactionJsonDataService from "../Utils/actionReactionJsonData.service";
 
@@ -21,16 +19,25 @@ const ModalUI: React.FC<{
     VALIDATE_OR_ADD_FORM
   }
 
-
   const [actionJsonData, setActionJsonDatas] = useState<ServiceActionInterface[]>();
   const [reactionJsonData, setReactionJsonDatas] = useState<ServiceReactionInterface[]>();
   const [step, setStep] = useState<number>(Step.SELECT_SERVICE_ACTION);
   const [action, setAction] = useState<ServiceActionInterface>();
+  const [actionTokenIds, setActionTokenIds] = useState<number[]>();
   const [actionDatas, setActionDatas] = useState<string>("");
   const [reactions, setReactions] = useState<ServiceReactionInterface[]>();
   const [reactionDatas, setReactionDatas] = useState<string[]>();
 
+  if (!isOpen || !ModalData) {
+    return null;
+  }
 
+  /* Clear functions */
+  /**
+   * @function clearDatas
+   * @description Clear datas when modal is open or close
+   * @returns {void}
+   */
   const clearDatas = () => {
     setAction(undefined);
     setActionDatas("");
@@ -38,6 +45,7 @@ const ModalUI: React.FC<{
     setReactionDatas(undefined);
   }
 
+  /* useEffect */
   /**
    * @function useEffect
    * @description useEffect to clear datas when modal is open
@@ -89,6 +97,27 @@ const ModalUI: React.FC<{
     }
   }, [reactionDatas]);
 
+  /* Update functions */
+  /**
+   * @function updateReaction
+   * @param {ServiceReactionInterface} reaction - reaction to store
+   */
+  const updateReaction = (reaction: ServiceReactionInterface) => {
+    const newReaction: ServiceReactionInterface[] = [reaction, ...reactions || []];
+
+    setReactions(newReaction);
+  }
+
+  /**
+   * @function updateReactionDatas
+   * @param {string} data - data to store
+   */
+  const updateReactionDatas = (data: string) => {
+    const newReactionDatas: string[] = [data, ...reactionDatas || []];
+
+    setReactionDatas(newReactionDatas);
+  }
+
   // const actionJson: ServiceActionInterface[] = [
   //   {
   //     "id": 1,
@@ -117,10 +146,12 @@ const ModalUI: React.FC<{
   //   }
   // ];
 
-  if (!isOpen || !ModalData) {
-    return null;
-  }
-
+  /**
+   * @function HTMLselectServiceAction
+   * @description HTML for select Service Action
+   * @returns {JSX.Element}
+   * @note Step 1
+   */
   const HTMLselectServiceAction = () => {
     return (
       <div className="flex flex-col items-center justify-center">
@@ -145,6 +176,12 @@ const ModalUI: React.FC<{
     );
   }
 
+  /**
+   * @function HTMLselectServiceDataActionForm
+   * @description HTML for select Service Data Action Form
+   * @returns {JSX.Element}
+   * @note Step 2
+   */
   const HTMLselectServiceDataActionForm = () => {
     return (
       <AREAForm
@@ -154,13 +191,13 @@ const ModalUI: React.FC<{
     );
   }
 
-  const updateReaction = (reaction: ServiceReactionInterface) => {
-    const newReaction: ServiceReactionInterface[] = [reaction, ...reactions || []];
 
-    setReactions(newReaction);
-  }
-
-
+  /**
+   * @function HTMLselectReaction
+   * @description HTML for select Reaction
+   * @returns {JSX.Element}
+   * @note Step 3
+   */
   const HTMLselectReaction = () => {
     return (
       <div className="flex flex-col items-center justify-center">
@@ -186,12 +223,12 @@ const ModalUI: React.FC<{
     );
   }
 
-  const updateReactionDatas = (data: string) => {
-    const newReactionDatas: string[] = [data, ...reactionDatas || []];
-
-    setReactionDatas(newReactionDatas);
-  }
-
+  /**
+   * @function HTMLselectServiceReactionDataForm
+   * @description HTML for select Service Reaction Data Form
+   * @returns {JSX.Element}
+   * @note Step 4
+   */
   const HTMLselectServiceReactionDataForm = () => {
     return (
       <AREAForm
@@ -201,20 +238,12 @@ const ModalUI: React.FC<{
     );
   }
 
-
-
-  const submitAREA = () => {
-    // CALL API TO STORE AREA
-    console.log("action", action);
-    console.log("reactions", reactions);
-    console.log("actionDatas", actionDatas);
-    console.log("reactionDatas", reactionDatas);
-    setStep(Step.SELECT_SERVICE_ACTION);
-    clearDatas();
-    onClose();
-  }
-
-
+  /**
+   * @function HTMLvalidateOrAddForm
+   * @description HTML for validate or add a new Reaction
+   * @returns {JSX.Element}
+   * @note Step 5
+   */
   const HTMLvalidateOrAddForm = () => {
     return (
       <div className="flex flex-col items-center justify-center">
@@ -230,6 +259,22 @@ const ModalUI: React.FC<{
         </button>
       </div>
     );
+  }
+
+  /* Submit function */
+  /**
+   * @function submitAREA
+   * @description Submit AREA to API and close modal
+   */
+  const submitAREA = () => {
+    // CALL API TO STORE AREA
+    console.log("action", action);
+    console.log("reactions", reactions);
+    console.log("actionDatas", actionDatas);
+    console.log("reactionDatas", reactionDatas);
+    setStep(Step.SELECT_SERVICE_ACTION);
+    clearDatas();
+    onClose();
   }
 
   return (

@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import db from './models/index';
 import cors from 'cors';
 import UserRouter from './route/user.route';
+import AreaRouter from './route/area.route';
 import {TaskScheduler} from './services/taskScheduler';
 
 
@@ -33,6 +34,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', UserRouter);
+
+app.use('/area', AreaRouter);
 
 /**
  * Execute each minute the checkTriggers function, which checks if a trigger is activated

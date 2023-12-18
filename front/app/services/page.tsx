@@ -25,12 +25,6 @@ export default function Services() {
     "Weather": "./Weather_logo.svg"
   }
 
-  const handleModal = (service: ModalDataInterface) => {
-    setIsModalOpen(true);
-    setService(service);
-    console.log(service);
-  };
-
   /**
    * @function useEffect
    * @description useEffect to fetch actionJsonData when ModalData is defined
@@ -41,6 +35,10 @@ export default function Services() {
     }
   }, [isModalOpen]);
 
+  /**
+   * @function useEffect
+   * @description useEffect to fetch actionJsonData when ModalData is defined
+   */
   useEffect(() => {
     const services = actionReactionJsonDataService.getServices();
 
@@ -50,6 +48,16 @@ export default function Services() {
     });
   }, []);
 
+  /**
+   * @function handleModal
+   * @description handleModal to open the modal
+   * @param {ModalDataInterface} service - service to display in the modal
+   */
+  const handleModal = (service: ModalDataInterface) => {
+    setIsModalOpen(true);
+    setService(service);
+    console.log(service);
+  };
 
   return (
     <div className="relative h-screen flex">
