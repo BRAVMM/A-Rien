@@ -17,14 +17,24 @@ import {EncryptionService} from "./encryption.service";
  * @description OAuth service
  */
 namespace OAuthService {
-    export const getDecryptedOAuthTokenFromId = async (oauthId: number, ownerId: number): Promise<string | null> => {
+    export const getDecryptedAccessTokenFromId = async (oauthId: number, ownerId: number): Promise<string | null> => {
         const EncryptedOAuth: OAuth | null = await OAuthMiddleware.getOAuthFromId(oauthId, ownerId);
 
         if (EncryptedOAuth === null) {
-            console.error("OAuth not found");
-            throw new Error("OAuth not found in database [OAuthService.getDecryptedOAuthTokenFromId]");
+            console.error("Access token not found");
+            throw new Error("Access token not found in database [OAuthService.getDecryptedAccessTokenFromId]");
         }
-        return EncryptionService.decrypt(EncryptedOAuth.iv, EncryptedOAuth.encryptedOAuthToken);
+        return EncryptionService.decrypt(EncryptedOAuth.ivAccess, EncryptedOAuth.encryptedAccessToken);
+    }
+
+    export const getDecryptedRefreshTokenFromId = async (oauthId: number, ownerId: number): Promise<string | null> => {
+        const EncryptedOAuth: OAuth | null = await OAuthMiddleware.getOAuthFromId(oauthId, ownerId);
+
+        if (EncryptedOAuth === null) {
+            console.error("Refresh token not found");
+            throw new Error("Refresh token not found in database [OAuthService.getDecryptedRefreshTokenFromId]");
+        }
+        return EncryptionService.decrypt(EncryptedOAuth.ivRefresh, EncryptedOAuth.encryptedRefreshToken);
     }
 }
 

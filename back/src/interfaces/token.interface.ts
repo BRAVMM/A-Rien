@@ -7,4 +7,14 @@ interface TokenData {
     exp: number;
 }
 
-export {TokenData}
+/**
+ * Data of the request for routes to register a new token.
+ */
+interface OAuthData {
+    accessToken: string;
+    refreshToken: string;
+    expiresIn: number;
+    serviceId: number;
+}
+
+export {TokenData, OAuthData}

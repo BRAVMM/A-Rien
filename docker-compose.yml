@@ -31,7 +31,7 @@ services:
     networks:
       - back-net
     ports:
-      - "19002:19002"
+      - "3000:3000"
 
 networks:
   back-net:

@@ -7,8 +7,8 @@ import db from './models/index';
 import cors from 'cors';
 import UserRouter from './route/user.route';
 import AreaRouter from './route/area.route';
+import ServicesRouter from './route/services.route';
 import {TaskScheduler} from './services/taskScheduler';
-
 
 const app = express();
 app.use(cors());
@@ -34,8 +34,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', UserRouter);
-
 app.use('/area', AreaRouter);
+app.use('/services', ServicesRouter);
 
 /**
  * Execute each minute the checkTriggers function, which checks if a trigger is activated
