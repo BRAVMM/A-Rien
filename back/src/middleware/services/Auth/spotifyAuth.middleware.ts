@@ -33,11 +33,14 @@ const spotifyAuth = async (req: Request, res: Response, next: NextFunction): Pro
 
         if (!code) {
             res.status(401).json({error: "Code not found in the request."})
+            return;
         }
         req.body = await authenticateUser(code)
         next()
-    } catch (err) {
+    } catch (error) {
+        console.log(error)
         res.status(500).json({error: 'Spotify authentication failed.'})
+        return;
     }
 }
 
@@ -60,12 +63,19 @@ const spotifyAlreadyAuth = async (tokens: OAuth[], newToken: string): Promise<vo
     var newUserEmail: string = ''
 
     try {
+        if (!newToken || newToken.length === 0) {
+            throw new Error('No token of the new user given')
+        }
         newUserEmail = await getUserEmail(newToken)
     } catch (error) {
+        console.error("New user email error")
         throw error
     }
 
     try {
+        if (!tokens || tokens.length === 0) {
+            return
+        }
         for (const token of tokens) {
             const accessToken: string = EncryptionService.decrypt(token.ivAccess, token.encryptedAccessToken);
             const userEmail: string = await getUserEmail(accessToken)
@@ -75,6 +85,7 @@ const spotifyAlreadyAuth = async (tokens: OAuth[], newToken: string): Promise<vo
             }
         }
     } catch (error) {
+        console.error("User already logged in error")
         throw error
     }
 }

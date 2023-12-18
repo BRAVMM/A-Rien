@@ -21,14 +21,14 @@ import { EncryptionService } from "../../../services/encryption.service";
  */
 const refreshSpotifyTokens = async (tokens : OAuth[]): Promise<void> => {
     for (const token of tokens) {
-        const newAccessToken = await getRefreshedToken(EncryptionService.decrypt(token.ivRefresh, token.encryptedRefreshToken))
+        const newAccessToken: string = await getRefreshedToken(EncryptionService.decrypt(token.ivRefresh, token.encryptedRefreshToken))
 
         if (newAccessToken) {
             const encryptedAccessToken : {iv: string, content: string} = EncryptionService.encrypt(newAccessToken)
 
             token.update({
                 encryptedAccessToken: encryptedAccessToken.content,
-                ivAcces: encryptedAccessToken.iv
+                ivAccess: encryptedAccessToken.iv,
             });
         } else {
             throw new Error("Could not refresh spotify tokens")

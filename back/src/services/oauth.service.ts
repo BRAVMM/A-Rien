@@ -21,8 +21,8 @@ namespace OAuthService {
         const EncryptedOAuth: OAuth | null = await OAuthMiddleware.getOAuthFromId(oauthId, ownerId);
 
         if (EncryptedOAuth === null) {
-            console.error("OAuth not found");
-            throw new Error("OAuth not found in database [OAuthService.getDecryptedOAuthTokenFromId]");
+            console.error("Access token not found");
+            throw new Error("Access token not found in database [OAuthService.getDecryptedAccessTokenFromId]");
         }
         return EncryptionService.decrypt(EncryptedOAuth.ivAccess, EncryptedOAuth.encryptedAccessToken);
     }
@@ -31,8 +31,8 @@ namespace OAuthService {
         const EncryptedOAuth: OAuth | null = await OAuthMiddleware.getOAuthFromId(oauthId, ownerId);
 
         if (EncryptedOAuth === null) {
-            console.error("OAuth not found");
-            throw new Error("OAuth not found in database [OAuthService.getDecryptedOAuthTokenFromId]");
+            console.error("Refresh token not found");
+            throw new Error("Refresh token not found in database [OAuthService.getDecryptedRefreshTokenFromId]");
         }
         return EncryptionService.decrypt(EncryptedOAuth.ivRefresh, EncryptedOAuth.encryptedRefreshToken);
     }

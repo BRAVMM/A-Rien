@@ -67,11 +67,16 @@ const userAlreadyAuth = async (req: Request, res: Response, next: NextFunction):
     const userInfo : TokenData = (req as CustomRequest).user
 
     if (!userInfo) {
-        res.status(401).json({error: "User not found"})
+        res.status(401).json({error: "User not found"});
+        return;
     }
     try {
         const { serviceId, accessToken } = req.body
 
+        if (!serviceId || !accessToken) {
+            res.status(400).json({error: "Missing required parameters"});
+            return;
+        }
         const tokens : OAuth[] = await OAuth.findAll({
             where: {
                 ownerID: userInfo.userId,
@@ -81,12 +86,15 @@ const userAlreadyAuth = async (req: Request, res: Response, next: NextFunction):
         const userAlreadyAuthCallback : CheckUserAlreadyAuth = userAlreadyAuthCallbacks[serviceId];
 
         if (!userAlreadyAuthCallback) {
-            res.status(401).json({error: "Service undefined"})
+            res.status(401).json({error: "Service undefined"});
+            return;
         }
-        await userAlreadyAuthCallback(tokens, accessToken)
-        next()
+        await userAlreadyAuthCallback(tokens, accessToken);
+        next();
     } catch (error) {
-        res.status(401).json({error: "User already logged in"})
+        console.error(error);
+        res.status(401).json({error: "User already logged in"});
+        return;
     }
 }
 

@@ -12,34 +12,38 @@ import { OAuthData } from "../../../interfaces/token.interface";
  * @throws Will throw an error if the request to Spotify's API fails or if the response cannot be parsed as JSON.
  */
 const authenticateUser = async (code: string): Promise<OAuthData> => {
-    const SERVICE_ID = 1
     const SPOTIFY_REDIRECT_URI : string = process.env.SPOTIFY_REDIRECT_URI ?? ''
 
-    if (!process.env.SPOTIFY_REDIRECT_URI && !process.env.SPOTIFY_CLIENT_ID && SPOTIFY_REDIRECT_URI.length === 0) {
+    if (!process.env.SPOTIFY_REDIRECT_URI && !process.env.SPOTIFY_CLIENT_ID && SPOTIFY_REDIRECT_URI.length === 0 && !process.env.SPOTIFY_SERVICE_ID) {
         throw new Error ("Bad env configuration")
     }
+    const SPOTIFY_SERVICE_ID : number = Number(process.env.SPOTIFY_SERVICE_ID)
 
-    const spotifyResponse = await fetch('https://accounts.spotify.com/api/token', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': 'Basic ' + Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')
-        },
-        body: new URLSearchParams({
-            code: code,
-            redirect_uri: SPOTIFY_REDIRECT_URI,
-            grant_type: 'authorization_code'
-        }).toString()
-    });
-    const data = await spotifyResponse.json();
-    const oauthData: OAuthData = {
-        accessToken: data.access_token,
-        refreshToken: data.refresh_token,
-        expiresIn: data.expires_in,
-        serviceId: SERVICE_ID,
+    try {
+        const spotifyResponse = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Basic ' + Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')
+            },
+            body: new URLSearchParams({
+                code: code,
+                redirect_uri: SPOTIFY_REDIRECT_URI,
+                grant_type: 'authorization_code'
+            }).toString()
+        });
+        const data = await spotifyResponse.json();
+        const oauthData: OAuthData = {
+            accessToken: data.access_token,
+            refreshToken: data.refresh_token,
+            expiresIn: data.expires_in,
+            serviceId: SPOTIFY_SERVICE_ID,
+        }
+        return oauthData
+    } catch (error) {
+        console.log(error);
+        throw error;
     }
-
-    return oauthData
 }
 
 export default authenticateUser

@@ -49,8 +49,11 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
         const encryptedAccessToken : { iv: string; content: string } = EncryptionService.encrypt(accessToken)
         const encryptedRefreshToken : { iv: string; content: string } = EncryptionService.encrypt(refreshToken)
 
+        if (!process.env.SPOTIFY_SERVICE_ID || Number(process.env.SPOTIFY_SERVICE_ID) !== serviceId) {
+            return res.status(400).json({ error: "Wrong service id" })
+        }
         if (!accessToken || !refreshToken || !expiresIn) {
-            return res.status(400).json({ error: "No tokens provided" })
+            return res.status(401).json({ error: "No tokens provided" })
         }
         const OAuthData = await OAuth.create({
             serviceId : serviceId,
@@ -63,6 +66,7 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
         });
         return res.status(201).json({id: OAuthData.id})
     } catch (error) {
+        console.error(error)
         return res.status(500).json({ error: "An unexpected error occurred" })
     }
 }
