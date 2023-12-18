@@ -1,12 +1,13 @@
 import React from "react";
 import Image from "next/image"; // Import from next/image
 import { AreaDetailsInterface } from "../Interfaces/AreaDetails.Interface";
+import Pastille from "./Pastille";
 
 function AreaIcon({ id, image, name, status }: AreaDetailsInterface) {
   return (
     <div className="flex items-center container flex-col aspect-square bg-[#382B59] rounded-xl overflow-hidden">
       <div className="flex basis-1/3 w-full flex-row">
-        <div className="flex basis-2/3"/>
+        <div className="flex basis-2/3" />
         <div className="flex basis-1/3 items-center justify-center space-x-16">
           <Pastille status={status} />
         </div>
@@ -17,18 +18,6 @@ function AreaIcon({ id, image, name, status }: AreaDetailsInterface) {
       <p className="text-3xl font-bold text-center basis-1/3">{name}</p>
     </div>
   );
-}
-
-function Pastille({ status }: { status: boolean }) {
-  if (status) {
-    return (
-      <div className="w-4 h-4 rounded-full bg-green"></div>
-    );
-  } else {
-    return (
-      <div className="w-4 h-4 rounded-full bg-red"></div>
-    );
-  }
 }
 
 export default AreaIcon;
