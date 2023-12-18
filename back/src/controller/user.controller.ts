@@ -101,4 +101,32 @@ const logout = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({success: "User logout correctly"})
 }
 
-export {register, login, logout};
+/**
+ * Get user info
+ * @param {Request} req - This is the request object
+ * @param {Response} res - This is the response object
+ * @returns {Promise<void>} This returns the user info if successful or an error message if unsuccessful
+ */
+const getUserInfo = async (req: Request, res: Response): Promise<void> => {
+    if (!(req as any).user) {
+        res.status(401).json({error: "Unauthorized"});
+        return;
+    }
+    try {
+        const userId: number = (req as any).user.userId;
+
+        console.log(userId);
+
+        const user: User | null = await UserMiddleware.getUserFromId(userId);
+        if (!user) {
+            res.status(401).json({error: "User not found"});
+            return;
+        }
+        res.status(200).json({username: user.username, email: user.email});
+    } catch (error: any) {
+        console.error(error)
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
+export {register, login, logout, getUserInfo};
