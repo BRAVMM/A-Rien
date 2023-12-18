@@ -38,10 +38,11 @@ const register = async (req: Request, res: Response): Promise<void> => {
         }
 
         const hashedPassword: string = await EncryptionService.bcryptHash(password);
-        const hashedEmail: string = await EncryptionService.bcryptHash(email);
+        const encryptedEmail: {iv: string, content: string} = EncryptionService.encrypt(email);
         const user: User = await User.create({
             username: username,
-            email: hashedEmail,
+            encryptedEmail: encryptedEmail.content,
+            ivEmail: encryptedEmail.iv,
             password: hashedPassword,
         });
         const token: string = JwtService.generateToken(user.id);
