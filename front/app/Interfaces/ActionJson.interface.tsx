@@ -19,7 +19,6 @@ interface ActionJsonInterface {
  * @extends {Array<ActionJsonInterface>}
  * @see {ActionJsonInterface}
  */
- */
 interface ActionJsonArray extends Array<ActionJsonInterface> {}
 
 export type { ActionJsonInterface, ActionJsonArray };

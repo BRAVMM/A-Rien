@@ -2,6 +2,8 @@
  * @fileoverview Interfaces for the task scheduler
  */
 
+import {ActionData} from "../models/actionData.model";
+
 /**
  * Interface for the task scheduler
  * @interface actionFunction
@@ -9,7 +11,7 @@
  * @param {function} action - The function to execute related to the action id
  */
 interface actionFunction {
-    [key: number]: (ownerId: number, oauthId: number, actionData: JSON) => Promise<boolean>;
+    [key: number]: (ownerId: number, oauthId: number, data: JSON) => Promise<boolean>;
 }
 
 /**

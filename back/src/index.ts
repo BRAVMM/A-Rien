@@ -6,8 +6,8 @@ import bodyParser from 'body-parser';
 import db from './models/index';
 import cors from 'cors';
 import UserRouter from './route/user.route';
+import ServicesRouter from './route/services.route';
 import {TaskScheduler} from './services/taskScheduler';
-
 
 const app = express();
 app.use(cors());
@@ -20,7 +20,7 @@ if (isNaN(INTERVAL)) {
 }
 
 // Initialize the database connection
-db.sequelize.sync()
+db.sequelize.sync({force: true})
     .then(() => {
         console.log('Database sync completed.');
     })
@@ -33,6 +33,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', UserRouter);
+
+app.use('/services', ServicesRouter)
 
 /**
  * Execute each minute the checkTriggers function, which checks if a trigger is activated

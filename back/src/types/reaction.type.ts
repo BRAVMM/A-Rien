@@ -1,3 +1,0 @@
-type ReactionType = {
-    playlistId: string;
-}

@@ -24,7 +24,7 @@ namespace SpotifyTriggers {
      * @returns {Promise<any>} - The response of the fetch
      */
     async function fetchWithOAuth(oauthId: number, ownerId: number, url: string): Promise<any> {
-        const oauthToken: string | null = await OAuthService.getDecryptedOAuthTokenFromId(oauthId, ownerId);
+        const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
         if (oauthToken === null) {
             throw new Error("OAuth token not found");
         }
@@ -67,7 +67,7 @@ namespace SpotifyTriggers {
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
-    export const checkSpotifyNewSavedSong = async (ownerId: number, oauthId: number, data: JSON): Promise<boolean> => {
+    export const checkSpotifyNewSavedSong = async (ownerId: number, oauthId: number): Promise<boolean> => {
         try {
             const json = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + "/me/tracks");
             const userData = getOrCreateUserData(ownerId);
@@ -90,7 +90,7 @@ namespace SpotifyTriggers {
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
-    export const checkSpotifyNewSavedAlbum = async (ownerId: number, oauthId: number, data: JSON): Promise<boolean> => {
+    export const checkSpotifyNewSavedAlbum = async (ownerId: number, oauthId: number): Promise<boolean> => {
         try {
             const json = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + "/me/albums");
             const userData = getOrCreateUserData(ownerId);
@@ -113,10 +113,21 @@ namespace SpotifyTriggers {
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
-    export const checkSpotifyNewSavedArtist = async (ownerId: number, oauthId: number, data: JSON): Promise<boolean> => {
+    export const checkSpotifyNewSavedArtist = async (ownerId: number, oauthId: number, data: any): Promise<boolean> => {
         try {
             const json = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + "/me/following?type=artist");
             const userData = getOrCreateUserData(ownerId);
+            if (data.gendre) {
+                for (const artist of json.artists.items) {
+                    if (artist.genres.includes(data.gendre)) {
+                        if (userData.ArtistLikedLength !== json.artists.items.length) {
+                            userData.ArtistLikedLength = json.artists.items.length;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+            }
             if (userData.ArtistLikedLength !== json.artists.items.length) {
                 userData.ArtistLikedLength = json.artists.items.length;
             } else {
@@ -136,7 +147,7 @@ namespace SpotifyTriggers {
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
-    export const checkSpotifyNewSavedPlaylist = async (ownerId: number, oauthId: number, data: JSON): Promise<boolean> => {
+    export const checkSpotifyNewSavedPlaylist = async (ownerId: number, oauthId: number): Promise<boolean> => {
         try {
             const json = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + "/me/playlists");
             const userData = getOrCreateUserData(ownerId);
