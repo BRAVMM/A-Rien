@@ -10,7 +10,7 @@ class OAuth extends Model {
     public ivAccess!: string;
     public ivRefresh!: string;
     public expiresIn!: number;
-    public ownerID!: number;
+    public ownerId!: number;
 
     public static initialize(sequelize: Sequelize) {
         OAuth.init(
@@ -45,7 +45,7 @@ class OAuth extends Model {
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },
-                ownerID: {
+                ownerId: {
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },

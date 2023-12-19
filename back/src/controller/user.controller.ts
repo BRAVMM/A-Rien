@@ -38,10 +38,11 @@ const register = async (req: Request, res: Response): Promise<void> => {
         }
 
         const hashedPassword: string = await EncryptionService.bcryptHash(password);
-        const hashedEmail: string = await EncryptionService.bcryptHash(email);
+        const encryptedEmail: {iv: string, content: string} = EncryptionService.encrypt(email);
         const user: User = await User.create({
             username: username,
-            email: hashedEmail,
+            encryptedEmail: encryptedEmail.content,
+            ivEmail: encryptedEmail.iv,
             password: hashedPassword,
         });
         const token: string = JwtService.generateToken(user.id);
@@ -119,7 +120,8 @@ const getUserInfo = async (req: Request, res: Response): Promise<void> => {
             res.status(401).json({error: "User not found"});
             return;
         }
-        res.status(200).json({username: user.username, email: user.email});
+        const decryptedEmail: string = EncryptionService.decrypt(user.encryptedEmail, user.ivEmail);
+        res.status(200).json({username: user.username, email: decryptedEmail});
     } catch (error: any) {
         console.error(error)
         res.status(500).json({error: "An unexpected error occurred"});

@@ -50,8 +50,8 @@ namespace UserMiddleware {
      * @returns {Promise<boolean>} - This returns true if the user exists or false if the user doesn't exist
      */
     export const checkIfUserExists = async (username: string, email: string): Promise<boolean> => {
-        const hashedEmail: string = await EncryptionService.bcryptHash(email);
-        const user: User | null = await User.findOne({where: {[Op.or]: [{username: username}, {email: hashedEmail}]}});
+        const encryptedEmail = EncryptionService.encrypt(email);
+        const user: User | null = await User.findOne({where: {[Op.or]: [{username: username}, {encryptedEmail: encryptedEmail.content}]}});
 
         return user !== null;
     }

@@ -15,7 +15,7 @@ class ReactionData extends Model {
                 id: {
                     type: DataTypes.INTEGER,
                     primaryKey: true,
-                    allowNull: false,
+                    autoIncrement: true,
                 },
                 ownerId: {
                     type: DataTypes.INTEGER,

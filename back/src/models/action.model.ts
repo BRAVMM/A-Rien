@@ -6,7 +6,7 @@ class Action extends Model {
     public id!: number;
     public name!: string;
     public args!: string;
-    public reactionsIds!: number;
+    public reactionsIds!: number[];
 
     public static initialize(sequelize: Sequelize) {
         Action.init(
@@ -14,7 +14,7 @@ class Action extends Model {
                 id: {
                     type: DataTypes.INTEGER,
                     primaryKey: true,
-                    allowNull: false,
+                    autoIncrement: true
                 },
                 name: {
                     type: DataTypes.STRING,
