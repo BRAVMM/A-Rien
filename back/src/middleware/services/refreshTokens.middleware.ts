@@ -74,7 +74,7 @@ const refreshTokensOfUserByServiceID = async (serviceId: number, ownerId: number
     const refreshTokenCallback : RefreshTokenCallback = refreshTokenCallbacks[serviceId];
 
     if (!refreshTokenCallback) {
-        throw new Error('Unknow service')
+        throw new Error('Service not found')
     }
     await refreshTokenCallback(tokens)
 }
@@ -109,19 +109,22 @@ const refreshTokens = async (req: Request, res: Response, next: NextFunction): P
     const userInfo : TokenData = (req as CustomRequest).user
 
     if (!userInfo) {
-        res.status(401).json({error: "User not found"});
+        res.status(404).json({error: "User not found"});
         return;
     }
     try {
         const { serviceId } = req.body
 
         if (!serviceId) {
-            res.status(401).json({error: "Service not defined"});
+            res.status(404).json({error: "Service not found"});
             return;
         }
         await refreshTokensOfUserByServiceID(serviceId, userInfo.userId)
         next()
     } catch (error) {
+        if (error instanceof Error) {
+
+        }
         console.error(error);
         res.status(500).json({error: 'Token refresh error'});
         return;

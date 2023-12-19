@@ -7,38 +7,6 @@ import refreshSpotifyTokens from "./refreshCallback/spotifyRefresh.middleware";
 import { spotifyAlreadyAuth } from "./Auth/spotifyAuth.middleware";
 
 /**
- * Type definition for a callback function used to check if a user is already authenticated.
- * This function takes an array of OAuth tokens and a new access token as parameters
- * and performs a check to determine if the user associated with the new access token
- * is already authenticated.
- *
- * @param {OAuth[]} tokens - An array of OAuth token objects to check against.
- * @param {string} newToken - The new access token to check for existing authentication.
- * @returns {Promise<void>} - A promise that resolves when the check is complete.
- */
-type CheckUserAlreadyAuth = (tokens: OAuth[], newToken: string) => Promise<void>;
-
-/**
- * A map that associates service IDs with their respective callback functions for checking
- * if a user is already authenticated with that service. Each service ID key maps to a
- * CheckUserAlreadyAuth function that implements the specific logic for that service.
- * 
- * Currently implemented services:
- *  - Service ID 1: A callback for the Spotify service, invoking the spotifyAlreadyAuth function.
- * 
- * Example usage:
- *  const serviceId = 1;
- *  const tokens = await OAuth.findAll({ where: { serviceId }});
- *  const newAccessToken = "example_new_access_token";
- *  await userAlreadyAuthCallbacks[serviceId](tokens, newAccessToken);
- */
-const userAlreadyAuthCallbacks: { [serviceId: number]: CheckUserAlreadyAuth } = {
-    1: async (tokens, newToken) => { 
-        await spotifyAlreadyAuth(tokens, newToken); 
-    },
-};
-
-/**
  * Middleware that checks if a user is already authenticated with a specific service.
  * The middleware retrieves all OAuth tokens associated with a given serviceId,
  * then invokes a service-specific callback to check if the user associated with the new access token
@@ -71,25 +39,31 @@ const userAlreadyAuth = async (req: Request, res: Response, next: NextFunction):
         return;
     }
     try {
-        const { serviceId, accessToken } = req.body
+        const { userEmail, accessToken, refreshToken} = req.body
 
-        if (!serviceId || !accessToken) {
+        if (!userEmail) {
             res.status(400).json({error: "Missing required parameters"});
             return;
         }
-        const tokens : OAuth[] = await OAuth.findAll({
+        const token : OAuth | null = await OAuth.findOne({
             where: {
-                ownerId: userInfo.userId,
-                serviceId: serviceId,
+                OAuthEmail: userEmail
             }
         });
-        const userAlreadyAuthCallback : CheckUserAlreadyAuth = userAlreadyAuthCallbacks[serviceId];
 
-        if (!userAlreadyAuthCallback) {
-            res.status(401).json({error: "Service undefined"});
-            return;
+        if (token) {
+            const encryptedAccessToken : {iv: string, content: string} = EncryptionService.encrypt(accessToken)
+            const encryptedRefreshToken : {iv: string, content: string} = EncryptionService.encrypt(refreshToken)
+
+            token.update({
+                encryptedAccessToken: encryptedAccessToken.content,
+                encryptedRefreshToken: encryptedRefreshToken.content,
+                ivAccess: encryptedAccessToken.iv,
+                ivRefresh: encryptedRefreshToken.iv,
+            })
+            res.status(200).json({message: 'New token registered'})
+            return
         }
-        await userAlreadyAuthCallback(tokens, accessToken);
         next();
     } catch (error) {
         console.error(error);
