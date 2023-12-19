@@ -7,6 +7,6 @@ import userAlreadyAuth from '../middleware/services/userAlreadyAuth.middleware';
 import { refreshTokens } from '../middleware/services/refreshTokens.middleware';
 
 /** Definitions of routes */
-router.post('/spotify/registerToken', verifyToken, spotifyAuth, refreshTokens, userAlreadyAuth, spotifyController.registerToken)
+router.post('/spotify/registerToken', verifyToken, spotifyAuth, userAlreadyAuth, spotifyController.registerToken)
 
 export default router;

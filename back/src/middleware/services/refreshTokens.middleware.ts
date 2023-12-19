@@ -123,7 +123,7 @@ const refreshTokens = async (req: Request, res: Response, next: NextFunction): P
         next()
     } catch (error) {
         if (error instanceof Error) {
-
+            console.error(error)
         }
         console.error(error);
         res.status(500).json({error: 'Token refresh error'});

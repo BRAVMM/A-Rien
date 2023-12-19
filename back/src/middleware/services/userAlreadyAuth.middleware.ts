@@ -5,6 +5,7 @@ import { OAuth } from "../../models/oauth.model";
 import { EncryptionService } from "../../services/encryption.service";
 import refreshSpotifyTokens from "./refreshCallback/spotifyRefresh.middleware";
 import { spotifyAlreadyAuth } from "./Auth/spotifyAuth.middleware";
+import getUserEmail from "../../services/API/Spotify/getUserEmail.service";
 
 /**
  * Middleware that checks if a user is already authenticated with a specific service.
@@ -39,12 +40,13 @@ const userAlreadyAuth = async (req: Request, res: Response, next: NextFunction):
         return;
     }
     try {
-        const { userEmail, accessToken, refreshToken} = req.body
+        const {accessToken, refreshToken} = req.body
 
-        if (!userEmail) {
+        if (!accessToken || !refreshToken) {
             res.status(400).json({error: "Missing required parameters"});
             return;
         }
+        const userEmail = await getUserEmail(accessToken)
         const token : OAuth | null = await OAuth.findOne({
             where: {
                 OAuthEmail: userEmail
