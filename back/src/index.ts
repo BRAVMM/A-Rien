@@ -125,7 +125,7 @@ const addActionsToDB = async () => {
             name: 'Timer',
             actions: [
                 {
-                    id: 1,
+                    id: 5,
                     name: 'When X time stamped',
                     args: [{
                         title: "timeNeeded",

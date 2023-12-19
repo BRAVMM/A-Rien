@@ -26,6 +26,7 @@ const ACTIONS_FUNCTIONS: actionFunction = {
     2: SpotifyTriggers.checkSpotifyNewSavedAlbum,
     3: SpotifyTriggers.checkSpotifyNewSavedArtist,
     4: SpotifyTriggers.checkSpotifyNewPlaylistCreated,
+    5: TimerTriggers.actionWhenXTimeStamped,
 };
 
 const REACTIONS_FUNCTIONS: reactionFunction = {

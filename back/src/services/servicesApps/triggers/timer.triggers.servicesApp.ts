@@ -33,22 +33,23 @@ namespace TimerTriggers {
     /**
      * Add a song to a playlist
      * @param ownerId - The id of the owner
+     * @param oauthId - The id of the oauth
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the reaction
      */
-    export const actionWhenXTimeStamped = async (ownerId: number, data: any): Promise<boolean> => {
+    export const actionWhenXTimeStamped = async (ownerId: number, oauthId: number, data: JSON): Promise<{result: boolean, data: any}> => {
         try {
             const timerTriggerData: TimerTriggerData = getOrCreateUserTimerTriggerData(ownerId, data.timeNeeded);
 
             if (timerTriggerData.timer.getTime() - timerTriggerData.timeNeeded.getTime() >= 0) {
                 console.log('Timer is expired');
-                return true;
+                return {data: null, result: false};
             } else {
-                return false;
+                return {data: null, result: true};
             }
         } catch (error) {
             console.error('Error executing reaction timer add to playlist:', error);
-            return false;
+            return {data: null, result: false};
         }
     }
 }
