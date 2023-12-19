@@ -40,6 +40,50 @@ namespace SpotifyReactions {
         }
     }
 
+    /**
+     * Get a random char
+     * @returns {string} - The random char
+     */
+    const rand = (): string => {
+        const chars = 'abcdefghijklmnopqrstuvwxyz';
+        return chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    /**
+     * Get a random number from an interval
+     * @param min - The min number
+     * @param max - The max number
+     */
+    const randFromInterval = (min: number, max: number): number => {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    /**
+     * Get a random song uri
+     * @param oauthId - The id of the OAuth
+     * @param ownerId - The id of the owner
+     */
+    async function getRandomSongUri(oauthId: number, ownerId: number): Promise<string> {
+        try {
+            const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
+            if (oauthToken === null) {
+                console.error("OAuth token not found");
+                return Promise.resolve("");
+            }
+            const response = await fetch("https://api.spotify.com/v1/search?q=" + rand() + "&type=track&limit=50" + "&offset=" + randFromInterval(0, 1000), {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + oauthToken
+                }
+            });
+            const json = await response.json();
+            return json.tracks.items[randFromInterval(0, 50)].uri;
+        } catch (e) {
+            console.error("Error in getRandomSongUri:", e);
+            return Promise.resolve("");
+        }
+    }
+
     const getFirstSongUriOfAlbum = async (oauthId: number, ownerId: number, albumId: string): Promise<string> => {
         try {
             const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
@@ -121,11 +165,48 @@ namespace SpotifyReactions {
             }
             const actionDataParsed: any = actionData;
             const reactionDataParsed: any = JSON.parse(reactionData.toString());
-            console.log("actionDataParsed:");
-            console.log(actionDataParsed);
             const trackUri: string = await getDataTrackId(oauthId, ownerId, actionDataParsed);
             const playlistId: string = reactionDataParsed[0].playlistId;
             if (!trackUri || !playlistId) {
+                return false;
+            }
+            const response = await fetch("https://api.spotify.com/v1/playlists/" + playlistId + "/tracks", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + oauthToken
+                },
+                body: JSON.stringify({
+                    uris: [trackUri]
+                })
+            });
+            const json = await response.json();
+            console.log(json);
+        } catch (e) {
+            console.error("Error in reactionSpotifyAddToPlaylist:", e);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Add a random song to a playlist
+     * @param ownerId - The id of the owner
+     * @param oauthId - The id of the OAuth
+     * @param actionData - The action data
+     * @param reactionData - The reaction data
+     * @returns {Promise<boolean>} - The result of the reaction
+     */
+    export const reactionSpotifyAddRandomToPlaylist = async (ownerId: number, oauthId: number, actionData: JSON, reactionData: JSON): Promise<boolean> => {
+        try {
+            const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
+            if (oauthToken === null) {
+                console.error("OAuth token not found");
+                return false;
+            }
+            const reactionDataParsed: any = JSON.parse(reactionData.toString());
+            const playlistId: string = reactionDataParsed[0].playlistId;
+            const trackUri: string = await getRandomSongUri(oauthId, ownerId);
+            if (!playlistId) {
                 return false;
             }
             const response = await fetch("https://api.spotify.com/v1/playlists/" + playlistId + "/tracks", {
