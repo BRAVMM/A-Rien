@@ -17,9 +17,7 @@ import {actionFunction, reactionFunction} from '../interfaces/taskScheduler.inte
 import {SpotifyTriggers} from "./servicesApps/triggers/spotify.triggers.servicesApp";
 import {TimerTriggers} from "./servicesApps/triggers/timer.triggers.servicesApp";
 /* Import all reactions functions */
-import {
-    SpotifyReactions
-} from "./servicesApps/reactions/spotify.reactions.servicesApp";
+import {SpotifyReactions} from "./servicesApps/reactions/spotify.reactions.servicesApp";
 
 /* Constants */
 const ACTIONS_FUNCTIONS: actionFunction = {
@@ -35,6 +33,7 @@ const ACTIONS_FUNCTIONS: actionFunction = {
 
 const REACTIONS_FUNCTIONS: reactionFunction = {
     1: SpotifyReactions.reactionSpotifyAddToPlaylistFromASong,
+    2: SpotifyReactions.reactionSpotifyAddRandomToPlaylist,
 };
 
 /**

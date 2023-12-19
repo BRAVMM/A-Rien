@@ -155,7 +155,7 @@ const addActionsToDB = async () => {
                         title: "timeNeeded",
                         type: 'date',
                     }],
-                    reactionsIds: [1],
+                    reactionsIds: [2],
                 },
             ]
         }
