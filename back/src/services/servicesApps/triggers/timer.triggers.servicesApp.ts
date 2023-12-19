@@ -37,7 +37,7 @@ namespace TimerTriggers {
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the reaction
      */
-    export const actionWhenXTimeStamped = async (ownerId: number, oauthId: number, data: JSON): Promise<{result: boolean, data: any}> => {
+    export const actionWhenXTimeStamped = async (ownerId: number, oauthId: number, data: any): Promise<{result: boolean, data: any}> => {
         try {
             const timerTriggerData: TimerTriggerData = getOrCreateUserTimerTriggerData(ownerId, data.timeNeeded);
 
@@ -53,3 +53,5 @@ namespace TimerTriggers {
         }
     }
 }
+
+export { TimerTriggers };

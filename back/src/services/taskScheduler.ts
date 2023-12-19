@@ -15,6 +15,7 @@ import {TriggersMiddleware} from "../middleware/triggers.middleware";
 import {actionFunction, reactionFunction} from '../interfaces/taskScheduler.interface';
 /* Import all triggers functions */
 import {SpotifyTriggers} from "./servicesApps/triggers/spotify.triggers.servicesApp";
+import {TimerTriggers} from "./servicesApps/triggers/timer.triggers.servicesApp";
 /* Import all reactions functions */
 import {
     SpotifyReactions
@@ -26,7 +27,10 @@ const ACTIONS_FUNCTIONS: actionFunction = {
     2: SpotifyTriggers.checkSpotifyNewSavedAlbum,
     3: SpotifyTriggers.checkSpotifyNewSavedArtist,
     4: SpotifyTriggers.checkSpotifyNewPlaylistCreated,
-    5: TimerTriggers.actionWhenXTimeStamped,
+    5: SpotifyTriggers.checkSpotifyNewSavedPlaylist,
+    6: SpotifyTriggers.checkSpotifyNewSavedSongFromGenre,
+    7: SpotifyTriggers.checkSpotifyNewSavedSongFromArtist,
+    8: TimerTriggers.actionWhenXTimeStamped
 };
 
 const REACTIONS_FUNCTIONS: reactionFunction = {

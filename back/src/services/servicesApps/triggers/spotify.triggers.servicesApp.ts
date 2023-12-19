@@ -122,6 +122,8 @@ namespace SpotifyTriggers {
             usersSpotifyTriggerData[userId] = {
                 userId: userId,
                 trackLikedLength: 0,
+                trackLikedFromGenreLength: 0,
+                trackLikedFromArtistLength: 0,
                 albumLikedLength: 0,
                 artistLikedLength: 0,
                 playlistCreatedLength: 0,
@@ -150,6 +152,7 @@ namespace SpotifyTriggers {
                     return {result: false, data: null};
                 }
             } else {
+                userData.trackLikedLength = length;
                 return {result: false, data: null};
             }
             let data = json.items[0];
@@ -170,17 +173,19 @@ namespace SpotifyTriggers {
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
-    export const checkSpotifyNewSongFromGenre = async (ownerId: number, oauthId: number, data: any): Promise<{result: boolean, data: any}> => {
+    export const checkSpotifyNewSavedSongFromGenre = async (ownerId: number, oauthId: number, data: any): Promise<{result: boolean, data: any}> => {
         try {
             const {length, json} = await getSpotifyFollowedSongsLength(oauthId, ownerId);
             const {userData, isNew} = getOrCreateUserData(ownerId);
+            const DataParsed: any = JSON.parse(data.toString());
 
-            if (userData.trackLikedLength < length) {
-                userData.trackLikedLength = length;
+            if (userData.trackLikedFromGenreLength < length) {
+                userData.trackLikedFromGenreLength = length;
                 if (isNew) {
                     return {result: false, data: null};
                 }
             } else {
+                userData.trackLikedFromGenreLength = length;
                 return {result: false, data: null};
             }
             if (!json.items[0]) {
@@ -192,7 +197,7 @@ namespace SpotifyTriggers {
             track.trackUri = track.track.uri;
             for (const artist of track.track.artists) {
                 for (const genre of artist.genres) {
-                    if (genre.toLowerCase().includes(data.genre.toLowerCase())) {
+                    if (genre.toLowerCase().includes(DataParsed.genre.toLowerCase())) {
                         return {result: true, data: track};
                     }
                 }
@@ -211,17 +216,19 @@ namespace SpotifyTriggers {
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
-    export const checkSpotifyNewSongFromArtist = async (ownerId: number, oauthId: number, data: any): Promise<{result: boolean, data: any}> => {
+    export const checkSpotifyNewSavedSongFromArtist = async (ownerId: number, oauthId: number, data: any): Promise<{result: boolean, data: any}> => {
         try {
             const {length, json} = await getSpotifyFollowedSongsLength(oauthId, ownerId);
             const {userData, isNew} = getOrCreateUserData(ownerId);
+            const DataParsed: any = JSON.parse(data.toString());
 
-            if (userData.trackLikedLength < length) {
-                userData.trackLikedLength = length;
+            if (userData.trackLikedFromArtistLength < length) {
+                userData.trackLikedFromArtistLength = length;
                 if (isNew) {
                     return {result: false, data: null};
                 }
             } else {
+                userData.trackLikedFromArtistLength = length;
                 return {result: false, data: null};
             }
             if (!json.items[0]) {
@@ -231,7 +238,7 @@ namespace SpotifyTriggers {
             track.dataType = TRIGGER_DATA_TYPE.SPOTIFY_TRACK;
             track.trackId = track.track.id;
             track.trackUri = track.track.uri;
-            if (track.track.artists[0].id === data.artistId) {
+            if (track.track.artists[0].id === DataParsed.artistId) {
                 return {result: true, data: track};
             }
             return {result: false, data: null};
@@ -259,6 +266,7 @@ namespace SpotifyTriggers {
                     return {result: false, data: null};
                 }
             } else {
+                userData.albumLikedLength = length;
                 return {result: false, data: null};
             }
             if (!json.items[0]) {
@@ -282,7 +290,7 @@ namespace SpotifyTriggers {
      * @param data - The data of the trigger
      * @returns {Promise<boolean>} - The result of the trigger
      */
-    export const checkSpotifyNewSavedArtist = async (ownerId: number, oauthId: number, data: any): Promise<{result: boolean, data: any}> => {
+    export const checkSpotifyNewSavedArtist = async (ownerId: number, oauthId: number): Promise<{result: boolean, data: any}> => {
         try {
             const {length, json} = await getSpotifyFollowedArtistsLength(oauthId, ownerId);
             const {userData, isNew} = getOrCreateUserData(ownerId);
@@ -290,6 +298,7 @@ namespace SpotifyTriggers {
             if (userData.artistLikedLength < length) {
                 userData.artistLikedLength = length;
             } else {
+                userData.artistLikedLength = length;
                 return {result: false, data: null};
             }
             if (!json.artists.items[0]) {
@@ -323,6 +332,7 @@ namespace SpotifyTriggers {
                     return {result: false, data: null};
                 }
             } else {
+                userData.playlistCreatedLength = length;
                 return {result: false, data: null};
             }
             if (!json.items[0]) {
@@ -354,6 +364,7 @@ namespace SpotifyTriggers {
                     return {result: false, data: null};
                 }
             } else {
+                userData.playlistLikedLength = length;
                 return {result: false, data: null};
             }
             if (!json.items[0]) {

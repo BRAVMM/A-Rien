@@ -63,15 +63,15 @@ const addServicesToDB = async () => {
         {
             id: 1,
             name: 'Spotify',
-            actionsId: [1, 2, 3, 4],
+            actionsId: [1, 2, 3, 4, 5, 6, 7],
             reactionsId: [1],
         },
         {
             id: 2,
             name: 'Timer',
-            actionsId: [1],
-            reactionsId: [1],
-        },
+            actionsId: [8],
+            reactionsId: [],
+        }
     ];
 
     for (const service of SERVICES) {
@@ -115,8 +115,32 @@ const addActionsToDB = async () => {
                 },
                 {
                     id: 4,
+                    name: 'New created playlist',
+                    args: [],
+                    reactionsIds: [1],
+                },
+                {
+                    id: 5,
                     name: 'New saved playlist',
                     args: [],
+                    reactionsIds: [1],
+                },
+                {
+                    id: 6,
+                    name: 'New saved song from genre',
+                    args: [{
+                        title: "genre",
+                        type: 'string',
+                    }],
+                    reactionsIds: [1],
+                },
+                {
+                    id: 7,
+                    name: 'New saved song from artist',
+                    args: [{
+                        title: "artistId",
+                        type: 'string',
+                    }],
                     reactionsIds: [1],
                 },
             ]
@@ -125,7 +149,7 @@ const addActionsToDB = async () => {
             name: 'Timer',
             actions: [
                 {
-                    id: 5,
+                    id: 8,
                     name: 'When X time stamped',
                     args: [{
                         title: "timeNeeded",
