@@ -11,5 +11,6 @@ interface SpotifyTriggerData {
     trackLikedLength: number;
     albumLikedLength: number;
     artistLikedLength: number;
+    playlistCreatedLength: number;
     playlistLikedLength: number;
 }

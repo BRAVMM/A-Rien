@@ -8,7 +8,7 @@ import generateRandomString from '@/app/Utils/generateRandomString';
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
 const RESPONSE_TYPE = "code";
 const REGISTER_TOKEN_ROUTE = "/services/spotify/registerToken";
-const SCOPE = "user-read-private user-read-email playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public"
+const SCOPE = "user-read-private user-read-email playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-follow-read user-library-read user-library-modify user-top-read user-read-recently-played";
 
 const SpotifyButtonOAuth: React.FC = () => {
     const [code, setCode] = useState<string>('');
