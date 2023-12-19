@@ -43,7 +43,7 @@ namespace TaskScheduler {
      * @param actionDataDatas
      * @returns {Promise<void>}
      */
-    const executeReactionsFromActionData = async (actionData: ActionData, actionDataDatas: any): Promise<void> => {
+    const executeReactionsFromActionData = async (actionData: ActionData, actionDataDatas: JSON): Promise<void> => {
         try {
             for (const reactionDataId of actionData.reactionsDataIds) {
                 const reactionData: ReactionData | null = await TriggersMiddleware.getReactionDataFromId(actionData.ownerId, reactionDataId);
@@ -55,8 +55,7 @@ namespace TaskScheduler {
                 const reactionFunction = REACTIONS_FUNCTIONS[reactionData.reactionId];
 
                 if (reactionData && reactionFunction) {
-                    const datas = JSON.parse(reactionData.data.toString());
-                    await reactionFunction(actionData.ownerId, reactionData.oauthId, JSON.parse(actionDataDatas), datas);
+                    await reactionFunction(actionData.ownerId, reactionData.oauthId, actionDataDatas, reactionData.data);
                 } else {
                     console.error('Reaction function not found');
                 }
