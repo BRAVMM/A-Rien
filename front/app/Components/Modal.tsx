@@ -42,6 +42,7 @@ const ModalUI: React.FC<{
     setActionDatas("");
     setReactions(undefined);
     setReactionDatas(undefined);
+    setStep(Step.SELECT_SERVICE_ACTION);
   }
 
   /* useEffect */
