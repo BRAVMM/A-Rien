@@ -82,11 +82,6 @@ A((Api)) --> C
 A --> B
 B[App mobile] --> D
 C[App web] --> D{Data}
-```
-
-
-
-## Authors
 
 - **Romain Panno** - [Github](https://github.com/romainpanno)
 - **Brice Desousa** - [Github](https://github.com/KitetsuK)
