@@ -18,15 +18,22 @@ namespace TimerTriggers {
      * @param timeNeeded - The time needed
      * @returns {TimerTriggerData} - The timer trigger data
      **/
-    function getOrCreateUserTimerTriggerData(userId: number, timeNeeded: Date): TimerTriggerData {
+    function getOrCreateUserTimerTriggerData(userId: number, timeNeeded: string): TimerTriggerData {
         if (userTimerTriggerData[userId]) {
             return userTimerTriggerData[userId];
         }
+        console.log('timeNeeded = ', timeNeeded);
+        console.log('parseInt(timeNeeded) = ', parseInt(timeNeeded));
+        const timeNeededTemp: number = parseInt(timeNeeded);
         userTimerTriggerData[userId] = {
             userId,
             timer: new Date(),
-            timeNeeded: timeNeeded
+            gap: timeNeededTemp,
         };
+        let userTimerTriggerDataTemp: TimerTriggerData = userTimerTriggerData[userId];
+
+        userTimerTriggerDataTemp.timer.setMinutes(userTimerTriggerDataTemp.timer.getMinutes() + timeNeededTemp);
+        console.log('userTimerTriggerDataTemp.timer = ', userTimerTriggerDataTemp.timer);
         return userTimerTriggerData[userId];
     }
 
@@ -39,13 +46,19 @@ namespace TimerTriggers {
      */
     export const actionWhenXTimeStamped = async (ownerId: number, oauthId: number, data: any): Promise<{result: boolean, data: any}> => {
         try {
+            console.log('data = ', data);
+            console.log("data[0] = ", data[0]);
             const timerTriggerData: TimerTriggerData = getOrCreateUserTimerTriggerData(ownerId, data.timeNeeded);
 
-            if (timerTriggerData.timer.getTime() - timerTriggerData.timeNeeded.getTime() >= 0) {
+            console.log('timerTriggerData.timer = ', timerTriggerData.timer);
+            console.log('new Date().getTime() = ', new Date().getTime());
+            if (timerTriggerData.timer.getTime() - new Date().getTime() >= 0) {
                 console.log('Timer is expired');
-                return {data: null, result: false};
-            } else {
+                timerTriggerData.timer = new Date();
+                timerTriggerData.timer.setMinutes(timerTriggerData.timer.getMinutes() + timerTriggerData.gap);
                 return {data: null, result: true};
+            } else {
+                return {data: null, result: false};
             }
         } catch (error) {
             console.error('Error executing reaction timer add to playlist:', error);

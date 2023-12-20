@@ -64,7 +64,7 @@ const addServicesToDB = async () => {
             id: 1,
             name: 'Spotify',
             actionsId: [1, 2, 3, 4, 5, 6, 7],
-            reactionsId: [1],
+            reactionsId: [1, 2],
         },
         {
             id: 2,
@@ -153,7 +153,7 @@ const addActionsToDB = async () => {
                     name: 'When X time stamped',
                     args: [{
                         title: "timeNeeded",
-                        type: 'date',
+                        type: 'number',
                     }],
                     reactionsIds: [2],
                 },
@@ -186,6 +186,17 @@ const addReactionsToDB = async () => {
                     id: 1,
                     name: 'Add to playlist',
                     description: 'Add a song to a playlist',
+                    args: [
+                        {
+                            title: "playlistId",
+                            type: 'string',
+                        },
+                    ],
+                },
+                {
+                    id: 2,
+                    name: 'Add random to playlist',
+                    description: 'Add a random song to a playlist',
                     args: [
                         {
                             title: "playlistId",

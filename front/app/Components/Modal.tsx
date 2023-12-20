@@ -66,13 +66,9 @@ const ModalUI: React.FC<{
       return;
     }
     const actionJsonData: Promise<ServiceActionInterface[]> = actionReactionJsonDataService.getActionJsonData(ModalData.id);
-    const reactionJsonData: Promise<ServiceReactionInterface[]> = actionReactionJsonDataService.getReactionJsonData(ModalData.id);
 
     actionJsonData.then((actionJsonData) => {
         setActionJsonDatas(actionJsonData);
-    });
-    reactionJsonData.then((reactionJsonData) => {
-        setReactionJsonDatas(reactionJsonData);
     });
 
   }, [ModalData]);
@@ -84,6 +80,18 @@ const ModalUI: React.FC<{
   useEffect(() => {
     if (actionDatas !== "") {
       setStep(Step.SELECT_SERVICE_REACTION);
+      if (action === undefined) {
+        console.error("action is undefined");
+        return;
+      }
+      const reactionDatas = actionReactionJsonDataService.getReactionJsonData(action.id);
+      reactionDatas.then((reactionJsonData) => {
+        if (reactionJsonData === undefined) {
+          console.error("reactionJsonData is undefined");
+          return;
+        }
+        setReactionJsonDatas(reactionJsonData);
+      });
     }
   }, [actionDatas]);
 

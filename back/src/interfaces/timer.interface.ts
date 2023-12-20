@@ -11,5 +11,5 @@
 interface TimerTriggerData {
     userId: number;
     timer: Date;
-    timeNeeded: Date;
+    gap: number;
 }

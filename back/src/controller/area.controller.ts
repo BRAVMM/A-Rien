@@ -72,6 +72,7 @@ const getReactionsFromActionId = async (req: Request, res: Response): Promise<vo
         }
         const action: Action | null = await AreaMiddleware.getActionFromId(parseInt(actionId));
 
+        console.log("action", action);
         if (!action) {
             res.status(400).json({error: "Action not found"});
             return;
