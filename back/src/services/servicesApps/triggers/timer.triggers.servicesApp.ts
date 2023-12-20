@@ -22,8 +22,6 @@ namespace TimerTriggers {
         if (userTimerTriggerData[userId]) {
             return userTimerTriggerData[userId];
         }
-        console.log('timeNeeded = ', timeNeeded);
-        console.log('parseInt(timeNeeded) = ', parseInt(timeNeeded));
         const timeNeededTemp: number = parseInt(timeNeeded);
         userTimerTriggerData[userId] = {
             userId,
@@ -34,6 +32,8 @@ namespace TimerTriggers {
 
         userTimerTriggerDataTemp.timer.setMinutes(userTimerTriggerDataTemp.timer.getMinutes() + timeNeededTemp);
         console.log('userTimerTriggerDataTemp.timer = ', userTimerTriggerDataTemp.timer);
+        console.log("actual time = ", new Date());
+        console.log("diff = ", userTimerTriggerDataTemp.timer.getTime() - new Date().getTime());
         return userTimerTriggerData[userId];
     }
 
@@ -46,13 +46,9 @@ namespace TimerTriggers {
      */
     export const actionWhenXTimeStamped = async (ownerId: number, oauthId: number, data: any): Promise<{result: boolean, data: any}> => {
         try {
-            console.log('data = ', data);
-            console.log("data[0] = ", data[0]);
             const timerTriggerData: TimerTriggerData = getOrCreateUserTimerTriggerData(ownerId, data.timeNeeded);
 
-            console.log('timerTriggerData.timer = ', timerTriggerData.timer);
-            console.log('new Date().getTime() = ', new Date().getTime());
-            if (timerTriggerData.timer.getTime() - new Date().getTime() >= 0) {
+            if (timerTriggerData.timer.getTime() - new Date().getTime() <= 0) {
                 console.log('Timer is expired');
                 timerTriggerData.timer = new Date();
                 timerTriggerData.timer.setMinutes(timerTriggerData.timer.getMinutes() + timerTriggerData.gap);

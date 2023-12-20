@@ -95,18 +95,21 @@ const addActionsToDB = async () => {
                 {
                     id: 1,
                     name: 'New saved song',
+                    description: 'When a new song is saved',
                     args: [],
                     reactionsIds: [1],
                 },
                 {
                     id: 2,
                     name: 'New saved album',
+                    description: 'When a new album is saved',
                     args: [],
-                    reactionsIds: [],
+                    reactionsIds: [1],
                 },
                 {
                     id: 3,
                     name: 'New saved artist',
+                    description: 'When a new artist is saved',
                     args: [{
                         title: "gender",
                         type: 'string',
@@ -116,18 +119,21 @@ const addActionsToDB = async () => {
                 {
                     id: 4,
                     name: 'New created playlist',
+                    description: 'When a new playlist is created',
                     args: [],
                     reactionsIds: [1],
                 },
                 {
                     id: 5,
                     name: 'New saved playlist',
+                    description: 'When a new playlist is saved',
                     args: [],
                     reactionsIds: [1],
                 },
                 {
                     id: 6,
                     name: 'New saved song from genre',
+                    description: 'When a new song is saved from a genre',
                     args: [{
                         title: "genre",
                         type: 'string',
@@ -137,6 +143,7 @@ const addActionsToDB = async () => {
                 {
                     id: 7,
                     name: 'New saved song from artist',
+                    description: 'When a new song is saved from an artist',
                     args: [{
                         title: "artistId",
                         type: 'string',
@@ -151,9 +158,11 @@ const addActionsToDB = async () => {
                 {
                     id: 8,
                     name: 'When X time stamped',
+                    description: 'When X time is stamped',
                     args: [{
                         title: "timeNeeded",
                         type: 'number',
+                        range: [1, 1440],
                     }],
                     reactionsIds: [2],
                 },

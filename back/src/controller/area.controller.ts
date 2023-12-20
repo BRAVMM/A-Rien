@@ -43,6 +43,8 @@ const getActionsFromServiceId = async (req: Request, res: Response): Promise<voi
             res.status(400).json({error: "Please provide serviceId"});
             return;
         }
+        console.log("serviceId", serviceId);
+        console.log("parseInt(serviceId)", parseInt(serviceId));
         const action: Action[] | null = await AreaMiddleware.getActionsFromServiceId(parseInt(serviceId));
 
         if (!action) {
@@ -170,6 +172,14 @@ const getOauthIdsFromReactionId = async (req: Request, res: Response): Promise<v
     }
 }
 
+/**
+ * Store area
+ * @param req - This is the request object containing the area data
+ * @param res - This is the response object containing the area data id
+ * @returns {Promise<void>}
+ * @throws {Error} - An error
+ * @description This function store an area in the database
+ */
 const storeArea = async (req: Request, res: Response): Promise<void> => {
     try {
         const user: TokenData = (req as CustomRequest).user;
@@ -225,6 +235,12 @@ const storeArea = async (req: Request, res: Response): Promise<void> => {
         res.status(200).json({actionDataId, reactionDataIds});
     } catch (error: any) {
         console.error(error);
+        if (req.body.reactionDataIds) {
+            for (const reactionDataId of req.body.reactionDataIds) {
+                await ReactionData.destroy({where: {id: reactionDataId}});
+            }
+        }
+        await ActionData.destroy({where: {id: req.body.actionDataId}});
         res.status(500).json({error: "An unexpected error occurred"});
     }
 }

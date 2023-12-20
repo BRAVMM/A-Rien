@@ -88,7 +88,8 @@ export default function Services() {
     "Outlook": "./Outlook_logo.svg",
     "TrackerGG": "./TrackerGG_logo.svg",
     "Onedrive": "./OneDrive_logo.svg",
-    "Weather": "./Weather_logo.svg"
+    "Weather": "./Weather_logo.svg",
+    "Timer": "./Timer_logo.svg",
   }
 
     const [areas, setAreas] = useState<AreaDetailsInterface[]>([]);
@@ -117,7 +118,6 @@ export default function Services() {
 
     services.then((services) => {
       setServicesList(services);
-      console.log("services = ", services);
     });
   }, []);
 
@@ -129,7 +129,6 @@ export default function Services() {
   const handleModal = (service: ModalDataInterface) => {
     setIsModalOpen(true);
     setService(service);
-    console.log(service);
   };
 
   return (
@@ -148,7 +147,7 @@ export default function Services() {
           <p>Select a service</p>
         </div>
         <div className="overflow-hidden flex flex-col justify-center items-center space-y-5">
-          {servicesList?.map((service) => (
+          {servicesList !== undefined && (servicesList?.map((service) => (
             <button
               key={service.id}
               className="w-full h-1/2 flex items-center justify-center"
@@ -160,7 +159,7 @@ export default function Services() {
                 name={service.name}
               />
             </button>
-          ))}
+          )))}
         </div>
       </div>
 
