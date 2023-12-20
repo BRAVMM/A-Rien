@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      - dev
-      - AR-44-je-veux-que-lutilisateur-puisse-avoir-un-apk-dans-les-releases-automatiquement
 
 env:
   BRANCH: "main"
@@ -47,7 +45,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: install expo-dev-client
-        working-directory: ./front
+        working-directory: ./mobile
         run: |
           npm install expo-dev-client
           npm install expo-cli
@@ -68,7 +66,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Build Release APK
-        working-directory: ./front
+        working-directory: ./mobile
         timeout-minutes: 10
         run: |
           export ANDROID_HOME=/root/.android/sdk
@@ -77,7 +75,7 @@ jobs:
 
       - name: Upload To Release
         if: github.ref == 'refs/heads/main'
-        working-directory: ./front
+        working-directory: ./mobile
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
