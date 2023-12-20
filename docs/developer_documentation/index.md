@@ -82,3 +82,24 @@ docker-compose.yml
 │   ├── package.json
 │   ├── app/
 ```
+
+### Interactions
+
+The following diagram shows the interactions between the different parts of the project:
+
+```txt
+   +------------+
+   |    Front   | <---+
+   +------------+     |
+                      |     +----------+       +------------+
+                      +---> |   BACK   | <---> |     DB     |
+                      |     +----------+       +------------+
+   +------------+     |
+   |   Mobile   | <---+
+   +------------+
+```
+
+The front and mobile communicate with the back via the API.
+Depending on the request, the back will communicate with the database.
+
+To update the services, the back communicates with the external services API.
