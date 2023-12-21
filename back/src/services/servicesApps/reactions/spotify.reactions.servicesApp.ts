@@ -30,7 +30,6 @@ namespace SpotifyReactions {
                 }
             });
             const json = await response.json();
-            console.log(json);
             if (!json || json.items[0] === undefined || json.items[0].track === undefined || json.items[0].track.uri === undefined)
                 return "";
             return json.items[0].track.uri;
@@ -77,7 +76,20 @@ namespace SpotifyReactions {
                 }
             });
             const json = await response.json();
-            return json.tracks.items[randFromInterval(0, 50)].uri;
+            if (!response.ok) {
+                console.error("Fetch request failed with status:", response.status);
+                return Promise.resolve("");
+            }
+            if (!json.tracks || !json.tracks.items || !json.tracks.items.length) {
+                console.error("Invalid JSON structure for tracks:", json);
+                return Promise.resolve("");
+            }
+            const randomIndex = randFromInterval(0, 50);
+            if (!json.tracks.items[randomIndex] || !json.tracks.items[randomIndex].uri) {
+                console.error("Invalid JSON structure for tracks:", json);
+                return Promise.resolve("");
+            }
+            return json.tracks.items[randomIndex].uri;
         } catch (e) {
             console.error("Error in getRandomSongUri:", e);
             return Promise.resolve("");
@@ -97,8 +109,11 @@ namespace SpotifyReactions {
                     "Authorization": "Bearer " + oauthToken
                 }
             });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error);
+            }
             const json = await response.json();
-            console.log(json);
             if (!json || json.items[0] === undefined || json.items[0].uri === undefined)
                 return "";
             return json.items[0].uri;
@@ -121,8 +136,11 @@ namespace SpotifyReactions {
                     "Authorization": "Bearer " + oauthToken
                 }
             });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error);
+            }
             const json = await response.json();
-            console.log(json);
             if (!json || json.tracks[0] === undefined || json.tracks[0].uri === undefined)
                 return "";
             return json.tracks[0].uri;
@@ -179,8 +197,12 @@ namespace SpotifyReactions {
                     uris: [trackUri]
                 })
             });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error);
+            }
             const json = await response.json();
-            console.log(json);
+            console.log("success adding song to playlist: ", json);
         } catch (e) {
             console.error("Error in reactionSpotifyAddToPlaylist:", e);
             return false;
@@ -218,8 +240,12 @@ namespace SpotifyReactions {
                     uris: [trackUri]
                 })
             });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error);
+            }
             const json = await response.json();
-            console.log(json);
+            console.log("success adding random song to playlist: ", json);
         } catch (e) {
             console.error("Error in reactionSpotifyAddToPlaylist:", e);
             return false;

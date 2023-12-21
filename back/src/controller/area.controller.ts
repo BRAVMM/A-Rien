@@ -1,4 +1,5 @@
 import {Request, Response} from 'express';
+import db from '../models/index';
 
 /* Models */
 import {Service} from "../models/service.model";
@@ -43,8 +44,11 @@ const getActionsFromServiceId = async (req: Request, res: Response): Promise<voi
             res.status(400).json({error: "Please provide serviceId"});
             return;
         }
-        console.log("serviceId", serviceId);
-        console.log("parseInt(serviceId)", parseInt(serviceId));
+        const serviceLength: number = await Service.count();
+        if (parseInt(serviceId) < 1 || parseInt(serviceId) > serviceLength) {
+            res.status(400).json({error: "Invalid serviceId"});
+            return;
+        }
         const action: Action[] | null = await AreaMiddleware.getActionsFromServiceId(parseInt(serviceId));
 
         if (!action) {
@@ -74,7 +78,6 @@ const getReactionsFromActionId = async (req: Request, res: Response): Promise<vo
         }
         const action: Action | null = await AreaMiddleware.getActionFromId(parseInt(actionId));
 
-        console.log("action", action);
         if (!action) {
             res.status(400).json({error: "Action not found"});
             return;
@@ -181,6 +184,8 @@ const getOauthIdsFromReactionId = async (req: Request, res: Response): Promise<v
  * @description This function store an area in the database
  */
 const storeArea = async (req: Request, res: Response): Promise<void> => {
+    const t = await db.sequelize.transaction();
+
     try {
         const user: TokenData = (req as CustomRequest).user;
         const name: string = req.body.name;
@@ -208,6 +213,10 @@ const storeArea = async (req: Request, res: Response): Promise<void> => {
                 return;
             }
         }
+        if (reactionIds.length !== reactionsData.length || reactionIds.length !== oauthTokens.length - 1) {
+            res.status(400).json({error: "Please provide the same number of reactionIds, reactionsData and oauthTokens"});
+            return;
+        }
         let reactionDataIds: number[] = [];
 
         for (let i: number = 0; i < reactionsData.length; i++) {
@@ -219,7 +228,8 @@ const storeArea = async (req: Request, res: Response): Promise<void> => {
                 title: name,
                 isActivated: true,
                 oauthId: oauthTokens[i + 1]
-            }).then((reactionData: ReactionData) => reactionData.id);
+            }, {transaction: t}
+            ).then((reactionData: ReactionData) => reactionData.id);
             reactionDataIds.push(reactionDataIdTemp);
         }
 
@@ -231,18 +241,23 @@ const storeArea = async (req: Request, res: Response): Promise<void> => {
             title: name,
             isActivated: true,
             oauthId: oauthTokens[0]
-        }).then((actionData: ActionData) => actionData.id);
+        }, {transaction: t}
+        ).then((actionData: ActionData) => actionData.id);
+        t.commit();
         res.status(200).json({actionDataId, reactionDataIds});
     } catch (error: any) {
+        await t.rollback();
         console.error(error);
-        if (req.body.reactionDataIds) {
-            for (const reactionDataId of req.body.reactionDataIds) {
-                await ReactionData.destroy({where: {id: reactionDataId}});
-            }
-        }
-        await ActionData.destroy({where: {id: req.body.actionDataId}});
         res.status(500).json({error: "An unexpected error occurred"});
     }
 }
 
-export {getActionsFromServiceId, getReactionsFromActionId, getServices, storeArea, getOauthIdsFromServiceId, getOauthIdsFromActionId, getOauthIdsFromReactionId};
+export {
+    getActionsFromServiceId,
+    getReactionsFromActionId,
+    getServices,
+    storeArea,
+    getOauthIdsFromServiceId,
+    getOauthIdsFromActionId,
+    getOauthIdsFromReactionId
+};
