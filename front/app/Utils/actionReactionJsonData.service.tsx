@@ -42,13 +42,21 @@ namespace actionReactionJsonDataService {
      * @memberof actionReactionJsonDataService
      */
     export const getServices = async (): Promise<ModalDataInterface[]> => {
-        console.log("getServices");
-        // const response: Response = await fetch(`${process.env.NEXT_PUBLIC_API}/area/getServices`);
-        const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getServices`, "GET", null)
-        const services: ModalDataInterface[] = await response.json();
+        try {
+            console.log("getServices");
+            const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getServices`, "GET", null)
+            if (response.ok === false) {
+                console.error("error getServices : ", response.status, response.statusText);
+                return [];
+            }
+            const services: ModalDataInterface[] = await response.json();
 
-        console.log("services", services);
-        return services;
+            console.log("services", services);
+            return services;
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     }
 
     /**
@@ -58,11 +66,20 @@ namespace actionReactionJsonDataService {
      * @memberof actionReactionJsonDataService
      */
     export const getActionJsonData = async (serviceId: number): Promise<ServiceActionInterface[]> => {
-        const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getActionsFromServiceId/${serviceId}`, "GET", null)
-        const actionJsonData: ServiceActionInterface[] = await response.json();
+        try {
+            const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getActionsFromServiceId/${serviceId}`, "GET", null)
+            if (response.ok === false) {
+                console.error("error getActionJsonData : ", response.status, response.statusText);
+                return [];
+            }
+            const actionJsonData: ServiceActionInterface[] = await response.json();
 
-        console.log("actionJsonData", actionJsonData);
-        return actionJsonData;
+            console.log("actionJsonData", actionJsonData);
+            return actionJsonData;
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     }
 
     /**
@@ -72,11 +89,20 @@ namespace actionReactionJsonDataService {
      * @memberof actionReactionJsonDataService
      */
     export const getReactionJsonData = async (actionId: number): Promise<ServiceReactionInterface[]> => {
-        const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getReactionsFromActionId/${actionId}`, "GET", null)
-        const reactionJsonData: ServiceReactionInterface[] = await response.json();
+        try {
+            const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getReactionsFromActionId/${actionId}`, "GET", null)
+            if (response.ok === false) {
+                console.error("error getReactionJsonData : ", response.status, response.statusText);
+                return [];
+            }
+            const reactionJsonData: ServiceReactionInterface[] = await response.json();
 
-        console.log("reactionJsonData", reactionJsonData);
-        return reactionJsonData;
+            console.log("reactionJsonData", reactionJsonData);
+            return reactionJsonData;
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
     }
 
     /**
@@ -88,7 +114,10 @@ namespace actionReactionJsonDataService {
     export const getOauthIdsFromServiceId = async (serviceId: number): Promise<number[]> => {
         try {
             const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getOauthIdsFromServiceId/${serviceId}`, "GET", null)
-
+            if (response.ok === false) {
+                console.error("error getOauthIdsFromServiceId : ", response.status, response.statusText);
+                return [];
+            }
             const oauthIds: number[] = await response.json();
             console.log("oauthIds", oauthIds);
             return oauthIds;
@@ -107,7 +136,10 @@ namespace actionReactionJsonDataService {
     export const getOauthIdsFromActionId = async (actionId: number): Promise<number[]> => {
         try {
             const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getOauthIdsFromActionId/${actionId}`, "GET", null)
-
+            if (response.ok === false) {
+                console.error("error getOauthIdsFromActionId : ", response.status, response.statusText);
+                return [];
+            }
             const oauthIds: number[] = await response.json();
             console.log("oauthIds", oauthIds);
             return oauthIds;
@@ -126,7 +158,10 @@ namespace actionReactionJsonDataService {
     export const getOauthIdsFromReactionId = async (reactionId: number): Promise<number[]> => {
         try {
             const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getOauthIdsFromReactionId/${reactionId}`, "GET", null)
-
+            if (response.ok === false) {
+                console.error("error getOauthIdsFromReactionId : ", response.status, response.statusText);
+                return [];
+            }
             const oauthIds: number[] = await response.json();
             console.log("oauthIds", oauthIds);
             return oauthIds;
