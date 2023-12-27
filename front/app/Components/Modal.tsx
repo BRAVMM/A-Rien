@@ -160,7 +160,6 @@ const ModalUI: React.FC<{
     if (isThereAnOauthToken) {
       return isThereAnOauthToken;
     }
-    console.log("actionJsonData", actionJsonData)
     return (
       <div className="flex flex-col items-center justify-center">
         {ModalData.name}
