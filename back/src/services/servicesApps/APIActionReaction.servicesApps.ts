@@ -15,10 +15,10 @@ enum TRIGGER_DATA_TYPE {
      * @data {string} playlistUri - The uri of the playlist
      * @data {JSON} see: https://developer.spotify.com/documentation/web-api/reference/get-users-saved-tracks
      */
-    SPOTIFY_PLAYLIST,
-    SPOTIFY_TRACK,
-    SPOTIFY_ARTIST,
-    SPOTIFY_ALBUM,
+    SPOTIFY_PLAYLIST = 1,
+    SPOTIFY_TRACK = 2,
+    SPOTIFY_ARTIST = 3,
+    SPOTIFY_ALBUM = 4,
 }
 
 export {TRIGGER_DATA_TYPE};
