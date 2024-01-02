@@ -10,15 +10,15 @@
  * const randomState = generateRandomString(16);
  * 
  */
+import { randomBytes } from 'crypto';
+
 const generateRandomString = (length: number): string => {
     const possibleChars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let randomString: string = '';
 
-    for (let i = 0; i < length; i++) {
-        const randomChar: string = possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
-        randomString += randomChar;
-    }
-    return randomString;
+    return randomBytes(length)
+        .map((byte) => possibleChars.charAt(byte % possibleChars.length))
+        .join('');
+}
 }
 
 export default generateRandomString
