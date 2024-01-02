@@ -21,9 +21,16 @@ const Login = () => {
   useEffect(() => {
     if (loginSuccess) {
       // Redirect to the home page
+      router.navigate("home" as never);
     }
-  }
-  , [loginSuccess, router]);
+  
+    // Clean-up function
+    return () => {
+      // Reset login state
+      setLoginSuccess(false);
+      // Any other clean-up actions can be placed here
+    };
+  }, [loginSuccess, router]);
 
   const handleError = (error: any) => {
     console.error("Error:", error);
