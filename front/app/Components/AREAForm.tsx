@@ -38,6 +38,7 @@ const AREAForm: React.FC<{fields: ActionJsonArray, setDatas: (data: string) => v
                             if (field.range) {
                                 const value = parseInt(e.target.value);
                                 if (value !== NaN && (value >= field.range[0] && value <= field.range[1])) {
+                                    setError(null);
                                     handleChange(e, field.title);
                                 } else {
                                     setError(`The value must be between ${field.range[0]} and ${field.range[1]}`);
