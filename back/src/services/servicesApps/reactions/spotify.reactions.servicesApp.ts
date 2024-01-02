@@ -164,6 +164,9 @@ namespace SpotifyReactions {
         if (data.dataType === TRIGGER_DATA_TYPE.SPOTIFY_PLAYLIST) {
             return await getFirstSongUriOfPlaylist(oauthId, ownerId, data.playlistId);
         }
+        if (data.dataType === undefined) {
+            throw new Error("Unsupported data type");
+        }
         return "";
     }
 
