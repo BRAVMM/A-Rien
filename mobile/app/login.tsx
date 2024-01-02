@@ -36,8 +36,6 @@ const Login = () => {
     console.error("Error:", error);
     setError("An error occurred, please try again");
   };
-
-
   const handleSubmit = async () => {
     if (password === undefined || password === "") {
       setError("Passwords do not match");
