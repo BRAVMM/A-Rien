@@ -3,7 +3,7 @@ import { ModalDataInterface, ServiceActionInterface, ServiceReactionInterface } 
 import AREAForm from "./AREAForm";
 
 import actionReactionJsonDataService from "../Utils/actionReactionJsonData.service";
-import {storeArea} from "@/app/Utils/callApi";
+import { storeArea } from "@/app/Utils/callApi";
 
 
 const ModalUI: React.FC<{
@@ -55,11 +55,11 @@ const ModalUI: React.FC<{
     console.log("actionTokenIds", actionTokenIds);
     if (actionTokenIds.length === 0) {
       console.error("Error in checkIfThereIsAnOauthToken: actionTokenIds is empty");
-        setIsThereAnOauthToken(
-            <div className="flex flex-col items-center justify-center">
-            You must be connected to the service to create an AREA
-            </div>
-        );
+      setIsThereAnOauthToken(
+        <div className="flex flex-col items-center justify-center">
+          You must be connected to the service to create an AREA
+        </div>
+      );
     }
   }
 
@@ -84,10 +84,10 @@ const ModalUI: React.FC<{
       console.error("ModalData is undefined");
       return;
     }
-    const actionJsonData: Promise<ServiceActionInterface[]> = actionReactionJsonDataService.getActionJsonData(ModalData.id);
+    const actionJsonData_: Promise<ServiceActionInterface[]> = actionReactionJsonDataService.getActionJsonData(ModalData.id);
 
-    actionJsonData.then((actionJsonData) => {
-        setActionJsonDatas(actionJsonData);
+    actionJsonData_.then((actionJsonData_) => {
+      setActionJsonDatas(actionJsonData_);
     });
 
   }, [ModalData]);
@@ -255,8 +255,8 @@ const ModalUI: React.FC<{
    */
   const HTMLselectServiceReactionDataForm = () => {
     if (reactions?.[0].args.length === 0) {
-        setStep(Step.VALIDATE_OR_ADD_FORM);
-        updateReactionDatas("[]");
+      setStep(Step.VALIDATE_OR_ADD_FORM);
+      updateReactionDatas("[]");
     }
 
     return (
@@ -294,15 +294,15 @@ const ModalUI: React.FC<{
     return (
       <div className="flex flex-col items-center justify-center">
         <AREAForm
-            fields={[
-                {
-                title: "AREA name",
-                type: "string"
-                }
-            ]}
-            setDatas={(data: string) => {
-              submitAREA(data);
-            }}
+          fields={[
+            {
+              title: "AREA name",
+              type: "string"
+            }
+          ]}
+          setDatas={(data: string) => {
+            submitAREA(data);
+          }}
         ></AREAForm>
       </div>
     );
@@ -328,12 +328,12 @@ const ModalUI: React.FC<{
     const reactionIds: number[] = reactions.map(reaction => reaction.id);
 
     if (newActionTokenIds.length === 0 || newActionTokenIds.length !== reactionIds.length + 1) {
-        console.error("Error in submitAREA: actionTokenIds is empty");
-        return (
-            <div className="flex flex-col items-center justify-center">
-                You must be connected to the service to create an AREA
-            </div>
-        )
+      console.error("Error in submitAREA: actionTokenIds is empty");
+      return (
+        <div className="flex flex-col items-center justify-center">
+          You must be connected to the service to create an AREA
+        </div>
+      )
     }
     onClose();
     await storeArea(name, action.id, reactionIds, actionDatas, reactionDatas, newActionTokenIds);
