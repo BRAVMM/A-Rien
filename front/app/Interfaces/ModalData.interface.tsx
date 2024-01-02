@@ -37,9 +37,8 @@ interface ServiceActionInterface {
 }
 
 
+// REACTION
 
-        // REACTION
-    
 /**
  * @interface ReactionJsonArray
  * @description Interface for ReactionJsonArray
@@ -48,9 +47,6 @@ interface ReactionJsonArray {
     title: string;
     type: string;
 }
-
-
-
 
 /**
  * @interface ServiceReactionInterface
