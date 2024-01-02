@@ -61,7 +61,6 @@ const getActionsFromServiceId = async (req: Request, res: Response): Promise<voi
         console.error(error);
         res.status(500).json({error: "An unexpected error occurred"});
     }
-
 }
 
 /**
