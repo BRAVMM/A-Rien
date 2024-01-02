@@ -64,7 +64,6 @@ const getActionsFromServiceId = async (req: Request, res: Response): Promise<voi
         console.error(error);
         res.status(500).json({error: "An unexpected error occurred"});
     }
-
 }
 
 /**
@@ -192,7 +191,7 @@ const getOauthIdsFromReactionId = async (req: Request, res: Response): Promise<v
  * @description This function store an area in the database
  */
 const storeArea = async (req: Request, res: Response): Promise<void> => {
-    const t = await db.sequelize.transaction();
+    const dbTransaction = await db.sequelize.transaction();
 
     try {
         const user: TokenData = (req as CustomRequest).user;
@@ -236,7 +235,7 @@ const storeArea = async (req: Request, res: Response): Promise<void> => {
                 title: name,
                 isActivated: true,
                 oauthId: oauthTokens[i + 1]
-            }, {transaction: t}
+            }, {transaction: dbTransaction}
             ).then((reactionData: ReactionData) => reactionData.id);
             reactionDataIds.push(reactionDataIdTemp);
         }
@@ -249,12 +248,12 @@ const storeArea = async (req: Request, res: Response): Promise<void> => {
             title: name,
             isActivated: true,
             oauthId: oauthTokens[0]
-        }, {transaction: t}
+        }, {transaction: dbTransaction}
         ).then((actionData: ActionData) => actionData.id);
-        t.commit();
+        dbTransaction.commit();
         res.status(200).json({actionDataId, reactionDataIds});
     } catch (error: any) {
-        await t.rollback();
+        await dbTransaction.rollback();
         console.error(error);
         res.status(500).json({error: "An unexpected error occurred"});
     }

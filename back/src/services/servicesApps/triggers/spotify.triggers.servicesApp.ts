@@ -179,14 +179,9 @@ namespace SpotifyTriggers {
             const {userData, isNew} = getOrCreateUserData(ownerId);
             const DataParsed: any = JSON.parse(data.toString());
 
-            if (userData.trackLikedFromGenreLength < length) {
-                userData.trackLikedFromGenreLength = length;
-                if (isNew) {
+            userData.trackLikedFromGenreLength = length;
+            if (userData.trackLikedFromGenreLength >= length ||  (userData.trackLikedFromGenreLength < length && isNew)) {
                     return {result: false, data: null};
-                }
-            } else {
-                userData.trackLikedFromGenreLength = length;
-                return {result: false, data: null};
             }
             if (!json.items[0]) {
                 return {result: false, data: null};
@@ -222,13 +217,8 @@ namespace SpotifyTriggers {
             const {userData, isNew} = getOrCreateUserData(ownerId);
             const DataParsed: any = JSON.parse(data.toString());
 
-            if (userData.trackLikedFromArtistLength < length) {
-                userData.trackLikedFromArtistLength = length;
-                if (isNew) {
-                    return {result: false, data: null};
-                }
-            } else {
-                userData.trackLikedFromArtistLength = length;
+            userData.trackLikedFromArtistLength = length;
+            if (userData.trackLikedFromArtistLength >= length || (userData.trackLikedFromArtistLength < length && isNew)) {
                 return {result: false, data: null};
             }
             if (!json.items[0]) {

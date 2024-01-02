@@ -19,6 +19,7 @@ namespace SpotifyReactions {
     const getFirstSongUriOfPlaylist = async (oauthId: number, ownerId: number, playlistId: string): Promise<string> => {
         try {
             const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
+
             if (oauthToken === null) {
                 console.error("OAuth token not found");
                 return "";
@@ -43,7 +44,7 @@ namespace SpotifyReactions {
      * Get a random char
      * @returns {string} - The random char
      */
-    const rand = (): string => {
+    const getRandomChar = (): string => {
         const chars = 'abcdefghijklmnopqrstuvwxyz';
         return chars.charAt(Math.floor(Math.random() * chars.length));
     }
@@ -69,7 +70,7 @@ namespace SpotifyReactions {
                 console.error("OAuth token not found");
                 return Promise.resolve("");
             }
-            const response = await fetch("https://api.spotify.com/v1/search?q=" + rand() + "&type=track&limit=50" + "&offset=" + randFromInterval(0, 1000), {
+            const response = await fetch("https://api.spotify.com/v1/search?q=" + getRandomChar() + "&type=track&limit=50" + "&offset=" + randFromInterval(0, 1000), {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + oauthToken
@@ -162,6 +163,9 @@ namespace SpotifyReactions {
         }
         if (data.dataType === TRIGGER_DATA_TYPE.SPOTIFY_PLAYLIST) {
             return await getFirstSongUriOfPlaylist(oauthId, ownerId, data.playlistId);
+        }
+        if (data.dataType === undefined) {
+            throw new Error("Unsupported data type");
         }
         return "";
     }
