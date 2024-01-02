@@ -19,6 +19,7 @@ namespace SpotifyReactions {
     const getFirstSongUriOfPlaylist = async (oauthId: number, ownerId: number, playlistId: string): Promise<string> => {
         try {
             const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
+
             if (oauthToken === null) {
                 console.error("OAuth token not found");
                 return "";
