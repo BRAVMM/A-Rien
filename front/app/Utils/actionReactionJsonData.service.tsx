@@ -43,15 +43,12 @@ namespace actionReactionJsonDataService {
      */
     export const getServices = async (): Promise<ModalDataInterface[]> => {
         try {
-            console.log("getServices");
             const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getServices`, "GET", null)
             if (response.ok === false) {
                 console.error("error getServices : ", response.status, response.statusText);
                 return [];
             }
             const services: ModalDataInterface[] = await response.json();
-
-            console.log("services", services);
             return services;
         } catch (error) {
             console.log(error);
@@ -96,8 +93,6 @@ namespace actionReactionJsonDataService {
                 return [];
             }
             const reactionJsonData: ServiceReactionInterface[] = await response.json();
-
-            console.log("reactionJsonData", reactionJsonData);
             return reactionJsonData;
         } catch (error) {
             console.log(error);
