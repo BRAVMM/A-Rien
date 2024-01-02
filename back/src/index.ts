@@ -24,7 +24,7 @@ if (isNaN(INTERVAL)) {
 }
 
 // Initialize the database connection
-db.sequelize.sync()
+db.sequelize.sync({force: true}) // {force: true} to drop the tables and recreate them
     .then(() => {
         console.log('Database sync completed.');
 
@@ -113,6 +113,7 @@ const addActionsToDB = async () => {
                     args: [{
                         title: "gender",
                         type: 'string',
+                        description: "Enter a gender",
                     }],
                     reactionsIds: [1],
                 },
@@ -137,6 +138,7 @@ const addActionsToDB = async () => {
                     args: [{
                         title: "genre",
                         type: 'string',
+                        description: 'Enter a genre',
                     }],
                     reactionsIds: [1],
                 },
@@ -147,6 +149,7 @@ const addActionsToDB = async () => {
                     args: [{
                         title: "artistId",
                         type: 'string',
+                        description: 'Enter an artist id',
                     }],
                     reactionsIds: [1],
                 },
@@ -158,10 +161,11 @@ const addActionsToDB = async () => {
                 {
                     id: 8,
                     name: 'When X time stamped',
-                    description: 'When X time is stamped',
+                    description: 'When X time is stamped (in minutes)',
                     args: [{
                         title: "timeNeeded",
                         type: 'number',
+                        description: 'Enter a number (in minutes)',
                         range: [1, 1440],
                     }],
                     reactionsIds: [2],
@@ -199,6 +203,7 @@ const addReactionsToDB = async () => {
                         {
                             title: "playlistId",
                             type: 'string',
+                            description: "Enter a playlist id",
                         },
                     ],
                 },
@@ -210,6 +215,7 @@ const addReactionsToDB = async () => {
                         {
                             title: "playlistId",
                             type: 'string',
+                            description: "Enter a playlist id",
                         },
                     ],
                 },

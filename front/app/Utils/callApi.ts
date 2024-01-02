@@ -120,4 +120,3 @@ export async function storeArea(name: string, actionId: number, reactionIds: num
     throw error;
   }
 }
-

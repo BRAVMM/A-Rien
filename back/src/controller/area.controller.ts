@@ -15,6 +15,9 @@ import {TokenData} from "../interfaces/token.interface";
 import {AreaMiddleware} from "../middleware/area.middleware";
 import {CustomRequest} from "../interfaces/request.interface";
 
+/* Constants */
+const SERVICES_WITHOUT_OAUTH :number[] = [2 /* Timer */];
+
 /**
  * Get services
  * @param req - This is the request object
@@ -38,18 +41,19 @@ const getServices = async (req: Request, res: Response): Promise<void> => {
  */
 const getActionsFromServiceId = async (req: Request, res: Response): Promise<void> => {
     try {
-        const {serviceId} = req.params;
+        const serviceId = parseInt(req.params.serviceId, 10);
 
-        if (!serviceId || isNaN(parseInt(serviceId))) {
-            res.status(400).json({error: "Please provide serviceId"});
+        if (isNaN(serviceId)) {
+            res.status(400).json({error: "Please provide a valid serviceId"});
             return;
         }
+
         const serviceLength: number = await Service.count();
-        if (parseInt(serviceId) < 1 || parseInt(serviceId) > serviceLength) {
+        if (serviceId < 1 || serviceId > serviceLength) {
             res.status(400).json({error: "Invalid serviceId"});
             return;
         }
-        const action: Action[] | null = await AreaMiddleware.getActionsFromServiceId(parseInt(serviceId));
+        const action: Action[] | null = await AreaMiddleware.getActionsFromServiceId(serviceId);
 
         if (!action) {
             res.status(400).json({error: "Action not found"});
@@ -97,7 +101,11 @@ const getOauthIdsFromServiceId = async (req: Request, res: Response): Promise<vo
         const ownerId = (req as CustomRequest).user.userId;
 
         if (!serviceId || isNaN(parseInt(serviceId)) || !ownerId) {
-            res.status(400).json({error: "Please provide serviceId"});
+            res.status(400).json({error: "Please provide serviceId and ownerId"});
+            return;
+        }
+        if (SERVICES_WITHOUT_OAUTH.includes(parseInt(serviceId))) {
+            res.status(200).json([-1]);
             return;
         }
         const service: Service | null = await AreaMiddleware.getServiceFromId(parseInt(serviceId));
@@ -125,7 +133,7 @@ const getOauthIdsFromActionId = async (req: Request, res: Response): Promise<voi
         const ownerId = (req as CustomRequest).user.userId;
 
         if (!actionId || isNaN(parseInt(actionId)) || !ownerId) {
-            res.status(400).json({error: "Please provide serviceId"});
+            res.status(400).json({error: "Please provide actionId"});
             return;
         }
         const service: Service | null = await AreaMiddleware.getServiceFromActionId(parseInt(actionId));
@@ -153,7 +161,7 @@ const getOauthIdsFromReactionId = async (req: Request, res: Response): Promise<v
         const ownerId = (req as CustomRequest).user.userId;
 
         if (!reactionId || isNaN(parseInt(reactionId)) || !ownerId) {
-            res.status(400).json({error: "Please provide serviceId"});
+            res.status(400).json({error: "Please provide reactionId"});
             return;
         }
         const service: Service | null = await AreaMiddleware.getServiceFromReactionId(parseInt(reactionId));
