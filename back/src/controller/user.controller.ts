@@ -120,7 +120,8 @@ const getUserInfo = async (req: Request, res: Response): Promise<void> => {
             res.status(401).json({error: "User not found"});
             return;
         }
-        res.status(200).json({username: user.username, email: user.email});
+        const decryptedEmail: string = EncryptionService.decrypt(user.encryptedEmail, user.ivEmail);
+        res.status(200).json({username: user.username, email: decryptedEmail});
     } catch (error: any) {
         console.error(error)
         res.status(500).json({error: "An unexpected error occurred"});

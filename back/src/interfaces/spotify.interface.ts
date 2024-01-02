@@ -9,7 +9,10 @@
 interface SpotifyTriggerData {
     userId: string;
     trackLikedLength: number;
+    trackLikedFromGenreLength: number;
+    trackLikedFromArtistLength: number;
     albumLikedLength: number;
     artistLikedLength: number;
+    playlistCreatedLength: number;
     playlistLikedLength: number;
 }

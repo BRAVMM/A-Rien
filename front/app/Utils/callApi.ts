@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import DataBody from '../Interfaces/dataBody.interface';
+import {DataBody} from '../Interfaces/dataBody.interface';
 
 /**
  * loginUser - Function to perform a user login by making an API call.
@@ -83,6 +83,35 @@ export async function registerTokenService(data : DataBody, serviceRoute : strin
         "Authorization": `Bearer ${bearer}`,
       },
       body: data.getString(),
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      console.error(error.error);
+      // throw new Error("an error occurred");
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function storeArea(name: string, actionId: number, reactionIds: number[], actionData: any, reactionData: any, oauthTokens: number[]): Promise<any> {
+  try {
+    const bearer = Cookies.get('token')
+
+    const response = await fetch(process.env.NEXT_PUBLIC_API + "/area/storeArea", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${bearer}`,
+      },
+      body: JSON.stringify({
+        name: name,
+        actionId: actionId,
+        reactionIds: reactionIds,
+        actionData: actionData,
+        reactionsData: reactionData,
+        oauthTokens: oauthTokens,
+      }),
     });
     if (!response.ok) {
       const error = await response.json();

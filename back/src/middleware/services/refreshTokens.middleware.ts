@@ -64,7 +64,7 @@ const refreshTokenCallbacks: { [serviceId: number]: RefreshTokenCallback } = {
 const refreshTokensOfUserByServiceID = async (serviceId: number, ownerId: number /*temporary*/): Promise<void> => {
     const tokens : OAuth[] = await OAuth.findAll({
         where: {
-            ownerID: ownerId,
+            ownerId: ownerId,
             serviceId: serviceId,
         }
     });
