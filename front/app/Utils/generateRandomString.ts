@@ -13,6 +13,7 @@
 const generateRandomString = (length: number): string => {
     const possibleChars: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let randomString: string = '';
+
     for (let i = 0; i < length; i++) {
         const randomChar: string = possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
         randomString += randomChar;
