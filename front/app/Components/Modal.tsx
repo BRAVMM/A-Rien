@@ -89,7 +89,6 @@ const ModalUI: React.FC<{
     actionJsonData_.then((actionJsonData_) => {
       setActionJsonDatas(actionJsonData_);
     });
-
   }, [ModalData]);
 
   /**
