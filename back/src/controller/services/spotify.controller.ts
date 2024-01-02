@@ -35,7 +35,7 @@ import getUserEmail from '../../services/API/Spotify/getUserEmail.service';
  * Response Body: { "id": new_oauth_data_id }
  * 
  * // Error response for missing data
- * Status: 400
+ * Status: 401
  * Response Body: { "error": "No tokens provided" }
  *
  * // Error response for server error
