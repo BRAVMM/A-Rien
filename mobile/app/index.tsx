@@ -49,7 +49,6 @@ const App = () => {
           body: JSON.stringify(data),
         }
       );
-      console.log("response", response);
       if (response.ok) {
         // Redirect to home page
         setRegisterSuccess(true);
@@ -135,7 +134,6 @@ const App = () => {
       <StyledTouchableOpacity
         onPress={handleSubmit}
         style={{
-          // Add additional styling here if needed
           backgroundColor: "#4285F4",
           padding: 10,
           borderRadius: 10,
@@ -144,7 +142,6 @@ const App = () => {
       >
         <StyledText
           style={{
-            // Add additional styling here if needed
             color: "#FFFFFF",
             textAlign: "center",
             fontSize: 16,
