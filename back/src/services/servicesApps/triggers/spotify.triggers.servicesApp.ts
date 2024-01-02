@@ -222,13 +222,8 @@ namespace SpotifyTriggers {
             const {userData, isNew} = getOrCreateUserData(ownerId);
             const DataParsed: any = JSON.parse(data.toString());
 
-            if (userData.trackLikedFromArtistLength < length) {
-                userData.trackLikedFromArtistLength = length;
-                if (isNew) {
-                    return {result: false, data: null};
-                }
-            } else {
-                userData.trackLikedFromArtistLength = length;
+            userData.trackLikedFromArtistLength = length;
+            if (userData.trackLikedFromArtistLength >= length || (userData.trackLikedFromArtistLength < length && isNew)) {
                 return {result: false, data: null};
             }
             if (!json.items[0]) {
