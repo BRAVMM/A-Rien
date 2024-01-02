@@ -45,6 +45,7 @@ const getActionsFromServiceId = async (req: Request, res: Response): Promise<voi
             return;
         }
         const serviceLength: number = await Service.count();
+
         if (parseInt(serviceId) < 1 || parseInt(serviceId) > serviceLength) {
             res.status(400).json({error: "Invalid serviceId"});
             return;
