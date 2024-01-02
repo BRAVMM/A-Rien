@@ -88,15 +88,15 @@ docker-compose.yml
 The following diagram shows the interactions between the different parts of the project:
 
 ```txt
-   +------------+
-   |    Front   | <---+
-   +------------+     |
-                      |     +----------+       +------------+
-                      +---> |   BACK   | <---> |     DB     |
-                      |     +----------+       +------------+
-   +------------+     |
-   |   Mobile   | <---+
-   +------------+
+   +------------+                              +----------+
+   |    Front   | <---+          +-----------> |    DB    |
+   +------------+     |          |             +----------+
+                      |     +----------+
+                      +---> |   BACK   |
+                      |     +----------+
+   +------------+     |          |             +----------+
+   |   Mobile   | <---+          +-----------> | EXT API  |
+   +------------+                              +----------+
 ```
 
 The front and mobile communicate with the back via the API.
