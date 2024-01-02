@@ -1,6 +1,7 @@
 import { withExpoSnack, styled } from "nativewind";
 import React from "react";
 import { Text, View } from "react-native";
+import LoginSpotify from "./Components/LoginSpotify";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -8,6 +9,7 @@ const StyledText = styled(Text);
 const App = () => {
   return (
     <StyledView className="flex-1 items-center justify-center">
+      <LoginSpotify/>
       <StyledText className="text-slate-800">Try editing me! 🎉</StyledText>
     </StyledView>
   );
