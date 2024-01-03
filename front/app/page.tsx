@@ -1,7 +1,10 @@
 "use client"
+import { useMsal } from "@azure/msal-react";
+import MicrosoftButtonLogin from "./Components/MicrosoftLoginButton";
 import Navbar from "./Components/Navbar";
 import TextSection from "./Components/TextSection";
 import { useRouter } from 'next/navigation';
+import { useEffect } from "react";
 
 export default function Home() {
 
@@ -14,6 +17,18 @@ export default function Home() {
   const handleRegisterClick = () => {
     router.push('/register');
   };
+
+  const { accounts, instance } = useMsal();
+
+  useEffect(() => {
+      const request = {
+        scopes: ['your_required_scopes'], // Ajoutez les scopes nécessaires pour Teams
+      };
+
+      instance.acquireTokenSilent(request).then((response) => {
+        console.log('Token récupéré :', response.accessToken);
+      });
+  }, [accounts, instance]);
 
   return (
     <div className="relative h-screen">
@@ -40,7 +55,9 @@ export default function Home() {
           </button>
         </div>
         <div className="flex items-center justify-center h-1/3 mt-10">
-          <div className="snake-container"></div>
+          <div className="snake-container">
+          </div>
+            <MicrosoftButtonLogin />
         </div>
       </div>
     </div>
