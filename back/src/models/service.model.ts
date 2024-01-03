@@ -5,8 +5,8 @@ import {Sequelize, DataTypes, Model} from 'sequelize';
 class Service extends Model {
     public id!: number;
     public name!: string;
-    public actionsId!: number[];
-    public reactionsId!: number[];
+    public actionsIds!: number[];
+    public reactionsIds!: number[];
 
     public static initialize(sequelize: Sequelize) {
         Service.init(
@@ -14,7 +14,6 @@ class Service extends Model {
                 id: {
                     type: DataTypes.INTEGER,
                     primaryKey: true,
-                    allowNull: false,
                     autoIncrement: true,
                 },
                 name: {

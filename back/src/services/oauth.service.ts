@@ -11,6 +11,7 @@ import {OAuthMiddleware} from "../middleware/oauth.middleware";
 
 /* Services */
 import {EncryptionService} from "./encryption.service";
+import {refreshTokens, refreshTokensOfUserByServiceID} from "../middleware/services/refreshTokens.middleware";
 
 /**
  * @namespace OAuthService
@@ -23,6 +24,15 @@ namespace OAuthService {
         if (EncryptedOAuth === null) {
             console.error("Access token not found");
             throw new Error("Access token not found in database [OAuthService.getDecryptedAccessTokenFromId]");
+        }
+        // check if the access token is expired
+        const now = new Date();
+        let expiresAt = new Date();
+        expiresAt.setSeconds(expiresAt.getSeconds() + EncryptedOAuth.expiresIn);
+        expiresAt.setMinutes(expiresAt.getMinutes() - 1);
+        if (now > expiresAt) {
+            console.error("Access token expired");
+            await refreshTokensOfUserByServiceID(ownerId, EncryptedOAuth.serviceId);
         }
         return EncryptionService.decrypt(EncryptedOAuth.ivAccess, EncryptedOAuth.encryptedAccessToken);
     }
