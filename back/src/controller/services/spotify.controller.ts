@@ -55,6 +55,7 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
         if (!accessToken || !refreshToken || !expiresIn) {
             return res.status(401).json({ error: "No tokens provided" })
         }
+        console.log("registerToken :\n accessToken : " + accessToken + "\n refreshToken : " + refreshToken + "\n expiresIn : " + expiresIn + "\n serviceId : " + serviceId + "\n userInfo : " + userInfo.userId);
         const OAuthData = await OAuth.create({
             serviceId : serviceId,
             encryptedAccessToken : encryptedAccessToken.content,
@@ -62,7 +63,7 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
             ivAccess : encryptedAccessToken.iv,
             ivRefresh : encryptedRefreshToken.iv,
             expiresIn : expiresIn,
-            ownerID : userInfo.userId,
+            ownerId : userInfo.userId,
         });
         return res.status(201).json({id: OAuthData.id})
     } catch (error) {

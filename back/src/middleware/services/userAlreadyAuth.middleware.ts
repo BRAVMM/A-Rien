@@ -79,7 +79,7 @@ const userAlreadyAuth = async (req: Request, res: Response, next: NextFunction):
         }
         const tokens : OAuth[] = await OAuth.findAll({
             where: {
-                ownerID: userInfo.userId,
+                ownerId: userInfo.userId,
                 serviceId: serviceId,
             }
         });
