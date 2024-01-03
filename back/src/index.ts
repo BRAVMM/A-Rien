@@ -24,7 +24,7 @@ if (isNaN(INTERVAL)) {
 }
 
 // Initialize the database connection
-db.sequelize.sync()
+db.sequelize.sync() // {force: true} to drop the tables and recreate them
     .then(() => {
         console.log('Database sync completed.');
 
@@ -64,7 +64,7 @@ const addServicesToDB = async () => {
             id: 1,
             name: 'Spotify',
             actionsId: [1, 2, 3, 4, 5, 6, 7],
-            reactionsId: [1],
+            reactionsId: [1, 2],
         },
         {
             id: 2,
@@ -95,51 +95,61 @@ const addActionsToDB = async () => {
                 {
                     id: 1,
                     name: 'New saved song',
+                    description: 'When a new song is saved',
                     args: [],
                     reactionsIds: [1],
                 },
                 {
                     id: 2,
                     name: 'New saved album',
+                    description: 'When a new album is saved',
                     args: [],
-                    reactionsIds: [],
+                    reactionsIds: [1],
                 },
                 {
                     id: 3,
                     name: 'New saved artist',
+                    description: 'When a new artist is saved',
                     args: [{
                         title: "gender",
                         type: 'string',
+                        description: "Enter a gender",
                     }],
                     reactionsIds: [1],
                 },
                 {
                     id: 4,
                     name: 'New created playlist',
+                    description: 'When a new playlist is created',
                     args: [],
                     reactionsIds: [1],
                 },
                 {
                     id: 5,
                     name: 'New saved playlist',
+                    description: 'When a new playlist is saved',
                     args: [],
                     reactionsIds: [1],
                 },
                 {
                     id: 6,
                     name: 'New saved song from genre',
+                    description: 'When a new song is saved from a genre',
                     args: [{
                         title: "genre",
                         type: 'string',
+                        description: 'Enter a genre',
                     }],
                     reactionsIds: [1],
                 },
                 {
                     id: 7,
                     name: 'New saved song from artist',
+                    description: 'When a new song is saved from an artist',
                     args: [{
                         title: "artistId",
                         type: 'string',
+                        description: 'Enter an artist id',
                     }],
                     reactionsIds: [1],
                 },
@@ -151,9 +161,12 @@ const addActionsToDB = async () => {
                 {
                     id: 8,
                     name: 'When X time stamped',
+                    description: 'When X time is stamped (in minutes)',
                     args: [{
                         title: "timeNeeded",
-                        type: 'date',
+                        type: 'number',
+                        description: 'Enter a number (in minutes)',
+                        range: [1, 1440],
                     }],
                     reactionsIds: [2],
                 },
@@ -190,6 +203,19 @@ const addReactionsToDB = async () => {
                         {
                             title: "playlistId",
                             type: 'string',
+                            description: "Enter a playlist id",
+                        },
+                    ],
+                },
+                {
+                    id: 2,
+                    name: 'Add random to playlist',
+                    description: 'Add a random song to a playlist',
+                    args: [
+                        {
+                            title: "playlistId",
+                            type: 'string',
+                            description: "Enter a playlist id",
                         },
                     ],
                 },

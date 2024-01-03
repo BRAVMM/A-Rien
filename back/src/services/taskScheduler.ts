@@ -81,7 +81,8 @@ namespace TaskScheduler {
             const actionFunction = ACTIONS_FUNCTIONS[actionData.actionId];
 
             if (actionFunction) {
-                const actionDataResult = await actionFunction(actionData.ownerId, actionData.oauthId, actionData.data);
+                const parsedActionData: any = JSON.parse(actionData.data);
+                const actionDataResult = await actionFunction(actionData.ownerId, actionData.oauthId, parsedActionData[0]);
                 if (actionDataResult.result) {
                     await executeReactionsFromActionData(actionData, actionDataResult.data);
                 }

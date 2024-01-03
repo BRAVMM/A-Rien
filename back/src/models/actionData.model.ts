@@ -5,7 +5,7 @@ import {Sequelize, DataTypes, Model} from 'sequelize';
 class ActionData extends Model {
     public id!: number;
     public ownerId!: number;
-    public data!: JSON;
+    public data!: string;
     public reactionsDataIds!: number[];
     public actionId!: number;
     public title!: string;

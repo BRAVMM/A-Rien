@@ -5,6 +5,7 @@ import {Sequelize, DataTypes, Model} from 'sequelize';
 class Action extends Model {
     public id!: number;
     public name!: string;
+    public description!: string;
     public args!: string;
     public reactionsIds!: number[];
 
@@ -20,6 +21,10 @@ class Action extends Model {
                     type: DataTypes.STRING,
                     unique: true,
                     allowNull: false,
+                },
+                description: {
+                    type: DataTypes.STRING,
+                    allowNull: true,
                 },
                 args: {
                     type: DataTypes.JSON,

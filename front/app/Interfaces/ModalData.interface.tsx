@@ -2,6 +2,8 @@
  * @fileoverview Type for ModalData
  */
 
+import { ActionJsonArray } from "./ActionJson.interface";
+
 /**
  * @interface ModalDataInterface
  * @description Interface for Services Modal
@@ -17,40 +19,33 @@ interface ModalDataInterface {
 }
 
 /**
- * @interface ActionJsonArray
- * @description Interface for ActionJsonArray
- */
-interface ActionJsonArray {
-    title: string;
-    type: string;
-}
-
-/**
  * @interface ServiceActionInterface
  * @description Interface for ServiceActionInterface
  */
 interface ServiceActionInterface {
     id: number;
     name: string;
-    args: ActionJsonArray[];
+    args: ActionJsonArray;
     reactionIds: number[];
 }
 
 
+// REACTION
 
-        // REACTION
-    
 /**
- * @interface ReactionJsonArray
- * @description Interface for ReactionJsonArray
+ * @interface ReactionJson
+ * @description Interface for ReactionJson
  */
-interface ReactionJsonArray {
+interface ReactionJson {
     title: string;
     type: string;
 }
 
-
-
+/**
+ * @interface ReactionJsonArray
+ * @description Interface for ReactionJsonArray
+ */
+interface ReactionJsonArray extends Array<ReactionJson> {}
 
 /**
  * @interface ServiceReactionInterface
@@ -59,7 +54,7 @@ interface ReactionJsonArray {
 interface ServiceReactionInterface {
     id: number;
     name: string;
-    args: ReactionJsonArray[];
+    args: ReactionJsonArray;
     actionIds: number[];
 }
 

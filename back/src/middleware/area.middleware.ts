@@ -125,13 +125,7 @@ namespace AreaMiddleware {
      */
     export const getActionFromId = async (actionId: number): Promise<Action | null> => {
         try {
-            return await Action.findOne(
-                {
-                    where: {
-                        id: actionId
-                    }
-                }
-            );
+            return await Action.findByPk(actionId);
         } catch (error) {
             console.error(`Error retrieving action with ID ${actionId}:`, error);
             return null;

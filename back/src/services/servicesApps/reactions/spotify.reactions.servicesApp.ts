@@ -19,6 +19,7 @@ namespace SpotifyReactions {
     const getFirstSongUriOfPlaylist = async (oauthId: number, ownerId: number, playlistId: string): Promise<string> => {
         try {
             const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
+
             if (oauthToken === null) {
                 console.error("OAuth token not found");
                 return "";
@@ -30,7 +31,6 @@ namespace SpotifyReactions {
                 }
             });
             const json = await response.json();
-            console.log(json);
             if (!json || json.items[0] === undefined || json.items[0].track === undefined || json.items[0].track.uri === undefined)
                 return "";
             return json.items[0].track.uri;
@@ -44,7 +44,7 @@ namespace SpotifyReactions {
      * Get a random char
      * @returns {string} - The random char
      */
-    const rand = (): string => {
+    const getRandomChar = (): string => {
         const chars = 'abcdefghijklmnopqrstuvwxyz';
         return chars.charAt(Math.floor(Math.random() * chars.length));
     }
@@ -70,14 +70,27 @@ namespace SpotifyReactions {
                 console.error("OAuth token not found");
                 return Promise.resolve("");
             }
-            const response = await fetch("https://api.spotify.com/v1/search?q=" + rand() + "&type=track&limit=50" + "&offset=" + randFromInterval(0, 1000), {
+            const response = await fetch("https://api.spotify.com/v1/search?q=" + getRandomChar() + "&type=track&limit=50" + "&offset=" + randFromInterval(0, 1000), {
                 method: "GET",
                 headers: {
                     "Authorization": "Bearer " + oauthToken
                 }
             });
             const json = await response.json();
-            return json.tracks.items[randFromInterval(0, 50)].uri;
+            if (!response.ok) {
+                console.error("Fetch request failed with status:", response.status);
+                return Promise.resolve("");
+            }
+            if (!json.tracks || !json.tracks.items || !json.tracks.items.length) {
+                console.error("Invalid JSON structure for tracks:", json);
+                return Promise.resolve("");
+            }
+            const randomIndex = randFromInterval(0, 50);
+            if (!json.tracks.items[randomIndex] || !json.tracks.items[randomIndex].uri) {
+                console.error("Invalid JSON structure for tracks:", json);
+                return Promise.resolve("");
+            }
+            return json.tracks.items[randomIndex].uri;
         } catch (e) {
             console.error("Error in getRandomSongUri:", e);
             return Promise.resolve("");
@@ -97,8 +110,11 @@ namespace SpotifyReactions {
                     "Authorization": "Bearer " + oauthToken
                 }
             });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error);
+            }
             const json = await response.json();
-            console.log(json);
             if (!json || json.items[0] === undefined || json.items[0].uri === undefined)
                 return "";
             return json.items[0].uri;
@@ -121,8 +137,11 @@ namespace SpotifyReactions {
                     "Authorization": "Bearer " + oauthToken
                 }
             });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error);
+            }
             const json = await response.json();
-            console.log(json);
             if (!json || json.tracks[0] === undefined || json.tracks[0].uri === undefined)
                 return "";
             return json.tracks[0].uri;
@@ -144,6 +163,9 @@ namespace SpotifyReactions {
         }
         if (data.dataType === TRIGGER_DATA_TYPE.SPOTIFY_PLAYLIST) {
             return await getFirstSongUriOfPlaylist(oauthId, ownerId, data.playlistId);
+        }
+        if (data.dataType === undefined) {
+            throw new Error("Unsupported data type");
         }
         return "";
     }
@@ -179,8 +201,12 @@ namespace SpotifyReactions {
                     uris: [trackUri]
                 })
             });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error);
+            }
             const json = await response.json();
-            console.log(json);
+            console.log("success adding song to playlist: ", json);
         } catch (e) {
             console.error("Error in reactionSpotifyAddToPlaylist:", e);
             return false;
@@ -218,8 +244,12 @@ namespace SpotifyReactions {
                     uris: [trackUri]
                 })
             });
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error);
+            }
             const json = await response.json();
-            console.log(json);
+            console.log("success adding random song to playlist: ", json);
         } catch (e) {
             console.error("Error in reactionSpotifyAddToPlaylist:", e);
             return false;

@@ -34,9 +34,21 @@ const AREAForm: React.FC<{fields: ActionJsonArray, setDatas: (data: string) => v
                     <input
                         type={field.type === 'string' ? 'text' : field.type}
                         value={formData[field.title] || ''}
-                        onChange={(e) => handleChange(e, field.title)}
+                        onChange={(e) => {
+                            if (field.range) {
+                                const value = parseInt(e.target.value);
+                                if (!isNaN(value) && (value >= field.range[0] && value <= field.range[1])) {
+                                    setError(null);
+                                    handleChange(e, field.title);
+                                } else {
+                                    setError(`The value must be between ${field.range[0]} and ${field.range[1]}`);
+                                }
+                            } else {
+                                handleChange(e, field.title);
+                            }
+                        }}
                         id={field.title}
-                        placeholder={field.title}
+                        placeholder={field.description}
                         name={field.title}
                         required
                         className="text-center block w-full rounded-md border-0 py-1.5 text-background shadow-sm ring-2 ring-inset ring-secondary placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary"
