@@ -36,12 +36,15 @@ class SpotifyDataBody implements DataBody {
  */
 class DiscordDataBody implements DataBody {
     readonly code: string;
+    readonly guildId: string;
+
     /**
      * Creates a new instance of DiscordDataBody.
      * @param code - The code.
      */
-    constructor(code: string) {
+    constructor(code: string, guildId: string) {
         this.code = code
+        this.guildId = guildId
     }
 
     /**
@@ -49,7 +52,7 @@ class DiscordDataBody implements DataBody {
      * @returns The string representation.
      */
     getString(): string {
-        return JSON.stringify({ code: this.code })
+        return JSON.stringify({ code: this.code, guildId: this.guildId })
     }
 }
 

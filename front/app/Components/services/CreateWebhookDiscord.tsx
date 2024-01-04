@@ -18,6 +18,7 @@ const DiscordButtonOAuth: React.FC = () => {
         const queryParams = new URLSearchParams(window.location.search);
         const queryCode: string | null = queryParams.get('code');
         const queryState: string | null = queryParams.get('state');
+        const queryGuildId: string | null = queryParams.get('guild_id');
         const state: string | undefined = Cookies.get('state');
 
         if (queryCode === null) {
@@ -28,12 +29,16 @@ const DiscordButtonOAuth: React.FC = () => {
             console.error('No state in query...')
             return
         }
+        if (queryGuildId === null) {
+            console.error('No guild_id in query...')
+            return
+        }
         try {
             if (queryState !== state) {
                 console.error('State is different : ' + queryState + ' != ' + state)
                 return
             }
-            await registerTokenService(new DiscordDataBody(queryCode), REGISTER_TOKEN_ROUTE);
+            await registerTokenService(new DiscordDataBody(queryCode, queryGuildId), REGISTER_TOKEN_ROUTE);
         } catch(error) {
             console.log(error)
         }

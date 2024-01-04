@@ -41,17 +41,30 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
     const userInfo: TokenData = (req as CustomRequest).user
 
     try {
-        const { code } = req.body
-        const encryptedAccessToken: { iv: string; content: string } = EncryptionService.encrypt(code)
+        const { accessToken, refreshToken, expiresIn, serviceId } = req.body
+        const encryptedAccessToken: { iv: string; content: string } = EncryptionService.encrypt(accessToken)
+        const encryptedRefreshToken: { iv: string; content: string } = EncryptionService.encrypt(refreshToken)
 
-        if (!process.env.DISCORD_SERVICE_ID) {
-            throw new Error ("Bad env configuration")
+        if (!process.env.DISCORD_SERVICE_ID || Number(process.env.DISCORD_SERVICE_ID) !== serviceId) {
+            return res.status(400).json({ error: "Wrong service id" })
         }
+        if (!accessToken || !refreshToken || !expiresIn) {
+            return res.status(401).json({ error: "No tokens provided" })
+        }
+        if (!req.params.guildId) {
+            return res.status(401).json({ error: "No guild ID provided" })
+        }
+        console.log("registerToken :\n accessToken : " + accessToken + "\n refreshToken : " + refreshToken + "\n expiresIn : " + expiresIn + "\n serviceId : " + serviceId + "\n userInfo : " + userInfo.userId);
         const OAuthData = await OAuth.create({
-            serviceId: Number(process.env.DISCORD_SERVICE_ID),
+            serviceId: serviceId,
             encryptedAccessToken: encryptedAccessToken.content,
+            encryptedRefreshToken: encryptedRefreshToken.content,
             ivAccess: encryptedAccessToken.iv,
+            ivRefresh: encryptedRefreshToken.iv,
+            expiresIn: expiresIn,
             ownerId: userInfo.userId,
+            OAuthEmail: "",
+            guildId: req.params.guildId,
         });
         return res.status(201).json({ id: OAuthData.id })
     } catch (error) {

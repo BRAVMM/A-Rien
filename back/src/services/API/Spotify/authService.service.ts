@@ -14,7 +14,8 @@ import { OAuthData } from "../../../interfaces/token.interface";
 const authenticateUser = async (code: string): Promise<OAuthData> => {
     const SPOTIFY_REDIRECT_URI : string = process.env.SPOTIFY_REDIRECT_URI ?? ''
 
-    if (!process.env.SPOTIFY_REDIRECT_URI && !process.env.SPOTIFY_CLIENT_ID && SPOTIFY_REDIRECT_URI.length === 0 && !process.env.SPOTIFY_SERVICE_ID) {
+
+    if (!process.env.SPOTIFY_REDIRECT_URI || !process.env.SPOTIFY_CLIENT_ID || SPOTIFY_REDIRECT_URI.length === 0 || !process.env.SPOTIFY_SERVICE_ID) {
         throw new Error ("Bad env configuration")
     }
     const SPOTIFY_SERVICE_ID : number = Number(process.env.SPOTIFY_SERVICE_ID)
