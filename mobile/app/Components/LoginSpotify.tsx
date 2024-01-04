@@ -1,9 +1,7 @@
 import * as React from 'react';
-import * as WebBrowser from 'expo-web-browser';
-import { makeRedirectUri, useAuthRequest, Prompt } from 'expo-auth-session';
+import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
 import { Button } from 'react-native';
-import { registerTokenService } from '../Services/callApi';
-import { SpotifyDataBody } from '../Interface/dataBody.interface';
+import { useRoute } from '@react-navigation/native';
 
 const REGISTER_TOKEN_ROUTE = "/services/spotify/registerToken";
 
@@ -13,6 +11,7 @@ const discovery = {
 };
 
 export default function App() {
+    const route = useRoute()
     const clientID: string = process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_ID ?? ''
 
     const [request, response, promptAsync] = useAuthRequest(
@@ -24,7 +23,8 @@ export default function App() {
             show_dialog: 'true'
           },
           redirectUri: makeRedirectUri({
-            scheme: 'myapp'
+            scheme: 'myapp',
+            path: 'home'
           }),
         },
         discovery,
@@ -32,7 +32,7 @@ export default function App() {
 
     const apiCall = async (code: string) => {
       try {
-        const bearer = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTcwNDM2MzA1MiwiZXhwIjoxNzA0MzY2NjUyfQ.AB6MVOMmBa7UODygKuQgI7hRfUsq6W3AZh-j20mHVLU"
+        const bearer = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTcwNDQwODUzOCwiZXhwIjoxNzA0NDEyMTM4fQ.ey93KsJNwDmFNq8xZsqmAFTdpXXRVcVGn2aHlzjZHV0"
 
         const response = await fetch(process.env.EXPO_PUBLIC_API_URL + REGISTER_TOKEN_ROUTE, {
           method: "POST",
@@ -54,6 +54,11 @@ export default function App() {
     } 
 
     React.useEffect(() => {
+      console.log(route.name)
+      console.log(makeRedirectUri({
+        scheme: 'myapp',
+        path: 'home'
+      }))
       if (response?.type === 'success') {
         const { code } = response.params;
 

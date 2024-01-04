@@ -3,6 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "expo-router";
 import { withExpoSnack, styled } from "nativewind";
 import React, { useEffect, useState } from "react";
+import colors from "../constants/Colors";
 import {
   Image,
   Text,
@@ -11,8 +12,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
-
-import colors from "../constants/Colors";
+import {color} from "ansi-fragments";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -20,48 +20,51 @@ const StyledImage = styled(Image);
 const StyledTextInput = styled(TextInput);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 
-const Login = () => {
+const Register = () => {
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [rePassword, setRePassword] = useState("");
   const [error, setError] = useState("");
-  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [registerSuccess, setRegisterSuccess] = useState(false);
 
   const router = useNavigation();
 
   useEffect(() => {
-    if (loginSuccess) {
+    if (registerSuccess) {
       // Redirect to the home page
-      // router.navigate("home" as never);
+      router.navigate("home" as never);
     }
 
     // Clean-up function
     return () => {
       // Reset login state
-      setLoginSuccess(false);
+      setRegisterSuccess(false);
       // Any other clean-up actions can be placed here
     };
-  }, [loginSuccess, router]);
+  }, [registerSuccess, router]);
 
   const handleError = (error: any) => {
     setError(error.error);
   };
 
   const handleSubmit = async () => {
-    if (password === undefined || password === "") {
-      setError("Passwords is empty");
+    if (password !== rePassword) {
+      setError("Passwords do not match");
       return;
     }
 
-    setError("");
+    setError(""); // Clear any existing errors
 
     const data = {
+      email,
       username,
       password,
     };
 
     try {
       const response = await fetch(
-        process.env.EXPO_PUBLIC_API_URL + "/users/login",
+        process.env.EXPO_PUBLIC_API_URL + "/users/register",
         {
           method: "POST",
           headers: {
@@ -71,9 +74,9 @@ const Login = () => {
         },
       );
       if (response.ok) {
-        setLoginSuccess(true);
+        setRegisterSuccess(true);
         const token = await response.json();
-        await AsyncStorage.setItem("token", token["token"]);
+        await AsyncStorage.setItem("token", token.token);
       } else {
         const errorResponse = await response.json();
         handleError(errorResponse);
@@ -97,13 +100,13 @@ const Login = () => {
             source={require("./../assets/images/logobravm.png")}
           />
           <StyledText className="text-white text-2xl font-bold">
-            Sign In to continue
+            Sign up to get started
           </StyledText>
         </StyledView>
         <KeyboardAvoidingView
           style={{
             width: "100%",
-            height: "20%",
+            height: "30%",
             justifyContent: "center",
             alignItems: "center",
           }}
@@ -112,18 +115,35 @@ const Login = () => {
           <StyledView className="flex flex-col items-center justify-center space-y-2 w-80 mt-14">
             <StyledTextInput
               autoCapitalize="none"
-              value={username}
-              onChangeText={(text) => setUsername(text)}
+              value={email}
               placeholderTextColor="#000000"
+              onChangeText={(text) => setEmail(text)}
+              placeholder="Email"
+              className="text-center w-[80%] h-10 bg-white rounded-2xl"
+            />
+            <StyledTextInput
+              autoCapitalize="none"
+              value={username}
+              placeholderTextColor="#000000"
+              onChangeText={(text) => setUsername(text)}
               placeholder="Username"
               className="text-center w-[80%] h-10 bg-white rounded-2xl"
             />
             <StyledTextInput
               autoCapitalize="none"
               value={password}
-              onChangeText={(text) => setPassword(text)}
               placeholderTextColor="#000000"
+              onChangeText={(text) => setPassword(text)}
               placeholder="Password"
+              secureTextEntry
+              className="text-center w-[80%] h-10 bg-white rounded-2xl"
+            />
+            <StyledTextInput
+              autoCapitalize="none"
+              value={rePassword}
+              placeholderTextColor="#000000"
+              onChangeText={(text) => setRePassword(text)}
+              placeholder="Repeat Password"
               secureTextEntry
               className="text-center w-[80%] h-10 bg-white rounded-2xl"
             />
@@ -131,33 +151,34 @@ const Login = () => {
         </KeyboardAvoidingView>
         <StyledTouchableOpacity
           onPress={handleSubmit}
-          className="p-5 rounded-2xl mt-5"
-          style={{
-            // Add additional styling here if needed
-            backgroundColor: colors.light.secondary,
-            width: "50%",
-          }}
+          className="bg-cyan p-2 rounded-2xl mt-5 w-[40%]"
+          style={{ backgroundColor: colors.light.secondary }}
         >
-          <StyledText
-            style={{
-              // Add additional styling here if needed
-              color: "#FFFFFF",
-              textAlign: "center",
-              fontSize: 16,
-              fontWeight: "bold",
-            }}
-          >
-            Login
+          <StyledText className="text-white text-center text-2xl font-bold">
+            Register
           </StyledText>
         </StyledTouchableOpacity>
         {error && (
-          <StyledText className="text-[#FF0000] text-center mt-2">
+          <StyledText className="text-[#FF0000] text-center top-2">
             {error}
           </StyledText>
         )}
+        <StyledView className="flex flex-row, justify-center top-[4%]">
+          <StyledText className="text-white text-xl font-bold">
+            Already have an account?
+          </StyledText>
+          <TouchableOpacity onPress={() => router.navigate("login" as never)}>
+            <StyledText
+              className="text-center text-2xl font-bold"
+              style={{ color: colors.light.fourthly }}
+            >
+              Go to login
+            </StyledText>
+          </TouchableOpacity>
+        </StyledView>
       </StyledView>
     </LinearGradient>
   );
 };
 
-export default withExpoSnack(Login);
+export default withExpoSnack(Register);

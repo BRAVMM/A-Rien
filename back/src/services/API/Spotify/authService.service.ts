@@ -11,7 +11,7 @@ import { OAuthData } from "../../../interfaces/token.interface";
  * 
  * @throws Will throw an error if the request to Spotify's API fails or if the response cannot be parsed as JSON.
  */
-const authenticateUser = async (code: string): Promise<OAuthData> => {
+const authenticateUserWeb = async (code: string): Promise<OAuthData> => {
     const SPOTIFY_REDIRECT_URI : string = process.env.SPOTIFY_REDIRECT_URI ?? ''
 
     if (!process.env.SPOTIFY_REDIRECT_URI && !process.env.SPOTIFY_CLIENT_ID && SPOTIFY_REDIRECT_URI.length === 0 && !process.env.SPOTIFY_SERVICE_ID) {
@@ -33,17 +33,18 @@ const authenticateUser = async (code: string): Promise<OAuthData> => {
             }).toString()
         });
         const data = await spotifyResponse.json();
+        console.log(data)
         const oauthData: OAuthData = {
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
             expiresIn: data.expires_in,
             serviceId: SPOTIFY_SERVICE_ID,
         }
+        console.log(oauthData)
         return oauthData
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
 
-export default authenticateUser
+export default authenticateUserWeb
