@@ -7,6 +7,7 @@ import { Request, Response } from 'express';
 import { TokenData } from '../../interfaces/token.interface';
 import { CustomRequest } from '../../interfaces/request.interface';
 import { EncryptionService } from '../../services/encryption.service';
+import getUserEmail from '../../services/API/Spotify/getUserEmail.service';
 
 /**
  * Middleware to register OAuth tokens for a user.
@@ -34,7 +35,7 @@ import { EncryptionService } from '../../services/encryption.service';
  * Response Body: { "id": new_oauth_data_id }
  * 
  * // Error response for missing data
- * Status: 400
+ * Status: 401
  * Response Body: { "error": "No tokens provided" }
  *
  * // Error response for server error
@@ -55,6 +56,7 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
         if (!accessToken || !refreshToken || !expiresIn) {
             return res.status(401).json({ error: "No tokens provided" })
         }
+        const userEmail : string = await getUserEmail(accessToken)
         console.log("registerToken :\n accessToken : " + accessToken + "\n refreshToken : " + refreshToken + "\n expiresIn : " + expiresIn + "\n serviceId : " + serviceId + "\n userInfo : " + userInfo.userId);
         const OAuthData = await OAuth.create({
             serviceId : serviceId,
@@ -64,6 +66,7 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
             ivRefresh : encryptedRefreshToken.iv,
             expiresIn : expiresIn,
             ownerId : userInfo.userId,
+            OAuthEmail : userEmail,
         });
         return res.status(201).json({id: OAuthData.id})
     } catch (error) {
