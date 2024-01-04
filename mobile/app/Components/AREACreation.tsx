@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {Modal, View, Text, TouchableOpacity, ScrollView} from "react-native";
+import {Modal, View, Text, TouchableOpacity, ScrollView, SafeAreaView} from "react-native";
 import {ModalDataInterface, ServiceActionInterface, ServiceReactionInterface} from "../Interfaces/ModalData.interface";
-import AREAForm from "./AREAForm"; // Assurez-vous que AREAForm est également adapté pour React Native
+import AREAForm from "./AREAForm";
 
 import actionReactionJsonDataService from "../Utils/actionReactionJsonData.serivce";
 import {storeArea} from "../Utils/callApi";
@@ -11,11 +11,6 @@ const AREACreationModal: React.FC<{
     onClose: () => void;
     ModalData: ModalDataInterface | undefined;
 }> = ({isOpen, onClose, ModalData}) => {
-    // ... (Le reste de votre logique de composant)
-
-    // Remplacez les composants HTML par des composants React Native
-    // Par exemple, remplacez <div> par <View>, <button> par <TouchableOpacity>, etc.
-
     enum Step {
         SELECT_SERVICE_ACTION,
         SELECT_SERVICE_ACTION_DATA,
@@ -165,7 +160,7 @@ const AREACreationModal: React.FC<{
         }
         return (
             <View className="flex flex-col items-center justify-center">
-                {ModalData.name}
+                <Text>{ModalData.name}</Text>
                 <View className="flex flex-col items-center justify-center">
                     {actionJsonData?.map(action => (
                         <View key={action.id}>
@@ -227,7 +222,7 @@ const AREACreationModal: React.FC<{
     const HTMLselectReaction = () => {
         return (
             <View className="flex flex-col items-center justify-center">
-                {ModalData.name}
+                <Text>{ModalData.name}</Text>
                 <View className="flex flex-col items-center justify-center">
                     {reactionJsonData?.map(reaction => (
                         <View key={reaction.id}>
@@ -363,14 +358,14 @@ const AREACreationModal: React.FC<{
 
     return (
         <Modal visible={isOpen} animationType="slide" onRequestClose={onClose}>
-            <View style={{flex: 1, padding: 20}}>
+            <SafeAreaView style={{flex: 1, padding: 20}}>
                 <TouchableOpacity onPress={onClose}>
                     <Text>Close</Text>
                 </TouchableOpacity>
                 <ScrollView>
                     <RenderContent/>
                 </ScrollView>
-            </View>
+            </SafeAreaView>
         </Modal>
     );
 };

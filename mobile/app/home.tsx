@@ -1,6 +1,6 @@
 import {styled, withExpoSnack} from "nativewind";
 import React, {useEffect, useState} from "react";
-import {Text, TouchableOpacity, View} from "react-native";
+import {SafeAreaView, Text, TouchableOpacity, View} from "react-native";
 import {ActionJsonArray} from "./Interfaces/ActionJson.interface";
 import {ModalDataInterface} from "./Interfaces/ModalData.interface";
 import actionReactionJsonDataService from "./Utils/actionReactionJsonData.serivce";
@@ -8,6 +8,7 @@ import IconService from "./Components/IconService";
 import AREACreationModal from "./Components/AREACreation";
 
 const StyledView = styled(View);
+const StyledSafeAreaView = styled(SafeAreaView);
 const StyledText = styled(Text);
 
 const Home = () => {
@@ -29,16 +30,16 @@ const Home = () => {
     const [service, setService] = useState<ModalDataInterface>();
 
     const servicePicture: { [key: string]: string } = {
-        "Discord": "./assets/Discord_logo.svg",
-        "Twitch": "./assets/Twitch_logo.svg",
-        "Spotify": "./assets/Spotify_logo.svg",
-        "Teams": "./assets/Teams_logo.svg",
-        "Gmail": "./assets/Gmail_logo.svg",
-        "Outlook": "./assets/Outlook_logo.svg",
-        "TrackerGG": "./assets/TrackerGG_logo.svg",
-        "Onedrive": "./assets/OneDrive_logo.svg",
-        "Weather": "./assets/Weather_logo.svg",
-        "Timer": "./assets/Timer_logo.svg",
+        "Discord": "./../assets/images/logos/Discord_logo.svg",
+        "Twitch": "./../assets/images/logos/Twitch_logo.svg",
+        "Spotify": "./../assets/images/logos/Spotify_logo.svg",
+        "Teams": "./../assets/images/logos/Teams_logo.svg",
+        "Gmail": "./../assets/images/logos/Gmail_logo.svg",
+        "Outlook": "./../assets/images/logos/Outlook_logo.svg",
+        "TrackerGG": "./../assets/images/logos/TrackerGG_logo.svg",
+        "Onedrive": "./../assets/images/logos/OneDrive_logo.svg",
+        "Weather": "./../assets/images/logos/Weather_logo.svg",
+        "Timer": "./../assets/images/logos/Timer_logo.svg",
     }
 
     /**
@@ -69,12 +70,12 @@ const Home = () => {
      * @param {ModalDataInterface} service - service to display in the modal
      */
     const handleModal = (service: ModalDataInterface) => {
-        setIsModalOpen(true);
         setService(service);
+        setIsModalOpen(true);
     };
 
     return (
-        <StyledView className="flex-1 items-center justify-center">
+        <StyledSafeAreaView className="flex-1 items-center justify-center">
             {service ? <AREACreationModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
@@ -97,7 +98,7 @@ const Home = () => {
                     />
                 </TouchableOpacity>
             )))}
-        </StyledView>
+        </StyledSafeAreaView>
     );
 };
 
