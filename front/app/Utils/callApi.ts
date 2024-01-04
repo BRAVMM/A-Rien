@@ -118,6 +118,7 @@ export async function storeArea(name: string, actionId: number, reactionIds: num
       throw new Error(error.error);
     }
   } catch (error) {
-    throw error;
+    console.error(error)
+    return
   }
 }
