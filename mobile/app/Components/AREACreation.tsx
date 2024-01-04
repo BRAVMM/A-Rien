@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Modal, View, Text, TouchableOpacity, ScrollView } from "react-native";
-import { ModalDataInterface, ServiceActionInterface, ServiceReactionInterface } from "../Interfaces/ModalData.interface";
+import React, {useEffect, useState} from "react";
+import {Modal, View, Text, TouchableOpacity, ScrollView} from "react-native";
+import {ModalDataInterface, ServiceActionInterface, ServiceReactionInterface} from "../Interfaces/ModalData.interface";
 import AREAForm from "./AREAForm"; // Assurez-vous que AREAForm est également adapté pour React Native
 
 import actionReactionJsonDataService from "../Utils/actionReactionJsonData.serivce";
-import { storeArea } from "../Utils/callApi";
+import {storeArea} from "../Utils/callApi";
 
 const AREACreationModal: React.FC<{
     isOpen: boolean;
     onClose: () => void;
     ModalData: ModalDataInterface | undefined;
-}> = ({ isOpen, onClose, ModalData }) => {
+}> = ({isOpen, onClose, ModalData}) => {
     // ... (Le reste de votre logique de composant)
 
     // Remplacez les composants HTML par des composants React Native
@@ -363,12 +363,12 @@ const AREACreationModal: React.FC<{
 
     return (
         <Modal visible={isOpen} animationType="slide" onRequestClose={onClose}>
-            <View style={{ flex: 1, padding: 20 }}>
+            <View style={{flex: 1, padding: 20}}>
                 <TouchableOpacity onPress={onClose}>
                     <Text>Close</Text>
                 </TouchableOpacity>
                 <ScrollView>
-                    <RenderContent />
+                    <RenderContent/>
                 </ScrollView>
             </View>
         </Modal>
