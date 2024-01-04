@@ -32,7 +32,22 @@ export default function App() {
 
     const apiCall = async (code: string) => {
       try {
-        // await registerTokenService(new SpotifyDataBody(code), REGISTER_TOKEN_ROUTE);
+        const bearer = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImlhdCI6MTcwNDM2MzA1MiwiZXhwIjoxNzA0MzY2NjUyfQ.AB6MVOMmBa7UODygKuQgI7hRfUsq6W3AZh-j20mHVLU"
+
+        const response = await fetch(process.env.EXPO_PUBLIC_API_URL + REGISTER_TOKEN_ROUTE, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${bearer}`,
+          },
+          body: JSON.stringify({code: code}),
+        });
+        console.log(response)
+        if (!response.ok) {
+          const error = await response.json();
+          console.log(error)
+          throw new Error(error.error);
+        }
       } catch (error) {
         console.log(error)
       }
