@@ -1,12 +1,19 @@
-import { Stack } from 'expo-router';
-import login from './login';
-import index from './index';
+import { Stack } from "expo-router";
+
+import home from "./home";
+import index from "./index";
+import login from "./login";
+import register from "./register";
 
 export default function Layout() {
-  return <Stack initialScreen="login" screens={{ login, index }} screenOptions={
-    {
-      headerShown: false,
-    }
-  }>
-  </Stack>
+  return (
+    <Stack
+      // @ts-ignore
+      initialScreen="register"
+      screens={{ login, register, home, index }}
+      screenOptions={{
+        headerShown: false,
+      }}
+    />
+  );
 }
