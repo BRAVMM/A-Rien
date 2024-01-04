@@ -59,6 +59,7 @@ const Login = () => {
     };
 
     try {
+      console.log("data = ", JSON.stringify(data));
       const response = await fetch(
         process.env.EXPO_PUBLIC_API_URL + "/users/login",
         {
