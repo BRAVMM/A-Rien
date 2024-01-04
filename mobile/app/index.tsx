@@ -6,7 +6,6 @@ const App = () => {
   const router = useNavigation();
 
   async function checkAuth() {
-    AsyncStorage.clear();
     const token = await AsyncStorage.getItem("token");
     if (token) {
       router.navigate("home" as never);
