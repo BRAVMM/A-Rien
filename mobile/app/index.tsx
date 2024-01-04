@@ -1,19 +1,21 @@
-import { withExpoSnack, styled } from "nativewind";
-import React from "react";
-import { Text, View } from "react-native";
-
-const StyledView = styled(View);
-const StyledText = styled(Text);
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "expo-router";
+import { withExpoSnack } from "nativewind";
 
 const App = () => {
-  return (
-    <StyledView className="flex-1 items-center justify-center">
-      <StyledText className="text-slate-800">Try editing me! 🎉</StyledText>
-    </StyledView>
-  );
+  const router = useNavigation();
+
+  async function checkAuth() {
+    const token = await AsyncStorage.getItem("token");
+    if (token) {
+      router.navigate("home" as never);
+    } else {
+      router.navigate("register" as never);
+    }
+  }
+
+  checkAuth().then(r => r);
+  return <></>;
 };
 
-// This demo is using a external compiler that will only work in Expo Snacks.
-// You may see flashes of unstyled content, this will not occur under normal use!
-// Please see the documentation to setup your application
 export default withExpoSnack(App);

@@ -41,7 +41,6 @@ const authenticateUser = async (code: string): Promise<OAuthData> => {
         }
         return oauthData
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
