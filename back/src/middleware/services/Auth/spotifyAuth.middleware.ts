@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import authenticateUserWeb from "../../../services/API/Spotify/authService.service";
+import authenticateUser from "../../../services/API/Spotify/authService.service";
 
 /**
  * Middleware that authenticates with Spotify using an authorization code.
@@ -25,13 +25,13 @@ import authenticateUserWeb from "../../../services/API/Spotify/authService.servi
 const spotifyAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
     try {
-        const code : string = req.body.code;
+        const { code, mobile } = req.body;
 
         if (!code) {
             res.status(400).json({error: "Code not found in the request."})
             return;
         }
-        req.body = await authenticateUserWeb(code)
+        req.body = await authenticateUser(code, (mobile !== undefined && mobile))
         next()
     } catch (error) {
         if (error instanceof Error) {

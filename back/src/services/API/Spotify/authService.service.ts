@@ -1,5 +1,9 @@
 import { OAuthData } from "../../../interfaces/token.interface";
 
+const getRedirectUri = (mobile: boolean) : string | undefined => {
+    return mobile ? process.env.SPOTIFY_REDIRECT_URI_MOBILE : process.env.SPOTIFY_REDIRECT_URI_WEB
+}
+
 /**
  * Asynchronously authenticates a user with the Spotify API using an authorization code.
  * This function sends a POST request to Spotify's token endpoint to exchange the authorization code
@@ -11,13 +15,13 @@ import { OAuthData } from "../../../interfaces/token.interface";
  * 
  * @throws Will throw an error if the request to Spotify's API fails or if the response cannot be parsed as JSON.
  */
-const authenticateUserWeb = async (code: string): Promise<OAuthData> => {
-    const SPOTIFY_REDIRECT_URI : string = process.env.SPOTIFY_REDIRECT_URI ?? ''
-
-    if (!process.env.SPOTIFY_REDIRECT_URI && !process.env.SPOTIFY_CLIENT_ID && SPOTIFY_REDIRECT_URI.length === 0 && !process.env.SPOTIFY_SERVICE_ID) {
+const authenticateUser  = async (code: string, mobile: boolean): Promise<OAuthData> => {
+    console.log(mobile)
+    if (!process.env.SPOTIFY_REDIRECT_URI_WEB && !process.env.SPOTIFY_CLIENT_ID && !process.env.SPOTIFY_REDIRECT_URI_MOBILE && !process.env.SPOTIFY_SERVICE_ID) {
         throw new Error ("Bad env configuration")
     }
     const SPOTIFY_SERVICE_ID : number = Number(process.env.SPOTIFY_SERVICE_ID)
+    const SPOTIFY_REDIRECT_URI : string = getRedirectUri(mobile) ?? ''
 
     try {
         const spotifyResponse = await fetch('https://accounts.spotify.com/api/token', {
@@ -47,4 +51,4 @@ const authenticateUserWeb = async (code: string): Promise<OAuthData> => {
     }
 }
 
-export default authenticateUserWeb
+export default authenticateUser 

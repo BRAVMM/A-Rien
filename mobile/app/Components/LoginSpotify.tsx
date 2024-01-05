@@ -2,6 +2,7 @@ import * as React from 'react';
 import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
 import { Button } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const REGISTER_TOKEN_ROUTE = "/services/spotify/registerToken";
 
@@ -32,7 +33,7 @@ export default function App() {
 
     const apiCall = async (code: string) => {
       try {
-        const bearer = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTcwNDQwODUzOCwiZXhwIjoxNzA0NDEyMTM4fQ.ey93KsJNwDmFNq8xZsqmAFTdpXXRVcVGn2aHlzjZHV0"
+        const bearer = await AsyncStorage.getItem("token")
 
         const response = await fetch(process.env.EXPO_PUBLIC_API_URL + REGISTER_TOKEN_ROUTE, {
           method: "POST",
@@ -40,33 +41,23 @@ export default function App() {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${bearer}`,
           },
-          body: JSON.stringify({code: code}),
+          body: JSON.stringify({code: code, mobile: true}),
         });
-        console.log(response)
         if (!response.ok) {
           const error = await response.json();
-          console.log(error)
           throw new Error(error.error);
         }
       } catch (error) {
         console.log(error)
+        return
       }
     } 
 
     React.useEffect(() => {
-      console.log(route.name)
-      console.log(makeRedirectUri({
-        scheme: 'myapp',
-        path: 'home'
-      }))
       if (response?.type === 'success') {
         const { code } = response.params;
 
-        try {
-          apiCall(code)
-        } catch(error) {
-            console.log(error)
-        }
+        apiCall(code)
       }
     }, [response]);
 
