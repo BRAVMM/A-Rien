@@ -31,7 +31,7 @@ const Login = () => {
   useEffect(() => {
     if (loginSuccess) {
       // Redirect to the home page
-      // router.navigate("home" as never);
+      router.navigate("home" as never);
     }
 
     // Clean-up function
@@ -45,7 +45,6 @@ const Login = () => {
   const handleError = (error: any) => {
     setError(error.error);
   };
-
   const handleSubmit = async () => {
     if (password === undefined || password === "") {
       setError("Passwords is empty");
