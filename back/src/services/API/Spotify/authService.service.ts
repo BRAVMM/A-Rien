@@ -16,7 +16,6 @@ const getRedirectUri = (mobile: boolean) : string | undefined => {
  * @throws Will throw an error if the request to Spotify's API fails or if the response cannot be parsed as JSON.
  */
 const authenticateUser  = async (code: string, mobile: boolean): Promise<OAuthData> => {
-    console.log(mobile)
     if (!process.env.SPOTIFY_REDIRECT_URI_WEB && !process.env.SPOTIFY_CLIENT_ID && !process.env.SPOTIFY_REDIRECT_URI_MOBILE && !process.env.SPOTIFY_SERVICE_ID) {
         throw new Error ("Bad env configuration")
     }
@@ -37,14 +36,16 @@ const authenticateUser  = async (code: string, mobile: boolean): Promise<OAuthDa
             }).toString()
         });
         const data = await spotifyResponse.json();
-        console.log(data)
+        if (!spotifyResponse.ok) {
+            console.error({errorMessage: "An error was caught", error: data.error})
+        }
         const oauthData: OAuthData = {
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
             expiresIn: data.expires_in,
             serviceId: SPOTIFY_SERVICE_ID,
         }
-        console.log(oauthData)
+        console.log({OAUTH_DATA: oauthData})
         return oauthData
     } catch (error) {
         throw error;
