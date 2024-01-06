@@ -18,6 +18,7 @@
   - [Add your service](#add-your-service)
   - [Add your actions](#add-your-actions)
 - [Add your reactions](#add-your-reactions)
+- [Add your service to the about.json page](#add-your-service-to-the-aboutjson-page)
 
 ## Files to modify
 
@@ -34,6 +35,8 @@
 - `/back/src/controller/services/<yourService>.controller.ts`
 
 - `/back/src/index.ts`
+
+- `/back/src/controller/about.controller.ts`
 
 ## Create your triggers and reactions
 
@@ -433,3 +436,68 @@ const addReactionsToDB = async () => {
     - type: The type of the argument
     - description: The description of the argument
     - range: The range of the argument (only for number type)
+
+## Add your service to the about.json page
+
+Add your service to the about.json page in `/back/src/controller/about.controller.ts`:
+
+```typescript
+
+const json: MyJson = {
+  client: {
+    host: "bravmm.myfdp.online"
+  },
+  server: {
+    current_time: getUnixTime(),
+    services: [
+      {
+        name: "Spotify",
+        actions: [
+          {
+            name: "new_message_in_group",
+            description: "A new message is posted in the group"
+          },
+          {
+            name: "new_message_inbox",
+            description: "A new private message is received by the user"
+          },
+          {
+            name: "new_like",
+            description: "The user gains a like from one of their messages"
+          }
+        ],
+        reactions: [
+          {
+            name: "like_message",
+            description: "The user likes a message"
+          }
+        ]
+      },
+      // Add your service here
+      {
+        name: "<YourService>",
+        actions: [
+          {
+            name: "<YourAction>",
+            description: "<YourAction> description"
+          }
+        ],
+        reactions: [
+          {
+            name: "<YourReaction>",
+            description: "<YourReaction> description"
+          }
+        ]
+      }
+    ]
+  }
+};
+```
+
+- name: The name of the service
+- actions: The actions of the service
+  - name: The name of the action
+  - description: The description of the action
+- reactions: The reactions of the service
+  - name: The name of the reaction
+  - description: The description of the reaction
