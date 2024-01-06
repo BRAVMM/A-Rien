@@ -14,7 +14,10 @@
 - [Add your service to the API](#add-your-service-to-the-api)
   - [Create your service API](#create-your-service-api)
   - [Create a route for your service](#create-a-route-for-your-service)
-- [Add your service to the middleware](#add-your-service-to-the-middleware)
+- [Add your service to the DB](#add-your-service-to-the-db)
+  - [Add your service](#add-your-service)
+  - [Add your actions](#add-your-actions)
+- [Add your reactions](#add-your-reactions)
 
 ## Files to modify
 
@@ -29,6 +32,8 @@
 - `/back/src/route/services.route.ts`
 
 - `/back/src/controller/services/<yourService>.controller.ts`
+
+- `/back/src/index.ts`
 
 ## Create your triggers and reactions
 
@@ -158,4 +163,273 @@ Add your service to the API in ``/back/src/route/services.route.ts``:
 router.post('/<yourservice>/registerToken', verifyToken, <yourservice>Auth, refreshTokens, userAlreadyAuth, <yourservice>Controller.registerToken)
 ```
 
-## Add your service to the middleware
+## Add your service to the DB
+
+### Add your service
+
+Add your service to the DB in `/back/src/index.ts`:
+
+```typescript
+const addServicesToDB = async () => {
+    const SERVICES: any[] = [
+        {
+            id: 1,
+            name: 'Spotify',
+            actionsId: [1, 2, 3, 4, 5, 6, 7],
+            reactionsId: [1, 2],
+        },
+        {
+            id: 2,
+            name: 'Timer',
+            actionsId: [8],
+            reactionsId: [],
+        },
+        // Add your service here
+        {
+            id: 3,
+            name: '<YourService>',
+            actionsId: [1, 2, 3, 4, 5],
+            reactionsId: [1, 2],
+        }
+    ];
+
+    for (const service of SERVICES) {
+        if (await Service.findOne({where: {name: service.name}})) {
+            continue;
+        }
+        await Service.create({
+            id: service.id,
+            name: service.name,
+            actionsIds: service.actionsId,
+            reactionsIds: service.reactionsId,
+        });
+    }
+};
+```
+
+- id: The id of the service (incremental)
+- name: The name of the service
+- actionsId: The ids of the actions of the service (can be found in `/back/src/services/taskScheduler.ts`)
+- reactionsId: The ids of the reactions of the service (can be found in `/back/src/services/taskScheduler.ts`)
+
+### Add your actions
+
+Add your actions to the DB in `/back/src/index.ts`:
+
+```typescript
+const addActionsToDB = async () => {
+    const ACTIONS: any[] = [
+        {
+            name: 'Spotify',
+            actions: [
+                {
+                    id: 1,
+                    name: 'New saved song',
+                    description: 'When a new song is saved',
+                    args: [],
+                    reactionsIds: [1],
+                },
+                {
+                    id: 2,
+                    name: 'New saved album',
+                    description: 'When a new album is saved',
+                    args: [],
+                    reactionsIds: [1],
+                },
+                {
+                    id: 3,
+                    name: 'New saved artist',
+                    description: 'When a new artist is saved',
+                    args: [{
+                        title: "gender",
+                        type: 'string',
+                        description: "Enter a gender",
+                    }],
+                    reactionsIds: [1],
+                },
+                {
+                    id: 4,
+                    name: 'New created playlist',
+                    description: 'When a new playlist is created',
+                    args: [],
+                    reactionsIds: [1],
+                },
+                {
+                    id: 5,
+                    name: 'New saved playlist',
+                    description: 'When a new playlist is saved',
+                    args: [],
+                    reactionsIds: [1],
+                },
+                {
+                    id: 6,
+                    name: 'New saved song from genre',
+                    description: 'When a new song is saved from a genre',
+                    args: [{
+                        title: "genre",
+                        type: 'string',
+                        description: 'Enter a genre',
+                    }],
+                    reactionsIds: [1],
+                },
+                {
+                    id: 7,
+                    name: 'New saved song from artist',
+                    description: 'When a new song is saved from an artist',
+                    args: [{
+                        title: "artistId",
+                        type: 'string',
+                        description: 'Enter an artist id',
+                    }],
+                    reactionsIds: [1],
+                },
+            ]
+        },
+        {
+            name: 'Timer',
+            actions: [
+                {
+                    id: 8,
+                    name: 'When X time stamped',
+                    description: 'When X time is stamped (in minutes)',
+                    args: [{
+                        title: "timeNeeded",
+                        type: 'number',
+                        description: 'Enter a number (in minutes)',
+                        range: [1, 1440],
+                    }],
+                    reactionsIds: [2],
+                },
+            ]
+        },
+        // Add your service here
+        {
+            name: '<YourService>',
+            actions: [
+                {
+                    id: 1,
+                    name: '<YourAction>',
+                    description: '<YourAction> description',
+                    args: [
+                        {
+                            title: "<YourArgument>",
+                            type: '<YourType>',
+                            description: "<YourArgument> description",
+                        },
+                    ],
+                    reactionsIds: [1],
+                },
+            ]
+        }
+    ];
+
+    for (const service of ACTIONS) {
+        for (const action of service.actions) {
+            if (await Action.findOne({where: {name: action.name}})) {
+                continue;
+            }
+            await Action.create({
+                id: action.id,
+                name: action.name,
+                args: action.args,
+                reactionsIds: action.reactionsIds,
+            });
+        }
+    }
+}
+```
+
+- name: The name of the service
+- actions: The actions of the service
+  - id: The id of the action (incremental)
+  - name: The name of the action
+  - description: The description of the action
+  - args: The arguments of the action
+    - title: The title of the argument
+    - type: The type of the argument
+    - description: The description of the argument
+    - range: The range of the argument (only for number type)
+  - reactionsIds: The ids of the reactions of the action (can be found in `/back/src/services/taskScheduler.ts`)
+
+## Add your reactions
+
+Add your reactions to the DB in `/back/src/index.ts`:
+
+```typescript
+const addReactionsToDB = async () => {
+    const REACTIONS: any[] = [
+        {
+            name: 'Spotify',
+            reactions: [
+                {
+                    id: 1,
+                    name: 'Add to playlist',
+                    description: 'Add a song to a playlist',
+                    args: [
+                        {
+                            title: "playlistId",
+                            type: 'string',
+                            description: "Enter a playlist id",
+                        },
+                    ],
+                },
+                {
+                    id: 2,
+                    name: 'Add random to playlist',
+                    description: 'Add a random song to a playlist',
+                    args: [
+                        {
+                            title: "playlistId",
+                            type: 'string',
+                            description: "Enter a playlist id",
+                        },
+                    ],
+                },
+            ]
+        },
+        // Add your service here
+        {
+            name: '<YourService>',
+            reactions: [
+                {
+                    id: 1,
+                    name: '<YourReaction>',
+                    description: '<YourReaction> description',
+                    args: [
+                        {
+                            title: "<YourArgument>",
+                            type: '<YourType>',
+                            description: "<YourArgument> description",
+                        },
+                    ],
+                },
+            ]
+        }
+    ];
+
+    for (const service of REACTIONS) {
+        for (const reaction of service.reactions) {
+            if (await Reaction.findOne({where: {name: reaction.name}})) {
+                continue;
+            }
+            await Reaction.create({
+                id: reaction.id,
+                name: reaction.name,
+                description: reaction.description,
+                args: reaction.args,
+            });
+        }
+    }
+}
+```
+
+- name: The name of the service
+- reactions: The reactions of the service
+  - id: The id of the reaction (incremental)
+  - name: The name of the reaction
+  - description: The description of the reaction
+  - args: The arguments of the reaction
+    - title: The title of the argument
+    - type: The type of the argument
+    - description: The description of the argument
+    - range: The range of the argument (only for number type)

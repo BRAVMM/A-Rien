@@ -72,6 +72,12 @@ const addServicesToDB = async () => {
             name: 'Timer',
             actionsId: [8],
             reactionsId: [],
+        },
+        {
+            id: 3,
+            name: 'Discord',
+            actionsId: [],
+            reactionsId: [3],
         }
     ];
 
@@ -217,6 +223,23 @@ const addReactionsToDB = async () => {
                             title: "playlistId",
                             type: 'string',
                             description: "Enter a playlist id",
+                        },
+                    ],
+                },
+            ]
+        },
+        {
+            name: 'Discord',
+            reactions: [
+                {
+                    id: 3,
+                    name: 'Send message',
+                    description: 'Send a message to a channel',
+                    args: [
+                        {
+                            title: "message",
+                            type: 'string',
+                            description: "Enter a message",
                         },
                     ],
                 },
