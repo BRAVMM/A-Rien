@@ -71,7 +71,7 @@ If you want to learn how to use the project, you should start by reading the [us
 ## Database Diagram
 
 > [!NOTE]  
-> You can't see this diagram at this time due to github, if you want to see it go in your editor
+> If the Mermaid diagram is not rendering on GitHub, you can view the static image here: [Database Diagram](docs/assets/database_diagram.png) or you see it in your editor using the mermaid extension.
 
 ```mermaid
 classDiagram
@@ -103,12 +103,17 @@ classDiagram
 
 ## Environment General
 
+> [!NOTE]  
+> If the Mermaid diagram is not rendering on GitHub, you can view the static image here: [Env Diagram](docs/assets/env_diagram.png) or you see it in your editor using the mermaid extension.
+
 ```mermaid
 graph LR
 A((Api)) --> C
 A --> B
 B[App mobile] --> D
-C[App web] --> D{Data}
+C[App web] --> D{Back}
+D[Back] --> A
+D --> E[Database]
 ```
 
 ## Authors

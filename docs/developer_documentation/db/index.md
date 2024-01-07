@@ -42,33 +42,4 @@ docker run -d -p 5432:5432 database
 
 ## Database Diagram
 
-> [!NOTE]  
-> You can't see this diagram at this time due to github, if you want to see it go in your editor
-
-```mermaid
-classDiagram
-    Services: id
-    Services: Service Name
-    Services: Actions IDs
-    Services: Reactions IDs
-    Actions: id
-    Actions: Action Name
-    Actions: Args
-    Actions: Service IDs
-    Reactions: id
-    Reactions: Reaction Name
-    Reactions: Args
-    Reactions: Action IDs
-    ActionsData: id
-    ActionsData: Owner ID
-    ActionsData: Data
-    ActionsData: Raaction Datas IDs
-    ReactionsData: id
-    ReactionsData: Owner ID
-    ReactionsData: Data
-    ReactionsData: Action Datas IDs
-    Services --|> Actions
-    Services --|> Reactions
-    Actions --|> ActionsData
-    Reactions --|> ReactionsData
-```
+![Database Diagram](../../assets/database_diagram.png)
