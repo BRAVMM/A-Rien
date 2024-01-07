@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import TextSection from "../Components/TextSection";
 import { AreaDetailsInterface } from "../Interfaces/AreaDetails.Interface";
 import SpotifyButtonOAuth from "../Components/services/LoginSpotify";
+import Cookies from 'js-cookie';
 
 function getAreas() {
     let _areas: AreaDetailsInterface[] = [
@@ -120,6 +121,37 @@ export default function Services() {
       setServicesList(services);
     });
   }, []);
+
+  /**
+   * @function useEffect
+   * @description useEffect to check if the user is logged in
+   */
+  useEffect(() => {
+    const token: string | null = Cookies.get("token");
+
+    if (!token) {
+      console.log("No token");
+      router.push("/");
+    }
+    try {
+      const response = fetch(process.env.NEXT_PUBLIC_API + "/users/me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+      });
+      response.then((response) => {
+        if (response.status !== 200) {
+          console.log("Not logged in");
+          router.push("/");
+        }
+      });
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+  , []);
 
   /**
    * @function handleModal
