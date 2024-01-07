@@ -9,10 +9,12 @@
   - [Using Docker Compose](#using-docker-compose)
   - [Using Docker](#using-docker)
   - [Using Node.js](#using-nodejs)
+- [API](#api)
+  - [Routes](#routes)
 
 ## Introduction
 
-The back uses the [NestJS](https://nestjs.com/) framework.
+The back uses the [ExpressJs](https://expressjs.com/) framework.
 
 ## Installation
 
@@ -85,3 +87,24 @@ Then, you can run the project.
 ```bash
 npm run start
 ```
+
+## API
+
+### Routes
+
+| Method | Route                                       | Description                          |
+| ------ | ------------------------------------------  | ------------------------------------ |
+| GET    | /                                           | Hello World                          |
+| POST   | /users/register                             | Create a user                        |
+| POST   | /users/login                                | Login a user                         |
+| POST   | /users/logout                               | Logout a user                        |
+| GET    | /users/me                                   | Get the current user                 |
+| GET    | /area/getActionsFromServiceId/:serviceId    | Get the actions from a service id    |
+| GET    | /area/getReactionsFromActionId/:actionId    | Get the reactions from an action id  |
+| GET    | /area/getServices                           | Get all the services                 |
+| GET    | /area/getOauthIdsFromServiceId/:serviceId   | Get the oauth ids from a service id  |
+| GET    | /area/getOauthIdsFromActionId/:actionId     | Get the oauth ids from an action id  |
+| GET    | /area/getOauthIdsFromReactionId/:reactionId | Get the oauth ids from a reaction id |
+| POST   | /area/storeArea                             | Store an area                        |
+| POST   | /services/spotify/registerToken             | Register a Spotify token             |
+| GET    | /about.json                                 | Get the about.json file              |

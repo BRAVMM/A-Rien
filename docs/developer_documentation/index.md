@@ -1,6 +1,6 @@
 # Developer documentation
 
-Welcome to the developer documentation of the A-RIEN project.  
+Welcome to the developer documentation of the **A-RIEN** project.  
 This documentation is intended for developers who want to contribute to the project.  
   
 If you are a new contributor, you should start by reading the [getting started](#getting-started) section.  
@@ -11,6 +11,7 @@ If you need some precise information, see the following sections :
 - [front](front/index.md)
 - [mobile](mobile/index.md)
 - [services_api](services_api/index.md)
+- [add a service](addService.md)
 
 ## Getting started
 
@@ -18,8 +19,8 @@ If you need some precise information, see the following sections :
 
 Before you begin, you should have a basic understanding of the following:
 
-- Take a look at the [contributing guidelines](../CONTRIBUTING.md) to understand how to contribute to the project.
-- Take a look at the [code of conduct](../CODE_OF_CONDUCT.md) to understand how to behave in the project.
+- Take a look at the [contributing guidelines](../../CONTRIBUTING.md) to understand how to contribute to the project.
+- Take a look at the [code of conduct](../../CODE_OF_CONDUCT.md) to understand how to behave in the project.
 - Take a look at the [project structure](#project-structure) to understand how the project is organized.
 
 ### Prerequisites
@@ -50,11 +51,11 @@ Before you begin, you should have a basic understanding of the following:
 
 ### Usage
 
-Access the application via the address: [http://localhost:3000](http://localhost:3000)
+Access the application via the address: [http://localhost:8081](http://localhost:8081).  
 
-Access the API via the address: [http://localhost:8080](http://localhost:8080)
+Access the API via the address: [http://localhost:8080](http://localhost:8080).  
 
-Access the mobile application via expo on your phone or via the address: [http://localhost:19002](http://localhost:19002)
+Access the mobile application via expo on your phone or via the address: [http://localhost:19002](http://localhost:19002).  
 
 ## Learn more
 
@@ -85,7 +86,7 @@ docker-compose.yml
 
 ### Interactions
 
-The following diagram shows the interactions between the different parts of the project:
+The following diagram shows the interactions between the different parts of the project:  
 
 ```txt
    +------------+
@@ -99,7 +100,7 @@ The following diagram shows the interactions between the different parts of the 
    +------------+
 ```
 
-The front and mobile communicate with the back via the API.
-Depending on the request, the back will communicate with the database.
+The front and mobile communicate with the back via the API.  
+Depending on the request, the back will communicate with the database.  
 
 To update the services, the back communicates with the external services API.
