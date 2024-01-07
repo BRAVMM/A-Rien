@@ -10,7 +10,14 @@
   - [Using Docker](#using-docker)
   - [Using Node.js](#using-nodejs)
 - [Usage](#usage)
-- [API](#api)
+- [Sitemap](#sitemap)
+  - [API Routes](#api-routes)
+  - [Pages](#pages)
+    - [Home page](#home-page)
+    - [Login page](#login-page)
+    - [Register page](#register-page)
+    - [Services page](#services-page)
+    - [Client apk](#client-apk)
 
 ## Introduction
 
@@ -71,7 +78,9 @@ npm run dev
 
 You can access the front at the following url: [http://localhost:8081](http://localhost:8081)
 
-## API
+## Sitemap
+
+### API Routes
 
 | Method | Route       | Description             |
 | ------ | ----------- | ----------------------- |
@@ -80,3 +89,35 @@ You can access the front at the following url: [http://localhost:8081](http://lo
 | GET    | /register   | Register page           |
 | GET    | /services   | Services page           |
 | GET    | /client.apk | Download the client apk |
+
+### Pages
+
+#### Home page
+
+The home page is the main page of the front.
+It allows you to access the login and registration pages.
+
+![Home page](../../assets/home.png)
+
+#### Login page
+
+The login page allows you to log in to the application.
+
+![Login page](../../assets/login.png)
+
+#### Register page
+
+The register page allows you to register in the application.
+
+![Register page](../../assets/register.png)
+
+#### Services page
+
+The services page allows you to manage your services.
+
+![Services page](../../assets/services.png)
+
+#### Client apk
+
+The client apk allows you to download the client apk.  
+It will allow you to use the application on your smartphone.
