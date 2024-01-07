@@ -132,6 +132,7 @@ export default function Services() {
     if (!token) {
       console.log("No token");
       router.push("/");
+      return;
     }
     try {
       const response = fetch(process.env.NEXT_PUBLIC_API + "/users/me", {
@@ -146,6 +147,9 @@ export default function Services() {
           console.log("Not logged in");
           router.push("/");
         }
+      }).catch((error) => {
+        console.error("Error:", error);
+        router.push("/");
       });
     } catch (error) {
       console.error("Error:", error);
