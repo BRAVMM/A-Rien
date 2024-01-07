@@ -10,10 +10,11 @@
   - [Using Docker](#using-docker)
   - [Using Node.js](#using-nodejs)
 - [Usage](#usage)
+- [API](#api)
 
 ## Introduction
 
-The front is a web application using the [React](https://reactjs.org/) framework.
+The front is a web application using the [NextJs](https://nextjs.org/) framework.  
 The front uses the [Tailwind CSS](https://tailwindcss.com/) framework to manage the styles.
 
 ## Installation
@@ -49,7 +50,7 @@ docker build -t front .
 Then, you can run the container:
 
 ```bash
-docker run -d -p 3000:3000 front
+docker run -d -p 3000:8081 front
 ```
 
 ### Using Node.js
@@ -68,4 +69,14 @@ npm run dev
 
 ## Usage
 
-You can access the front at the following url: [http://localhost:3000](http://localhost:3000)
+You can access the front at the following url: [http://localhost:8081](http://localhost:8081)
+
+## API
+
+| Method | Route       | Description             |
+| ------ | ----------- | ----------------------- |
+| GET    | /           | Home page               |
+| GET    | /login      | Login page              |
+| GET    | /register   | Register page           |
+| GET    | /services   | Services page           |
+| GET    | /client.apk | Download the client apk |
