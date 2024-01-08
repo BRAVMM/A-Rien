@@ -18,17 +18,47 @@ export default function Home() {
     router.push('/register');
   };
 
-  const { accounts, instance } = useMsal();
+  const { instance, accounts, inProgress } = useMsal();
 
   useEffect(() => {
-      const request = {
-        scopes: ['your_required_scopes'], // Ajoutez les scopes nécessaires pour Teams
-      };
+    const initializeMSAL = async () => {
+      try {
+        if (!inProgress) {
+          // Vérifiez si MSAL est déjà en cours d'initialisation
+          // pour éviter de lancer l'initialisation plusieurs fois
+          await instance.handleRedirectPromise();
+          // L'initialisation est terminée
+          console.log('MSAL initialisé avec succès.');
+        }
+      } catch (error) {
+        console.error('Erreur lors de l\'initialisation de MSAL :', error);
+      }
+    };
 
-      instance.acquireTokenSilent(request).then((response) => {
-        console.log('Token récupéré :', response.accessToken);
-      });
-  }, [accounts, instance]);
+    initializeMSAL();
+  }, [inProgress, instance]);
+
+  useEffect(() => {
+    const acquireToken = async () => {
+      try {
+        // Assurez-vous que MSAL est initialisé avant d'appeler acquireTokenByCode
+        if (!inProgress) {
+          const request = {
+            scopes: ['User.Read'],
+          };
+          console.log('Récupération du token...');
+          const response = await instance.acquireTokenByCode(request);
+
+          console.log('Token récupéré :', response.accessToken);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération du token :', error);
+      }
+    };
+
+    acquireToken();
+  }, [accounts, instance, inProgress]);
+  
 
   return (
     <div className="relative h-screen">

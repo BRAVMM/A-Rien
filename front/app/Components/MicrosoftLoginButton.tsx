@@ -14,7 +14,9 @@ const MicrosoftButtonLogin: React.FC = () => {
   };
 
   return (
-    <button onClick={handleLogin}>
+    <button onClick={async () => {
+      await handleLogin();
+    }}>
       Se connecter avec Microsoft Teams
     </button>
   );
