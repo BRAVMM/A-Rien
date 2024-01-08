@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - CICD-Test
 
 env:
   BRANCH: "main"
@@ -73,6 +72,7 @@ jobs:
         run: |
           export ANDROID_HOME=/root/.android/sdk
           npx dotenv-vault login ${{ secrets.DOTENV_ME_TOKEN }}
+          npx dotenv-vault pull
           eas build --non-interactive --platform android --profile production --local
           mv build-*.apk a-rien.apk
 
