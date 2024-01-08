@@ -8,6 +8,7 @@
 - [Installation](#installation)
   - [Using Docker Compose](#using-docker-compose)
   - [Using Docker](#using-docker)
+- [Database Diagram](#database-diagram)
 
 ## Introduction
 
@@ -38,3 +39,7 @@ Then, you can run the container:
 ```bash
 docker run -d -p 5432:5432 database
 ```
+
+## Database Diagram
+
+![Database Diagram](../../assets/database_diagram.png)

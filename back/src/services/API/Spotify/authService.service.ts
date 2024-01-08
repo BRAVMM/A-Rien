@@ -45,7 +45,7 @@ const authenticateUser  = async (code: string, mobile: boolean): Promise<OAuthDa
             expiresIn: data.expires_in,
             serviceId: SPOTIFY_SERVICE_ID,
         }
-        console.log({OAUTH_DATA: oauthData})
+        console.log("\x1b[32mUser successfully connected to spotify, access token = \x1b[0m", oauthData.accessToken)
         return oauthData
     } catch (error) {
         throw error;

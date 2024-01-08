@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Modal, View, Text, TouchableOpacity, ScrollView, SafeAreaView} from "react-native";
+import {Modal, SafeAreaView, ScrollView, Text, TouchableOpacity, View} from "react-native";
 import {ModalDataInterface, ServiceActionInterface, ServiceReactionInterface} from "../Interfaces/ModalData.interface";
 import AREAForm from "./AREAForm";
 
