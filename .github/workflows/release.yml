@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - CICD-Test
 
 env:
   BRANCH: "main"
@@ -48,7 +49,8 @@ jobs:
         working-directory: ./mobile
         run: |
           npm install expo-dev-client
-          npm install expo-cli
+          npm install expo-doctor
+          npm install dotenv-vault          
 
       - name: 🏗 Setup EAS
         uses: expo/expo-github-action@v8
@@ -70,7 +72,8 @@ jobs:
         timeout-minutes: 10
         run: |
           export ANDROID_HOME=/root/.android/sdk
-          eas build --non-interactive --platform android --profile development --local
+          npx dotenv-vault login ${{ secrets.DOTENV_ME_TOKEN }}
+          eas build --non-interactive --platform android --profile production --local
           mv build-*.apk a-rien.apk
 
       - name: Upload To Release
