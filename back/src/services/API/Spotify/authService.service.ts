@@ -11,7 +11,7 @@ import { OAuthData } from "../../../interfaces/token.interface";
  * 
  * @throws Will throw an error if the request to Spotify's API fails or if the response cannot be parsed as JSON.
  */
-const authenticateUser = async (code: string): Promise<OAuthData> => {
+const authenticateUserSpotify = async (code: string): Promise<OAuthData> => {
     const SPOTIFY_REDIRECT_URI : string = process.env.SPOTIFY_REDIRECT_URI ?? ''
 
     if (!process.env.SPOTIFY_REDIRECT_URI && !process.env.SPOTIFY_CLIENT_ID && SPOTIFY_REDIRECT_URI.length === 0 && !process.env.SPOTIFY_SERVICE_ID) {
@@ -46,4 +46,39 @@ const authenticateUser = async (code: string): Promise<OAuthData> => {
     }
 }
 
-export default authenticateUser
+const authenticateUserMicrosoft = async (code: string): Promise<OAuthData> => {
+    // const SPOTIFY_REDIRECT_URI : string = process.env.SPOTIFY_REDIRECT_URI ?? ''
+
+    // if (!process.env.SPOTIFY_REDIRECT_URI && !process.env.SPOTIFY_CLIENT_ID && SPOTIFY_REDIRECT_URI.length === 0 && !process.env.SPOTIFY_SERVICE_ID) {
+    //     throw new Error ("Bad env configuration")
+    // }
+    // const SPOTIFY_SERVICE_ID : number = Number(process.env.SPOTIFY_SERVICE_ID)
+
+    // try {
+    //     const spotifyResponse = await fetch('https://accounts.spotify.com/api/token', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/x-www-form-urlencoded',
+    //             'Authorization': 'Basic ' + Buffer.from(process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET).toString('base64')
+    //         },
+    //         body: new URLSearchParams({
+    //             code: code,
+    //             redirect_uri: SPOTIFY_REDIRECT_URI,
+    //             grant_type: 'authorization_code'
+    //         }).toString()
+    //     });
+    //     const data = await spotifyResponse.json();
+        const oauthData: OAuthData = {
+            accessToken: "",
+            refreshToken: "",
+            expiresIn: 1,
+            serviceId: 1,
+        }
+        return oauthData
+    // } catch (error) {
+    //     console.log(error);
+    //     throw error;
+    // }
+}
+
+export { authenticateUserSpotify, authenticateUserMicrosoft}

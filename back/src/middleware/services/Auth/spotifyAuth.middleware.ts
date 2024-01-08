@@ -3,7 +3,7 @@ import { OAuthData } from "../../../interfaces/token.interface";
 import { OAuth } from "../../../models/oauth.model";
 import { EncryptionService } from "../../../services/encryption.service";
 import getUserEmail from "../../../services/API/Spotify/getUserEmail.service";
-import authenticateUser from "../../../services/API/Spotify/authService.service";
+import { authenticateUserSpotify } from "../../../services/API/Spotify/authService.service";
 
 /**
  * Middleware that authenticates with Spotify using an authorization code.
@@ -35,7 +35,7 @@ const spotifyAuth = async (req: Request, res: Response, next: NextFunction): Pro
             res.status(401).json({error: "Code not found in the request."})
             return;
         }
-        req.body = await authenticateUser(code)
+        req.body = await authenticateUserSpotify(code)
         next()
     } catch (error) {
         console.log(error)

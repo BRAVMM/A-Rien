@@ -3,7 +3,7 @@ import { useMsal } from "@azure/msal-react";
 import MicrosoftButtonLogin from "./Components/MicrosoftLoginButton";
 import Navbar from "./Components/Navbar";
 import TextSection from "./Components/TextSection";
-import { useRouter } from 'next/navigation';
+import {  useRouter } from 'next/navigation';
 import { useEffect } from "react";
 
 export default function Home() {
@@ -21,43 +21,9 @@ export default function Home() {
   const { instance, accounts, inProgress } = useMsal();
 
   useEffect(() => {
-    const initializeMSAL = async () => {
-      try {
-        if (!inProgress) {
-          // Vérifiez si MSAL est déjà en cours d'initialisation
-          // pour éviter de lancer l'initialisation plusieurs fois
-          await instance.handleRedirectPromise();
-          // L'initialisation est terminée
-          console.log('MSAL initialisé avec succès.');
-        }
-      } catch (error) {
-        console.error('Erreur lors de l\'initialisation de MSAL :', error);
-      }
-    };
+    console.log()
+  }, []);
 
-    initializeMSAL();
-  }, [inProgress, instance]);
-
-  useEffect(() => {
-    const acquireToken = async () => {
-      try {
-        // Assurez-vous que MSAL est initialisé avant d'appeler acquireTokenByCode
-        if (!inProgress) {
-          const request = {
-            scopes: ['User.Read'],
-          };
-          console.log('Récupération du token...');
-          const response = await instance.acquireTokenByCode(request);
-
-          console.log('Token récupéré :', response.accessToken);
-        }
-      } catch (error) {
-        console.error('Erreur lors de la récupération du token :', error);
-      }
-    };
-
-    acquireToken();
-  }, [accounts, instance, inProgress]);
   
 
   return (

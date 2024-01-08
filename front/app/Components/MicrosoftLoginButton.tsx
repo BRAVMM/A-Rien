@@ -7,7 +7,9 @@ const MicrosoftButtonLogin: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      await instance.loginPopup();
+      const salut = await instance.loginRedirect();
+      
+      console.log(salut)
     } catch (error) {
       console.error('Erreur de connexion :', error);
     }
