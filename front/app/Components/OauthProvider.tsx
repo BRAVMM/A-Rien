@@ -11,8 +11,6 @@ const OauthProvider = ({ children }: { children: React.ReactNode }) => {
       clientId: process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID ?? '',
       authority: `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_MICROSOFT_TENANT_ID}`,
       redirectUri: process.env.NEXT_PUBLIC_MICROSOFT_REDIRECT_URI,
-      responseType: "code",
-      responseMode: "query",
     },
     cache: {
       cacheLocation: 'sessionStorage',

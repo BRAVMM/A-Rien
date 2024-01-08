@@ -9,17 +9,13 @@ export default function Redirect() {
     const [code, setCode] = useState<string>("null");
 
     useEffect(() => {
-      const queryParams = new URLSearchParams(window.location.hash.substring(1)); // remove the '#' at start
+      const queryParams = new URLSearchParams(window.location.search); // remove the '#' at start
       const codeFound: string = queryParams.get('code') ?? "";
-      setCode(codeFound);
-      console.log(codeFound);
-      const handleSetData = async () => {
-        const res = await registerTokenService(new MicroSoftDataBody(codeFound), "/services/microsoft/registerToken");
-        console.log(res);
+
+      const callApi = async () => {
+        await registerTokenService(new MicroSoftDataBody(codeFound), "/services/microsoft/registerToken")
       }
-      if (codeFound !== "") {
-        handleSetData();
-      }
+      callApi()
     }, []);
 
 

@@ -70,7 +70,6 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
         code: code,
         redirect_uri: MICROSOFT_REDIRECT_URI,
         grant_type: 'authorization_code',
-        client_secret: MICROSOFT_CLIENT_SECRET,
     });
 
     try {
@@ -82,13 +81,13 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Authorization': authHeader,
             },
-            body: params
+            body: params.toString()
         });
-        
-        console.log(microsoftResponse)
+
         const data = await microsoftResponse.json();
+        console.log(data);
         if (!microsoftResponse.ok) {
-            console.error({errorMessage: "\x1b[31mAn error was caught\x1b[0m"} , data.error)
+            console.error({errorMessage: "\x1b[31mAn error was caught\x1b[0m"} , data)
         }
         const oauthData: OAuthData = {
             accessToken: data.access_token,
