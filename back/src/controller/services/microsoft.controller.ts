@@ -3,12 +3,15 @@ import { Request, Response } from 'express';
 import { TokenData } from '../../interfaces/token.interface';
 import { CustomRequest } from '../../interfaces/request.interface';
 import { EncryptionService } from '../../services/encryption.service';
+import { getUserEmailMicrosoft } from '../../services/API/Spotify/getUserEmail.service';
 
 const registerToken = async (req: Request, res: Response): Promise<Response> => {
     const userInfo : TokenData = (req as CustomRequest).user
 
     try {
         const { accessToken, refreshToken, expiresIn} = req.body
+        const email = await getUserEmailMicrosoft(accessToken)
+        console.log("email : " + email);
         const encryptedAccessToken : { iv: string; content: string } = EncryptionService.encrypt(accessToken)
         const encryptedRefreshToken : { iv: string; content: string } = EncryptionService.encrypt(refreshToken)
 
@@ -20,6 +23,7 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
             serviceId : process.env.MICROSOFT_SERVICE_ID,
             encryptedAccessToken : encryptedAccessToken.content,
             encryptedRefreshToken: encryptedRefreshToken.content,
+            OAuthEmail : email,
             ivAccess : encryptedAccessToken.iv,
             ivRefresh : encryptedRefreshToken.iv,
             expiresIn : expiresIn,

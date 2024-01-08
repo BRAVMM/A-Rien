@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { OAuthData } from "../../../interfaces/token.interface";
 import { OAuth } from "../../../models/oauth.model";
 import { EncryptionService } from "../../../services/encryption.service";
-import getUserEmail from "../../../services/API/Spotify/getUserEmail.service";
+import {getUserEmail} from "../../../services/API/Spotify/getUserEmail.service";
 import { authenticateUserSpotify } from "../../../services/API/Spotify/authService.service";
 
 /**

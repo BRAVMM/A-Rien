@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { TokenData } from '../../interfaces/token.interface';
 import { CustomRequest } from '../../interfaces/request.interface';
 import { EncryptionService } from '../../services/encryption.service';
-import getUserEmail from '../../services/API/Spotify/getUserEmail.service';
+import {getUserEmail} from '../../services/API/Spotify/getUserEmail.service';
 
 /**
  * Middleware to register OAuth tokens for a user.
