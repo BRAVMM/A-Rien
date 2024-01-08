@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@keyframes rotate-highlight {
+  0% {
+    box-shadow: 0 0 5px 1px white;
+  }
+  12.5% {
+    box-shadow: 0 2.5px 5px 1px white;
+  }
+  25% {
+    box-shadow: 0 5px 5px 1px white;
+  }
+  37.5% {
+    box-shadow: 2.5px 5px 5px 1px white;
+  }
+  50% {
+    box-shadow: 5px 5px 5px 1px white;
+  }
+  62.5% {
+    box-shadow: 5px 2.5px 5px 1px white;
+  }
+  75% {
+    box-shadow: 5px 0 5px 1px white;
+  }
+  87.5% {
+    box-shadow: 2.5px 0 5px 1px white;
+  }
+  100% {
+    box-shadow: 0 0 5px 1px white;
+  }
+}
+
+.snake-container {
+  width: 80%;
+  height: 90%;
+  box-shadow: 16px 16px 32px 0 black;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: rotate-highlight 3s linear infinite;
+}
+
+.snake-container::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.snake-container::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  position: absolute;
+  border-radius: 10px;
+}
