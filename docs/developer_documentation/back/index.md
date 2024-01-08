@@ -9,10 +9,20 @@
   - [Using Docker Compose](#using-docker-compose)
   - [Using Docker](#using-docker)
   - [Using Node.js](#using-nodejs)
+- [API](#api)
+  - [API Introduction](#api-introduction)
+  - [Routes](#routes)
+  - [Endpoints](#endpoints)
+    - [Root](#root)
+    - [User Management](#user-management)
+    - [Area Operations](#area-operations)
+    - [Services Information](#services-information)
+    - [Spotify Integration](#spotify-integration)
+    - [About Information](#about-information)
 
 ## Introduction
 
-The back uses the [NestJS](https://nestjs.com/) framework.
+The back uses the [ExpressJs](https://expressjs.com/) framework.
 
 ## Installation
 
@@ -85,3 +95,261 @@ Then, you can run the project.
 ```bash
 npm run start
 ```
+
+## API
+
+### API Introduction
+
+This API provides various endpoints to manage user authentication, retrieve information about services, areas, actions, reactions, and OAuth IDs. It also allows interactions with Spotify services through token registration.
+
+### Routes
+
+| Method | Route                                       | Description                          |
+| ------ | ------------------------------------------  | ------------------------------------ |
+| GET    | /                                           | Hello World                          |
+| POST   | /users/register                             | Create a user                        |
+| POST   | /users/login                                | Login a user                         |
+| POST   | /users/logout                               | Logout a user                        |
+| GET    | /users/me                                   | Get the current user                 |
+| GET    | /area/getActionsFromServiceId/:serviceId    | Get the actions from a service id    |
+| GET    | /area/getReactionsFromActionId/:actionId    | Get the reactions from an action id  |
+| GET    | /area/getServices                           | Get all the services                 |
+| GET    | /area/getOauthIdsFromServiceId/:serviceId   | Get the oauth ids from a service id  |
+| GET    | /area/getOauthIdsFromActionId/:actionId     | Get the oauth ids from an action id  |
+| GET    | /area/getOauthIdsFromReactionId/:reactionId | Get the oauth ids from a reaction id |
+| POST   | /area/storeArea                             | Store an area                        |
+| POST   | /services/spotify/registerToken             | Register a Spotify token             |
+| GET    | /about.json                                 | Get the about.json file              |
+
+### Endpoints
+
+#### Root
+
+- **Root**
+  - **Method**: GET
+  - **Route**: `/`
+  - **Description**: A simple Hello World endpoint.
+  - **Example**:
+
+    ```http
+    GET /
+    ```
+
+#### User Management
+
+- **Register User**
+  - **Method**: POST
+  - **Route**: `/users/register`
+  - **Description**: Create a new user.
+  - **Token Requirement**: No
+  - **Example**:
+
+    ```http
+    POST /users/register
+    Request Body:
+    {
+      "username": "example_user",
+      "password": "example_password"
+    }
+    ```
+
+- **Login User**
+  - **Method**: POST
+  - **Route**: `/users/login`
+  - **Description**: Login an existing user.
+  - **Token Requirement**: No
+  - **Example**:
+
+    ```http
+    POST /users/login
+    Request Body:
+    {
+      "username": "example_user",
+      "password": "example_password"
+    }
+    ```
+
+- **Logout User**
+  - **Method**: POST
+  - **Route**: `/users/logout`
+  - **Description**: Logout the currently logged-in user.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    POST /users/logout
+    Headers:
+    {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer token"
+    }
+    ```
+
+- **Get Current User**
+  - **Method**: GET
+  - **Route**: `/users/me`
+  - **Description**: Retrieve details of the current user.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    GET /users/me
+    Headers:
+    {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer token"
+    }
+    ```
+
+#### Area Operations
+
+- **Store Area**
+  - **Method**: POST
+  - **Route**: `/area/storeArea`
+  - **Description**: Store an area.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    POST /area/storeArea
+    Headers:
+    {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer token"
+    }
+    Request Body:
+    {
+      "name": "example_area",
+      "description": "Example area description"
+    }
+    ```
+
+#### Services Information
+
+For endpoints requiring tokens, I'll include the necessary header:
+
+- **Get All Services**
+  - **Method**: GET
+  - **Route**: `/area/getServices`
+  - **Description**: Retrieve information about all available services.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    GET /area/getServices
+    ```
+
+- **Get Actions by Service ID**
+  - **Method**: GET
+  - **Route**: `/area/getActionsFromServiceId/:serviceId`
+  - **Description**: Retrieve actions associated with a specific service.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    GET /area/getActionsFromServiceId/123456
+    Headers:
+    {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer token"
+    }
+    ```
+
+- **Get Reactions by Action ID**
+  - **Method**: GET
+  - **Route**: `/area/getReactionsFromActionId/:actionId`
+  - **Description**: Retrieve reactions associated with a specific action.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    GET /area/getReactionsFromActionId/987654
+    Headers:
+    {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer token"
+    }
+    ```
+
+- **Get OAuth IDs by Service ID**
+  - **Method**: GET
+  - **Route**: `/area/getOauthIdsFromServiceId/:serviceId`
+  - **Description**: Retrieve OAuth IDs associated with a specific service.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    GET /area/getOauthIdsFromServiceId/123456
+    Headers:
+    {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer token"
+    }
+    ```
+
+- **Get OAuth IDs by Action ID**
+  - **Method**: GET
+  - **Route**: `/area/getOauthIdsFromActionId/:actionId`
+  - **Description**: Retrieve OAuth IDs associated with a specific action.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    GET /area/getOauthIdsFromActionId/987654
+    Headers:
+    {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer token"
+    }
+    ```
+
+- **Get OAuth IDs by Reaction ID**
+  - **Method**: GET
+  - **Route**: `/area/getOauthIdsFromReactionId/:reactionId`
+  - **Description**: Retrieve OAuth IDs associated with a specific reaction.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    GET /area/getOauthIdsFromReactionId/567890
+    Headers:
+    {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer token"
+    }
+    ```
+
+#### Spotify Integration
+
+- **Register Spotify Token**
+  - **Method**: POST
+  - **Route**: `/services/spotify/registerToken`
+  - **Description**: Register a Spotify access token.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    POST /services/spotify/registerToken
+    Headers:
+    {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer token"
+    }
+    Request Body:
+    {
+      "token": "spotify_access_token"
+    }
+    ```
+
+#### About Information
+
+- **Get about.json**
+  - **Method**: GET
+  - **Route**: `/about.json`
+  - **Description**: Retrieve information from the about.json file.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    GET /about.json
+    ```
