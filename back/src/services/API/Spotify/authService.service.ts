@@ -53,24 +53,33 @@ const authenticateUserSpotify  = async (code: string, mobile: boolean): Promise<
 }
 
 const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise<OAuthData> => {
-    if (!process.env.MICROSOFT_REDIRECT_URI && !process.env.MICROSOFT_SERVICE_ID) {
-        throw new Error ("Bad env configuration")
+    const MICROSOFT_CLIENT_ID = process.env.MICROSOFT_CLIENT_ID;
+    const MICROSOFT_CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET;
+    const MICROSOFT_REDIRECT_URI = process.env.MICROSOFT_REDIRECT_URI;
+    const TENANT_ID = process.env.MICROSOFT_REDIRECT_URI;
+
+    if (!MICROSOFT_CLIENT_ID || !MICROSOFT_CLIENT_SECRET || !MICROSOFT_REDIRECT_URI) {
+        throw new Error("Les variables d'environnement Microsoft ne sont pas définies");
     }
-    const MICROSOFT_SERVICE_ID : number = Number(process.env.MICROSOFT_SERVICE_ID)
-    const MICROSOFT_REDIRECT_URI : string = process.env.MICROSOFT_REDIRECT_URI ?? ''
+
+    const tokenEndpoint = `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`;
+
+    const params = new URLSearchParams({
+        client_id: MICROSOFT_CLIENT_ID,
+        scope: 'openid email profile offline_access', // Ajoutez ou modifiez les scopes selon les besoins
+        code: code,
+        redirect_uri: MICROSOFT_REDIRECT_URI,
+        grant_type: 'authorization_code',
+        client_secret: MICROSOFT_CLIENT_SECRET,
+    });
 
     try {
-        const microsoftResponse = await fetch('https://accounts.spotify.com/api/token', {
+        const microsoftResponse = await fetch(tokenEndpoint, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + Buffer.from(process.env.MICROSOFT_CLIENT_ID + ':' + process.env.MICROSOFT_CLIENT_SECRET).toString('base64')
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: new URLSearchParams({
-                code: code,
-                redirect_uri: MICROSOFT_REDIRECT_URI,
-                grant_type: 'authorization_code'
-            }).toString()
+            body: params.toString()
         });
         const data = await microsoftResponse.json();
         if (!microsoftResponse.ok) {
