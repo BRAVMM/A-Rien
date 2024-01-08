@@ -5,6 +5,7 @@ import logo from "../../public/logo.svg";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Cookies from "js-cookie";
+import ServiceConnection from "../Components/ServiceOauthButton";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -83,6 +84,9 @@ export default function Profile() {
           >
             Logout
           </button>
+          <p className="text-lg font-bold mt-[20%]">Service Connection</p>
+          <ServiceConnection user={user} service="Spotify" />
+          <ServiceConnection user={user} service="TrackerGG" />
         </div>
       </div>
       <div className="flex-1 relative h-full">
