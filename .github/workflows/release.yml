@@ -71,7 +71,7 @@ jobs:
         timeout-minutes: 10
         run: |
           export ANDROID_HOME=/root/.android/sdk
-          eas build --non-interactive --platform android --profile development --local
+          eas build --non-interactive --platform android --profile production --local
           mv build-*.apk a-rien.apk
 
       - name: Upload To Release
