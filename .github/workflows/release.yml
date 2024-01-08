@@ -49,7 +49,11 @@ jobs:
         working-directory: ./mobile
         run: |
           npm install expo-dev-client
-          npm install expo-cli
+          npm install expo-dev-launcher
+          npm install expo-updates
+          npm install expo-constants
+          npm install expo-doctor
+          npm install dotenv-vault          
 
       - name: 🏗 Setup EAS
         uses: expo/expo-github-action@v8
@@ -60,7 +64,7 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '11'
           distribution: 'temurin'
 
       - name: Setup Android SDK
@@ -71,6 +75,7 @@ jobs:
         timeout-minutes: 10
         run: |
           export ANDROID_HOME=/root/.android/sdk
+          npx dotenv-vault login ${{ secrets.DOTENV_ME_TOKEN }}
           eas build --non-interactive --platform android --profile production --local
           mv build-*.apk a-rien.apk
 
