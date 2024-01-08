@@ -177,3 +177,10 @@ docs/pages/versions/*/react-native/*.diff
 /ios/versioned-react-native/*/ReactNative/sdks/hermes-engine/destroot
 **/.env
 package-lock.json
+
+.env.me
+.env
+.flaskenv*
+!.env.project
+!.env.vault
+.env*

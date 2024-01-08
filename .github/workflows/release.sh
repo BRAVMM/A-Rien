@@ -16,15 +16,15 @@ TAG_PATCH=""
 
 WARNINGS=""
 
-if grep -q "^    MAJOR" CHANGELOG; then
+if grep -q "MAJOR" CHANGELOG; then
     TAG_MAJOR=$((LAST_TAG_MAJOR + 1))
     TAG_MINOR="0"
     TAG_PATCH="0"
-elif grep -q "^    MINOR" CHANGELOG; then
+elif grep -q "MINOR" CHANGELOG; then
     TAG_MAJOR=$((LAST_TAG_MAJOR + 0))
     TAG_MINOR=$((LAST_TAG_MINOR + 1))
     TAG_PATCH="0"
-elif grep -q "^    PATCH" CHANGELOG; then
+elif grep -q "PATCH" CHANGELOG; then
     TAG_MAJOR=$((LAST_TAG_MAJOR + 0))
     TAG_MINOR=$((LAST_TAG_MINOR + 0))
     TAG_PATCH=$((LAST_TAG_PATCH + 1))

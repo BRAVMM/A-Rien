@@ -8,6 +8,7 @@ import cors from 'cors';
 import UserRouter from './route/user.route';
 import AreaRouter from './route/area.route';
 import ServicesRouter from './route/services.route';
+import AboutRouter from './route/about.route';
 import {TaskScheduler} from './services/taskScheduler';
 import {Service} from "./models/service.model";
 import {Action} from "./models/action.model";
@@ -239,6 +240,8 @@ const addReactionsToDB = async () => {
 }
 
 
+
+app.use('/about.json', AboutRouter);
 
 /**
  * Execute each minute the checkTriggers function, which checks if a trigger is activated

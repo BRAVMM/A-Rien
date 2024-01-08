@@ -9,6 +9,7 @@ class OAuth extends Model {
     public encryptedRefreshToken!: string;
     public ivAccess!: string;
     public ivRefresh!: string;
+    public OAuthEmail!: string;
     public expiresIn!: number;
     public ownerId!: number;
 
@@ -20,6 +21,10 @@ class OAuth extends Model {
                     primaryKey: true,
                     allowNull: false,
                     autoIncrement: true,
+                },
+                OAuthEmail: {
+                    type: DataTypes.STRING,
+                    allowNull: false,
                 },
                 serviceId: {
                     type: DataTypes.INTEGER,

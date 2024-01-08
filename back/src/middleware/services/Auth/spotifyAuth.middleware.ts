@@ -29,17 +29,21 @@ import { authenticateUserSpotify } from "../../../services/API/Spotify/authServi
 const spotifyAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
     try {
-        const code : string = req.body.code;
+        const { code, mobile } = req.body;
 
         if (!code) {
-            res.status(401).json({error: "Code not found in the request."})
+            res.status(400).json({error: "Code not found in the request."})
             return;
         }
-        req.body = await authenticateUserSpotify(code)
+        req.body = await authenticateUserSpotify(code, (mobile !== undefined && mobile))
         next()
     } catch (error) {
-        console.log(error)
-        res.status(500).json({error: 'Spotify authentication failed.'})
+        if (error instanceof Error) {
+            res.status(500).json({error: error})
+            return;
+        }
+        console.error(error)
+        res.status(500).json({error: 'Internal server error'})
         return;
     }
 }
@@ -59,35 +63,17 @@ const spotifyAuth = async (req: Request, res: Response, next: NextFunction): Pro
  * 
  * // If a user with the same email as the new token is found in the existing tokens, an error "User already logged in" is thrown.
  */
-const spotifyAlreadyAuth = async (tokens: OAuth[], newToken: string): Promise<void> => {
-    var newUserEmail: string = ''
+const spotifyAlreadyAuth = async (userEmail: string): Promise<boolean> => {
 
-    try {
-        if (!newToken || newToken.length === 0) {
-            throw new Error('No token of the new user given')
-        }
-        newUserEmail = await getUserEmail(newToken)
-    } catch (error) {
-        console.error("New user email error")
-        throw error
+    if (!userEmail) {
+        return false;
     }
-
     try {
-        if (!tokens || tokens.length === 0) {
-            return
-        }
-        for (const token of tokens) {
-            const accessToken: string = EncryptionService.decrypt(token.ivAccess, token.encryptedAccessToken);
-            const userEmail: string = await getUserEmail(accessToken)
-
-            if (newUserEmail === userEmail) {
-                throw new Error('User already logged in')
-            }
-        }
     } catch (error) {
         console.error("User already logged in error")
         throw error
     }
+    return true;
 }
 
 export { spotifyAuth, spotifyAlreadyAuth };

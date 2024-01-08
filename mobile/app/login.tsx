@@ -1,8 +1,18 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "expo-router";
 import { withExpoSnack, styled } from "nativewind";
 import React, { useEffect, useState } from "react";
-import { Image, Text, View, TextInput, TouchableOpacity } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  Image,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from "react-native";
+
+import colors from "../constants/Colors";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -23,7 +33,7 @@ const Login = () => {
       // Redirect to the home page
       router.navigate("home" as never);
     }
-  
+
     // Clean-up function
     return () => {
       // Reset login state
@@ -33,16 +43,15 @@ const Login = () => {
   }, [loginSuccess, router]);
 
   const handleError = (error: any) => {
-    console.error("Error:", error);
-    setError("An error occurred, please try again");
+    setError(error.error);
   };
   const handleSubmit = async () => {
     if (password === undefined || password === "") {
-      setError("Passwords do not match");
+      setError("Passwords is empty");
       return;
     }
 
-    setError(""); // Clear any existing errors
+    setError("");
 
     const data = {
       username,
@@ -58,94 +67,95 @@ const Login = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(data),
-        }
+        },
       );
-      console.log("response", response);
       if (response.ok) {
-        // Redirect to home page
         setLoginSuccess(true);
-        // save token
         const token = await response.json();
-        console.log("token", token);
-        await AsyncStorage.setItem("token", token);
+        await AsyncStorage.setItem("token", token["token"]);
       } else {
-        // Handle non-ok response
-        const errorResponse = await response.json(); // You may need to parse the response body
+        const errorResponse = await response.json();
         handleError(errorResponse);
       }
     } catch (error) {
-      // Handle error
       handleError(error);
     }
   };
 
   return (
-    <StyledView className="flex-1 items-center justify-center bg-[#24204A]">
-      <StyledView className="flex flex-col items-center justify-center space-y-10">
-        <StyledImage
-          className=""
-          source={require("./../assets/images/logobravm.png")}
-        />
-        <StyledText className="text-white text-2xl font-bold">
-          Sign In to continue
-        </StyledText>
-      </StyledView>
-      <StyledView className="flex flex-col items-center justify-center space-y-2 w-[80%] mt-14">
-      <StyledTextInput
-        value={username}
-        onChangeText={(text) => setUsername(text)}
-        placeholderTextColor={"#000000"}
-        placeholder="Username"
-        style={{
-          textAlign: "center",
-          width: "80%",
-          height: 40,
-          backgroundColor: "#FFFFFF",
-          borderRadius: 10,
-        }}
-      />
-      <StyledTextInput
-        value={password}
-        onChangeText={(text) => setPassword(text)}
-        placeholderTextColor={"#000000"}
-        placeholder="Password"
-        secureTextEntry
-        style={{
-          textAlign: "center",
-          width: "80%",
-          height: 40,
-          backgroundColor: "#FFFFFF",
-          borderRadius: 10,
-        }}
-      />
-      </StyledView>
-      <StyledTouchableOpacity
-        onPress={handleSubmit}
-        style={{
-          // Add additional styling here if needed
-          backgroundColor: "#4285F4",
-          padding: 10,
-          borderRadius: 10,
-          marginTop: 20,
-          
-        }}
-      >
-        <StyledText
+    <LinearGradient
+      colors={[colors.light.primary, colors.light.background]} // Start with your original color and end with gray
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{ flex: 1 }}
+    >
+      <StyledView className="flex-1 items-center justify-center">
+        <StyledView className="flex flex-col items-center justify-center space-y-10">
+          <StyledImage
+            className=""
+            source={require("./../assets/images/logobravm.png")}
+          />
+          <StyledText className="text-white text-2xl font-bold">
+            Sign In to continue
+          </StyledText>
+        </StyledView>
+        <KeyboardAvoidingView
+          style={{
+            width: "100%",
+            height: "20%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          behavior="position"
+        >
+          <StyledView className="flex flex-col items-center justify-center space-y-2 w-80 mt-14">
+            <StyledTextInput
+              autoCapitalize="none"
+              value={username}
+              onChangeText={(text) => setUsername(text)}
+              placeholderTextColor="#000000"
+              placeholder="Username"
+              className="text-center w-[80%] h-10 bg-white rounded-2xl"
+            />
+            <StyledTextInput
+              autoCapitalize="none"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              placeholderTextColor="#000000"
+              placeholder="Password"
+              secureTextEntry
+              className="text-center w-[80%] h-10 bg-white rounded-2xl"
+            />
+          </StyledView>
+        </KeyboardAvoidingView>
+        <StyledTouchableOpacity
+          onPress={handleSubmit}
+          className="p-5 rounded-2xl mt-5"
           style={{
             // Add additional styling here if needed
-            color: "#FFFFFF",
-            textAlign: "center",
-            fontSize: 16,
-            fontWeight: "bold",
+            backgroundColor: colors.light.secondary,
+            width: "50%",
           }}
         >
-          Login
-        </StyledText>
-      </StyledTouchableOpacity>
-      {error && (
-        <StyledText className="text-red text-center mt-2">{error}</StyledText>
-      )}
-    </StyledView>
+          <StyledText
+            style={{
+              // Add additional styling here if needed
+              color: "#FFFFFF",
+              textAlign: "center",
+              fontSize: 16,
+              fontWeight: "bold",
+            }}
+          >
+            Login
+          </StyledText>
+        </StyledTouchableOpacity>
+        {error && (
+          <StyledText className="text-[#FF0000] text-center mt-2">
+            {error}
+          </StyledText>
+        )}
+      </StyledView>
+    </LinearGradient>
   );
 };
 
