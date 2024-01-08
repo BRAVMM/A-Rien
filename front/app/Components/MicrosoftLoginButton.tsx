@@ -10,7 +10,7 @@ const MicrosoftButtonLogin: React.FC = () => {
       const salut = await instance.loginRedirect(
         {
           // openid email profile offline_access
-          scopes: ["openid", "profile", "offline_access", "email"],
+          scopes: ["openid", "profile", "email"],
         }
       );
       

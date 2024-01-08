@@ -66,12 +66,13 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
 
     const params = new URLSearchParams({
         client_id: MICROSOFT_CLIENT_ID,
-        scope: 'openid email profile offline_access', // Ajoutez ou modifiez les scopes selon les besoins
+        scope: 'openid email profile', // Ajoutez ou modifiez les scopes selon les besoins
         code: code,
         redirect_uri: MICROSOFT_REDIRECT_URI,
         grant_type: 'authorization_code',
         client_secret: MICROSOFT_CLIENT_SECRET,
     });
+    console.log(code)
 
     try {
         const authHeader = 'Basic ' + Buffer.from(`${MICROSOFT_CLIENT_ID}:${MICROSOFT_CLIENT_SECRET}`).toString('base64');
@@ -82,7 +83,7 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Authorization': authHeader,
             },
-            body: params
+            body: params.toString(),
         });
         
         console.log(microsoftResponse)
