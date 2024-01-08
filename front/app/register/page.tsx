@@ -6,6 +6,7 @@ import {useRouter} from "next/navigation";
 import styles from "./login.module.css";
 import logo from "../../public/logo.svg";
 import Cookies from 'js-cookie';
+import TextSection from "../Components/TextSection";
 
 export default function Register() {
     const [email, setEmail] = useState("");
@@ -80,23 +81,22 @@ export default function Register() {
         <div
             className={`h-screen flex bg-custom-gradient overflow-hidden ${styles.frame}`}
         >
-            <div className="absolute top-5/100 left-3/100">
-                <Image src={logo} alt="bravmm-logo" width={70} height={70}/>
-            </div>
+            <button className="absolute top-5/100 left-3/100" onClick={() => router.push("/")}>
+                <Image
+                    src={logo}
+                    alt="bravmm-logo"
+                    width={70}
+                    height={70}
+                />
+            </button>
             <div className={`${styles.polygon}`}></div>
             <div className={`${styles.ellipse}`}></div>
             <div className={`${styles.rectangle}`}></div>
 
-            <div className="z-10 flex-1 flex items-center">
-                <div className="text-center ml-1/10">
-                    <h2 className="text-6xl font-extrabold text-white">
-                        Welcome to BRAVMM
-                    </h2>
-                    <p className="mt-2 text-2xl text-white">
-                        lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    </p>
-                </div>
-            </div>
+            <TextSection
+                title="Welcome back to BRVMM"
+                content={`It's time to experience a new automated application to improve the quality of life. BRVM lets you manage actions and reactions on specific services`}
+            />
 
             <div className="w-full lg:w-1/2 flex items-center justify-center z-10">
                 <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-24">

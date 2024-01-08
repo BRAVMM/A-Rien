@@ -1,53 +1,77 @@
 # AREA (Action Reaction)
 
-As part of our third year, the AREA is an Epitech project included in the web development module.
+As part of our third year, the **AREA** is an **Epitech** project included in the web development module.
 
 ## Table of Contents
 
-- [Presentation](#presentation)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Database Diagram](#database-diagram)
-- [Environment General](#environment-general)
-- [Authors](#authors)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+- [AREA (Action Reaction)](#area-action-reaction)
+  - [Table of Contents](#table-of-contents)
+  - [Presentation](#presentation)
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Installing](#installing)
+  - [Usage](#usage)
+  - [Documentation](#documentation)
+    - [New contributor](#new-contributor)
+    - [New user](#new-user)
+  - [Database Diagram](#database-diagram)
+  - [Environment General](#environment-general)
+  - [Authors](#authors)
+  - [License](#license)
+  - [Acknowledgments](#acknowledgments)
 
 ## Presentation
 
-- Project size: 5 people
-- Project duration: 2 months
-- Languages used: NodeJS, ReactJS, JS, SQL
-- Frameworks used: Express, Sequelize, React, nextJS, Material UI, Tailwind CSS
-- APIs used: Spotify, Twitch, Discord, Twitter, Github
-- Compilation: docker-compose
+- **Project size:** 5 people
+- **Project duration:** 2 months
+- **Languages used:** NodeJS, ReactJS, JS, SQL
+- **Frameworks used:** Express, Sequelize, React, nextJS, Material UI, Tailwind CSS
+- **APIs used:** Spotify, Twitch, Discord, Twitter, Github
+- **Compilation:** docker-compose
 
 ## Installation
+
 ### Prerequisites
 
+- git
 - docker
 - docker-compose
 
-### Installation
+### Installing
 
 ```bash
+# Clone the project
 git clone https://github.com/BRAVMM/A-Rien.git
+
+# Go to the project root
 cd A-Rien
+
+# Run the project
 docker-compose up --build
 ```
 
 ## Usage
 
-Access the application via the address: http://localhost:3000
+Access the application via the address: [http://localhost:8081](http://localhost:8081).
 
-Access the API via the address: http://localhost:8080
+Access the API via the address: [http://localhost:8080](http://localhost:8080).
 
-Access the mobile application via expo (auto search)
+Access the mobile application via expo, read the [official documentation](https://docs.expo.dev/get-started/expo-go/).
+
+## Documentation
+
+### New contributor
+
+If you want to contribute to the project, you should start by reading the [developer documentation](docs/developer_documentation/index.md).
+
+### New user
+
+If you want to learn how to use the project, you should start by reading the [user documentation](docs/user_documentation/index.md).
 
 ## Database Diagram
 
 > [!NOTE]  
-> You can't see this diagram at this time due to github, if you want to see it go in your editor
+> If the Mermaid diagram is not rendering on GitHub, you can view the static image here: [Database Diagram](docs/assets/database_diagram.png) or you see it in your editor using the mermaid extension.
 
 ```mermaid
 classDiagram
@@ -79,12 +103,17 @@ classDiagram
 
 ## Environment General
 
+> [!NOTE]  
+> If the Mermaid diagram is not rendering on GitHub, you can view the static image here: [Env Diagram](docs/assets/env_diagram.png) or you see it in your editor using the mermaid extension.
+
 ```mermaid
 graph LR
 A((Api)) --> C
 A --> B
 B[App mobile] --> D
-C[App web] --> D{Data}
+C[App web] --> D{Back}
+D[Back] --> A
+D --> E[Database]
 ```
 
 ## Authors
