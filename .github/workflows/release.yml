@@ -49,9 +49,6 @@ jobs:
         working-directory: ./mobile
         run: |
           npm install expo-dev-client
-          npm install expo-dev-launcher
-          npm install expo-updates
-          npm install expo-constants
           npm install expo-doctor
           npm install dotenv-vault          
 
