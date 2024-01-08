@@ -160,3 +160,8 @@ docs/pages/versions/*/react-native/*.diff
 
 /back/.env
 /back/dist
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
