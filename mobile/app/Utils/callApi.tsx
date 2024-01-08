@@ -87,7 +87,7 @@ export async function registerTokenService(data : DataBody, serviceRoute : strin
         if (!response.ok) {
             const error = await response.json();
             console.error(error.error);
-            // throw new Error("an error occurred");
+            throw new Error(error.error);
         }
     } catch (error) {
         throw error;
