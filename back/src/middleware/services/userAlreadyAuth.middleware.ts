@@ -3,8 +3,6 @@ import { TokenData } from "../../interfaces/token.interface";
 import { CustomRequest } from "../../interfaces/request.interface";
 import { OAuth } from "../../models/oauth.model";
 import { EncryptionService } from "../../services/encryption.service";
-import refreshSpotifyTokens from "./refreshCallback/spotifyRefresh.middleware";
-import { spotifyAlreadyAuth } from "./Auth/spotifyAuth.middleware";
 import getUserEmail from "../../services/API/Spotify/getUserEmail.service";
 
 /**
