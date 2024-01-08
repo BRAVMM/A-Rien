@@ -15,7 +15,6 @@ namespace actionReactionJsonDataService {
         const bearer = await AsyncStorage.getItem("token")
         let response: Response;
 
-        console.log("url = ", url, " method = ", method, " token = ", bearer);
         if (method === "GET") {
             response = await fetch(url, {
                 method: method,
@@ -45,16 +44,12 @@ namespace actionReactionJsonDataService {
      */
     export const getServices = async (): Promise<ModalDataInterface[]> => {
         try {
-            console.log("prout");
             const response: Response = await requestApi(`${process.env.EXPO_PUBLIC_API_URL}/area/getServices`, "GET", null);
-            console.log("prout2");
             if (!response.ok) {
-                console.log("test = ", await response.json());
                 console.error("error getServices : ", response.status, response.statusText);
                 return [];
             }
             const services: ModalDataInterface[] = await response.json();
-            console.log("services", services);
             return services;
         } catch (error) {
             console.log(error);
@@ -77,7 +72,6 @@ namespace actionReactionJsonDataService {
             }
             const actionJsonData: ServiceActionInterface[] = await response.json();
 
-            console.log("actionJsonData", actionJsonData);
             return actionJsonData;
         } catch (error) {
             console.log(error);
@@ -120,7 +114,6 @@ namespace actionReactionJsonDataService {
                 return [];
             }
             const oauthIds: number[] = await response.json();
-            console.log("oauthIds", oauthIds);
             return oauthIds;
         } catch (error) {
             console.log(error);
@@ -142,7 +135,6 @@ namespace actionReactionJsonDataService {
                 return [];
             }
             const oauthIds: number[] = await response.json();
-            console.log("oauthIds", oauthIds);
             return oauthIds;
         } catch (error) {
             console.log(error);
@@ -164,7 +156,6 @@ namespace actionReactionJsonDataService {
                 return [];
             }
             const oauthIds: number[] = await response.json();
-            console.log("oauthIds", oauthIds);
             return oauthIds;
         } catch (error) {
             console.log(error);

@@ -5,15 +5,15 @@ import {View, Text} from "react-native";
 
 interface IconServiceProps {
     path: string;
-    witdh: number;
+    width: number;
     height: number;
     name: string;
 }
 
-function IconService({ path, witdh, height, name }: IconServiceProps) {
+function IconService({ path, width, height, name }: IconServiceProps) {
     return (
         <View className="flex flex-col w-full items-center justify-center h-1/6 text-white text-3xl truncate space-y-5">
-            <Image source={path} style={{ width: witdh, height: height }} />
+            <Image source={path} style={{ width: width, height: height }} />
             <Text>{name}</Text>
             <GradientBar />
         </View>

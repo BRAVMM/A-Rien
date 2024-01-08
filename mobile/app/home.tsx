@@ -71,6 +71,7 @@ const Home = () => {
         });
     }, []);
 
+    // TODO: Implement search functionality
     const handleSearch = () => {
         console.log("Search");
     }
