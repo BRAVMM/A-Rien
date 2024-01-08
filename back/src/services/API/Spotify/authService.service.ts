@@ -56,9 +56,9 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
     const MICROSOFT_CLIENT_ID = process.env.MICROSOFT_CLIENT_ID;
     const MICROSOFT_CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET;
     const MICROSOFT_REDIRECT_URI = process.env.MICROSOFT_REDIRECT_URI;
-    const TENANT_ID = process.env.MICROSOFT_REDIRECT_URI;
+    const TENANT_ID = process.env.MICROSOFT_CLIENT_TENANT_ID;
 
-    if (!MICROSOFT_CLIENT_ID || !MICROSOFT_CLIENT_SECRET || !MICROSOFT_REDIRECT_URI) {
+    if (!MICROSOFT_CLIENT_ID || !MICROSOFT_CLIENT_SECRET || !MICROSOFT_REDIRECT_URI || !TENANT_ID) {
         throw new Error("Les variables d'environnement Microsoft ne sont pas définies");
     }
 
@@ -74,16 +74,21 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
     });
 
     try {
+        const authHeader = 'Basic ' + Buffer.from(`${MICROSOFT_CLIENT_ID}:${MICROSOFT_CLIENT_SECRET}`).toString('base64');
+
         const microsoftResponse = await fetch(tokenEndpoint, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': authHeader,
             },
-            body: params.toString()
+            body: params
         });
+        
+        console.log(microsoftResponse)
         const data = await microsoftResponse.json();
         if (!microsoftResponse.ok) {
-            console.error({errorMessage: "\x1b[31mAn error was caught\x1b[0m", error: data.error})
+            console.error({errorMessage: "\x1b[31mAn error was caught\x1b[0m"} , data.error)
         }
         const oauthData: OAuthData = {
             accessToken: data.access_token,
@@ -94,7 +99,6 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
         console.log("\x1b[32mUser successfully connected to microsoft, access token = \x1b[0m", oauthData.accessToken)
         return oauthData
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }
