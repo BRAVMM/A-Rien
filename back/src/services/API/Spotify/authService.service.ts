@@ -52,7 +52,7 @@ const authenticateUserSpotify  = async (code: string, mobile: boolean): Promise<
     }
 }
 
-const authenticateUserMicrosoft = async (code: string): Promise<OAuthData> => {
+const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise<OAuthData> => {
     if (!process.env.MICROSOFT_REDIRECT_URI && !process.env.MICROSOFT_SERVICE_ID) {
         throw new Error ("Bad env configuration")
     }

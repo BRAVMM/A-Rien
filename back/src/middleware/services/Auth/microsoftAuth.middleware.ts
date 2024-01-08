@@ -29,7 +29,14 @@ import { authenticateUserMicrosoft } from "../../../services/API/Spotify/authSer
 const microsoftAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
     try {
-        throw Error("oui") 
+        const { code, mobile } = req.body;
+
+        if (!code) {
+            res.status(400).json({error: "Code not found in the request."})
+            return;
+        }
+        req.body = await authenticateUserMicrosoft(code, (mobile !== undefined && mobile))
+        next()
     } catch (error) {
         console.log(error)
         res.status(500).json({error: 'microsoft authentication failed.'})
