@@ -4,6 +4,7 @@ import { CustomRequest } from "../../interfaces/request.interface";
 import { OAuth } from "../../models/oauth.model";
 import { EncryptionService } from "../../services/encryption.service";
 import refreshSpotifyTokens from "./refreshCallback/spotifyRefresh.middleware";
+import refreshMicrosoftTokens from "./refreshCallback/microsoftRefresh.middleware";
 
 /**
  * Type definition for a callback function used to refresh OAuth tokens.
@@ -43,6 +44,9 @@ const refreshTokenCallbacks: { [serviceId: number]: RefreshTokenCallback } = {
     1: async (tokens) => { 
         await refreshSpotifyTokens(tokens); 
     },
+    2: async (tokens) => {
+        await refreshMicrosoftTokens(tokens);
+    }
 };
 
 /**

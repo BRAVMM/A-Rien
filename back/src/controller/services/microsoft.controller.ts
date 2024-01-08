@@ -8,19 +8,16 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
     const userInfo : TokenData = (req as CustomRequest).user
 
     try {
-        const { accessToken, refreshToken, expiresIn, serviceId} = req.body
+        const { accessToken, refreshToken, expiresIn} = req.body
         const encryptedAccessToken : { iv: string; content: string } = EncryptionService.encrypt(accessToken)
         const encryptedRefreshToken : { iv: string; content: string } = EncryptionService.encrypt(refreshToken)
 
-        if (!process.env.SPOTIFY_SERVICE_ID || Number(process.env.SPOTIFY_SERVICE_ID) !== serviceId) {
-            return res.status(400).json({ error: "Wrong service id" })
-        }
         if (!accessToken || !refreshToken || !expiresIn) {
             return res.status(401).json({ error: "No tokens provided" })
         }
-        console.log("registerToken :\n accessToken : " + accessToken + "\n refreshToken : " + refreshToken + "\n expiresIn : " + expiresIn + "\n serviceId : " + serviceId + "\n userInfo : " + userInfo.userId);
+        console.log("registerToken :\n accessToken : " + accessToken + "\n refreshToken : " + refreshToken + "\n expiresIn : " + expiresIn + "\n serviceId : "  + "\n userInfo : " + userInfo.userId);
         const OAuthData = await OAuth.create({
-            serviceId : serviceId,
+            serviceId : process.env.MICROSOFT_SERVICE_ID,
             encryptedAccessToken : encryptedAccessToken.content,
             encryptedRefreshToken: encryptedRefreshToken.content,
             ivAccess : encryptedAccessToken.iv,

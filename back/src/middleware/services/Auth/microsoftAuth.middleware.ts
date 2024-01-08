@@ -35,7 +35,7 @@ const microsoftAuth = async (req: Request, res: Response, next: NextFunction): P
             res.status(400).json({error: "Code not found in the request."})
             return;
         }
-        req.body = await authenticateUserMicrosoft(code, (mobile !== undefined && mobile))
+        req.body = await authenticateUserMicrosoft(code, (mobile !== undefined && mobile));
         next()
     } catch (error) {
         console.log(error)

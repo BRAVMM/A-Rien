@@ -10,6 +10,6 @@ import { microsoftAuth } from '../middleware/services/Auth/microsoftAuth.middlew
 
 /** Definitions of routes */
 router.post('/spotify/registerToken', verifyToken, spotifyAuth, refreshTokens, userAlreadyAuth, spotifyController.registerToken)
-router.post('/microsoft/registerToken', microsoftAuth, microsoftController.registerToken)
+router.post('/microsoft/registerToken', verifyToken, microsoftAuth, microsoftController.registerToken)
 
 export default router;
