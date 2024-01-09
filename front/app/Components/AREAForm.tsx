@@ -23,7 +23,8 @@ const AREAForm: React.FC<{ fields: ActionJsonArray, setDatas: (data: string) => 
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const outputData: any = fields.map(field => ({ [field.title]: formData[field.title] || '' }));
+        type OutputData = { [key: string]: string }[];
+        const outputData: OutputData = fields.map(field => ({ [field.title]: formData[field.title] || '' }));
         setDatas(JSON.stringify(outputData));
     };
 

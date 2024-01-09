@@ -54,7 +54,6 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
         if (!req.params.guildId) {
             return res.status(401).json({ error: "No guild ID provided" })
         }
-        console.log("registerToken :\n accessToken : " + accessToken + "\n refreshToken : " + refreshToken + "\n expiresIn : " + expiresIn + "\n serviceId : " + serviceId + "\n userInfo : " + userInfo.userId);
         const OAuthData = await OAuth.create({
             serviceId: serviceId,
             encryptedAccessToken: encryptedAccessToken.content,
