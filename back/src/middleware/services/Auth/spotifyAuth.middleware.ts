@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { OAuthData } from "../../../interfaces/token.interface";
 import { OAuth } from "../../../models/oauth.model";
 import { EncryptionService } from "../../../services/encryption.service";
-import getUserEmail from "../../../services/API/Spotify/getUserEmail.service";
-import authenticateUser from "../../../services/API/Spotify/authService.service";
+import {getUserEmail} from "../../../services/API/Spotify/getUserEmail.service";
+import { authenticateUserSpotify } from "../../../services/API/Spotify/authService.service";
 
 /**
  * Middleware that authenticates with Spotify using an authorization code.
@@ -29,13 +29,13 @@ import authenticateUser from "../../../services/API/Spotify/authService.service"
 const spotifyAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 
     try {
-        const code : string = req.body.code;
+        const { code, mobile } = req.body;
 
         if (!code) {
             res.status(400).json({error: "Code not found in the request."})
             return;
         }
-        req.body = await authenticateUser(code)
+        req.body = await authenticateUserSpotify(code, (mobile !== undefined && mobile))
         next()
     } catch (error) {
         if (error instanceof Error) {

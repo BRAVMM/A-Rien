@@ -24,18 +24,19 @@ class OAuth extends Model {
                 },
                 OAuthEmail: {
                     type: DataTypes.STRING,
-                    allowNull: false,
+                    allowNull: true,
+                    unique: true,
                 },
                 serviceId: {
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },
                 encryptedAccessToken: {
-                    type: DataTypes.STRING(1024),
+                    type: DataTypes.TEXT,
                     allowNull: false,
                 },
                 encryptedRefreshToken: {
-                    type: DataTypes.STRING(1024),
+                    type: DataTypes.TEXT,
                     allowNull: false,
                 },
                 ivAccess: {

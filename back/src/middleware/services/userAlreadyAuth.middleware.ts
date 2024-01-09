@@ -3,9 +3,7 @@ import { TokenData } from "../../interfaces/token.interface";
 import { CustomRequest } from "../../interfaces/request.interface";
 import { OAuth } from "../../models/oauth.model";
 import { EncryptionService } from "../../services/encryption.service";
-import refreshSpotifyTokens from "./refreshCallback/spotifyRefresh.middleware";
-import { spotifyAlreadyAuth } from "./Auth/spotifyAuth.middleware";
-import getUserEmail from "../../services/API/Spotify/getUserEmail.service";
+import {getUserEmail, getUserEmailMicrosoft } from "../../services/API/Spotify/getUserEmail.service";
 
 /**
  * Middleware that checks if a user is already authenticated with a specific service.
@@ -74,4 +72,46 @@ const userAlreadyAuth = async (req: Request, res: Response, next: NextFunction):
     }
 }
 
-export default userAlreadyAuth;
+const userAlreadyAuthMicrosoft = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const userInfo : TokenData = (req as CustomRequest).user
+
+    if (!userInfo) {
+        res.status(401).json({error: "User not found"});
+        return;
+    }
+    try {
+        const {accessToken, refreshToken} = req.body
+
+        if (!accessToken || !refreshToken) {
+            res.status(400).json({error: "Missing required parameters"});
+            return;
+        }
+        const userEmail = await getUserEmailMicrosoft(accessToken)
+        const token : OAuth | null = await OAuth.findOne({
+            where: {
+                OAuthEmail: userEmail
+            }
+        });
+
+        if (token) {
+            const encryptedAccessToken : {iv: string, content: string} = EncryptionService.encrypt(accessToken)
+            const encryptedRefreshToken : {iv: string, content: string} = EncryptionService.encrypt(refreshToken)
+
+            token.update({
+                encryptedAccessToken: encryptedAccessToken.content,
+                encryptedRefreshToken: encryptedRefreshToken.content,
+                ivAccess: encryptedAccessToken.iv,
+                ivRefresh: encryptedRefreshToken.iv,
+            })
+            res.status(200).json({message: 'New token registered'})
+            return
+        }
+        next();
+    } catch (error) {
+        console.error(error);
+        res.status(401).json({error: "User already logged in"});
+        return;
+    }
+}
+
+export  {userAlreadyAuth, userAlreadyAuthMicrosoft};
