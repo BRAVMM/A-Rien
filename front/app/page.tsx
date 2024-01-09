@@ -53,7 +53,7 @@ export default function Home() {
         <div className="flex items-center justify-center h-1/3 mt-10">
           <div className="snake-container">
           </div>
-            <MicrosoftButtonLogin />
+            {/* <MicrosoftButtonLogin /> */}
         </div>
       </div>
     </div>
