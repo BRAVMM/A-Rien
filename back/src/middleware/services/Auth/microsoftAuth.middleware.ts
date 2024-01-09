@@ -38,7 +38,6 @@ const microsoftAuth = async (req: Request, res: Response, next: NextFunction): P
         req.body = await authenticateUserMicrosoft(code, (mobile !== undefined && mobile));
         next()
     } catch (error) {
-        console.log(error)
         res.status(500).json({error: 'microsoft authentication failed.'})
         return;
     }

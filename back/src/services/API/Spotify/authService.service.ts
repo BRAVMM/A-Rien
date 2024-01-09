@@ -66,7 +66,7 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
 
     const params = new URLSearchParams({
         client_id: MICROSOFT_CLIENT_ID,
-        scope: 'openid email profile', // Ajoutez ou modifiez les scopes selon les besoins
+        scope: 'openid email profile user.read', // Ajoutez ou modifiez les scopes selon les besoins
         code: code,
         redirect_uri: MICROSOFT_REDIRECT_URI,
         grant_type: 'authorization_code',
@@ -89,6 +89,7 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
         console.log(data);
         if (!microsoftResponse.ok) {
             console.error({errorMessage: "\x1b[31mAn error was caught\x1b[0m"} , data)
+            throw new Error("Microsoft API error");
         }
         const oauthData: OAuthData = {
             accessToken: data.access_token,
@@ -103,4 +104,4 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
     }
 }
 
-export { authenticateUserSpotify, authenticateUserMicrosoft}
+export { authenticateUserSpotify, authenticateUserMicrosoft }

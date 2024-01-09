@@ -19,6 +19,12 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
             return res.status(401).json({ error: "No tokens provided" })
         }
         console.log("registerToken :\n accessToken : " + accessToken + "\n refreshToken : " + refreshToken + "\n expiresIn : " + expiresIn + "\n serviceId : "  + "\n userInfo : " + userInfo.userId);
+        if (!email) {
+            return res.status(401).json({ error: "No email provided" })
+        }
+        if (await OAuth.findOne({where: {OAuthEmail: email, serviceId: process.env.MICROSOFT_SERVICE_ID, ownerId: userInfo.userId}})) {
+            return res.status(401).json({ error: "User already logged in" })
+        }
         const OAuthData = await OAuth.create({
             serviceId : process.env.MICROSOFT_SERVICE_ID,
             encryptedAccessToken : encryptedAccessToken.content,

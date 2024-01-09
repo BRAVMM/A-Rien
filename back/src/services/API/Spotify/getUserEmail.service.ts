@@ -37,6 +37,7 @@ const getUserEmailMicrosoft = async (token: string): Promise<string> => {
     });
 
     if (!userResponse.ok) {
+        console.log(userResponse);
         throw new Error(`Microsoft API request failed with status: ${userResponse.status}`);
     }
 
