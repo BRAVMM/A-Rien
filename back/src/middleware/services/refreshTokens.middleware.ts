@@ -41,17 +41,34 @@ type RefreshTokenCallback = (tokens: OAuth[]) => Promise<void>;
  * Status: 500
  * Response Body: { "error": "Unexpected error was caught" }
  */
-const refreshTokenCallbacks: { [serviceId: number]: RefreshTokenCallback } = {
-    1: async (tokens) => {
-        await refreshSpotifyTokens(tokens);
-    },
-    2: async (tokens) => {
-        await refreshDiscordTokens(tokens);
-    },
-    2: async (tokens) => {
-        await refreshMicrosoftTokens(tokens);
+const refreshTokenCallbacks: { [serviceId: number]: RefreshTokenCallback } = {};
+if (process.env.SPOTIFY_SERVICE_ID) {
+    try {
+        refreshTokenCallbacks[Number(process.env.SPOTIFY_SERVICE_ID)] = async (tokens: OAuth[]) => {
+            await refreshSpotifyTokens(tokens);
+        };
+    } catch (error) {
+        console.error("Error while loading Spotify refresh callback: " + error);
     }
-};
+}
+if (process.env.DISCORD_SERVICE_ID) {
+    try {
+        refreshTokenCallbacks[Number(process.env.DISCORD_SERVICE_ID)] = async (tokens: OAuth[]) => {
+            await refreshDiscordTokens(tokens);
+        };
+    } catch (error) {
+        console.error("Error while loading Discord refresh callback: " + error);
+    }
+}
+if (process.env.MICROSOFT_SERVICE_ID) {
+    try {
+        refreshTokenCallbacks[Number(process.env.MICROSOFT_SERVICE_ID)] = async (tokens: OAuth[]) => {
+            await refreshMicrosoftTokens(tokens);
+        };
+    } catch (error) {
+        console.error("Error while loading Microsoft refresh callback: " + error);
+    }
+}
 
 /**
  * Function that refreshes OAuth tokens for a specific service identified by the serviceId.

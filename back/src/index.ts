@@ -60,26 +60,56 @@ app.use('/area', AreaRouter);
 app.use('/services', ServicesRouter);
 
 const addServicesToDB = async () => {
-    const SERVICES: any[] = [
-        {
-            id: 1,
-            name: 'Spotify',
-            actionsId: [1, 2, 3, 4, 5, 6, 7],
-            reactionsId: [1, 2],
-        },
-        {
-            id: 2,
-            name: 'Timer',
-            actionsId: [8],
-            reactionsId: [],
-        },
-        {
-            id: 3,
-            name: 'Discord',
-            actionsId: [],
-            reactionsId: [3],
+    const SERVICES: any[] = [];
+
+    if (process.env.SPOTIFY_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.SPOTIFY_SERVICE_ID),
+                name: 'Spotify',
+                actionsId: [1, 2, 3, 4, 5, 6, 7],
+                reactionsId: [1, 2],
+            });
+        } catch (error) {
+            console.error("Error while loading Spotify service: " + error);
         }
-    ];
+    }
+    if (process.env.TIMER_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.TIMER_SERVICE_ID),
+                name: 'Timer',
+                actionsId: [8],
+                reactionsId: [],
+            });
+        } catch (error) {
+            console.error("Error while loading Timer service: " + error);
+        }
+    }
+    if (process.env.DISCORD_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.DISCORD_SERVICE_ID),
+                name: 'Discord',
+                actionsId: [],
+                reactionsId: [3],
+            });
+        } catch (error) {
+            console.error("Error while loading Discord service: " + error);
+        }
+    }
+    if (process.env.MICROSOFT_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.MICROSOFT_SERVICE_ID),
+                name: 'Microsoft',
+                actionsId: [],
+                reactionsId: [],
+            });
+        } catch (error) {
+            console.error("Error while loading Microsoft service: " + error);
+        }
+    }
 
     for (const service of SERVICES) {
         if (await Service.findOne({where: {name: service.name}})) {
