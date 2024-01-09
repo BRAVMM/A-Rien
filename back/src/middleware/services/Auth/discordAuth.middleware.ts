@@ -26,6 +26,7 @@ const discordAuth = async (req: Request, res: Response, next: NextFunction): Pro
     try {
         const code: string = req.body.code;
         const guildId: string = req.body.guildId;
+        const mobile: boolean = req.body.mobile;
 
         if (!code) {
             res.status(400).json({ error: "Code not found in the request." })
@@ -35,7 +36,7 @@ const discordAuth = async (req: Request, res: Response, next: NextFunction): Pro
             res.status(400).json({ error: "Guild ID not found in the request." })
             return;
         }
-        req.body = await authenticateUser(code)
+        req.body = await authenticateUser(code, (mobile !== undefined && mobile))
         req.params.guildId = guildId
         next()
     } catch (error) {
