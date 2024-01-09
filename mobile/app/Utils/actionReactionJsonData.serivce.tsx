@@ -4,6 +4,8 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { NavigationProp } from "@react-navigation/native";
+
 import {ModalDataInterface, ServiceActionInterface, ServiceReactionInterface,} from "../Interfaces/ModalData.interface";
 
 /**
@@ -11,7 +13,7 @@ import {ModalDataInterface, ServiceActionInterface, ServiceReactionInterface,} f
  * @description actionReactionJsonDataService
  */
 namespace actionReactionJsonDataService {
-  const requestApi = async (url: string, method: string, body: any) => {
+  const requestApi = async (url: string, method: string, body: any, router: NavigationProp<ReactNavigation.RootParamList>) => {
     const bearer = await AsyncStorage.getItem("token")
     let response: Response;
 
@@ -33,6 +35,9 @@ namespace actionReactionJsonDataService {
         body: JSON.stringify(body),
       });
     }
+    if (response.status === 401) {
+      router.navigate("login" as never);
+    }
     return response;
   };
 
@@ -42,19 +47,15 @@ namespace actionReactionJsonDataService {
    * @returns {Promise<ServiceActionInterface[]>}
    * @memberof actionReactionJsonDataService
    */
-  export const getServices = async (): Promise<ModalDataInterface[]> => {
+  export const getServices = async (router: NavigationProp<ReactNavigation.RootParamList>): Promise<ModalDataInterface[]> => {
     try {
       const response: Response = await requestApi(
         `${process.env.EXPO_PUBLIC_API_URL}/area/getServices`,
         "GET",
         null,
+        router,
       );
       if (!response.ok) {
-        console.error(
-          "error getServices : ",
-          response.status,
-          response.statusText,
-        );
         return [];
       }
       return await response.json();
@@ -71,6 +72,7 @@ namespace actionReactionJsonDataService {
    * @memberof actionReactionJsonDataService
    */
   export const getActionJsonData = async (
+      router: NavigationProp<ReactNavigation.RootParamList>,
     serviceId: number,
   ): Promise<ServiceActionInterface[]> => {
     try {
@@ -78,6 +80,7 @@ namespace actionReactionJsonDataService {
         `${process.env.EXPO_PUBLIC_API_URL}/area/getActionsFromServiceId/${serviceId}`,
         "GET",
         null,
+          router
       );
       if (!response.ok) {
         console.error(
@@ -101,6 +104,7 @@ namespace actionReactionJsonDataService {
    * @memberof actionReactionJsonDataService
    */
   export const getReactionJsonData = async (
+      router: NavigationProp<ReactNavigation.RootParamList>,
     actionId: number,
   ): Promise<ServiceReactionInterface[]> => {
     try {
@@ -108,6 +112,7 @@ namespace actionReactionJsonDataService {
         `${process.env.EXPO_PUBLIC_API_URL}/area/getReactionsFromActionId/${actionId}`,
         "GET",
         null,
+            router
       );
       if (!response.ok) {
         console.error(
@@ -131,6 +136,7 @@ namespace actionReactionJsonDataService {
    * @memberof actionReactionJsonDataService
    */
   export const getOauthIdsFromServiceId = async (
+      router: NavigationProp<ReactNavigation.RootParamList>,
     serviceId: number,
   ): Promise<number[]> => {
     try {
@@ -138,6 +144,7 @@ namespace actionReactionJsonDataService {
         `${process.env.EXPO_PUBLIC_API_URL}/area/getOauthIdsFromServiceId/${serviceId}`,
         "GET",
         null,
+        router
       );
       if (!response.ok) {
         console.error(
@@ -161,6 +168,7 @@ namespace actionReactionJsonDataService {
    * @memberof actionReactionJsonDataService
    */
   export const getOauthIdsFromActionId = async (
+      router: NavigationProp<ReactNavigation.RootParamList>,
     actionId: number,
   ): Promise<number[]> => {
     try {
@@ -168,6 +176,7 @@ namespace actionReactionJsonDataService {
         `${process.env.EXPO_PUBLIC_API_URL}/area/getOauthIdsFromActionId/${actionId}`,
         "GET",
         null,
+        router
       );
       if (!response.ok) {
         console.error(
@@ -191,6 +200,7 @@ namespace actionReactionJsonDataService {
    * @memberof actionReactionJsonDataService
    */
   export const getOauthIdsFromReactionId = async (
+      router: NavigationProp<ReactNavigation.RootParamList>,
     reactionId: number,
   ): Promise<number[]> => {
     try {
@@ -198,6 +208,7 @@ namespace actionReactionJsonDataService {
         `${process.env.EXPO_PUBLIC_API_URL}/area/getOauthIdsFromReactionId/${reactionId}`,
         "GET",
         null,
+        router
       );
       if (!response.ok) {
         console.error(

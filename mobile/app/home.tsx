@@ -3,18 +3,19 @@ import {useNavigation} from "expo-router";
 import {styled, withExpoSnack} from "nativewind";
 import React, {useEffect, useState} from "react";
 import {Image, SafeAreaView, Text, TextInput, TouchableOpacity, View,} from "react-native";
-
-import BravmmModal from "./Components/BravmmModal";
-import SelectServices from "./Components/SelectServices";
 import {ModalDataInterface} from "./Interfaces/ModalData.interface";
 import actionReactionJsonDataService from "./Utils/actionReactionJsonData.serivce";
 import colors from "../constants/Colors";
+import SelectServices from "./Components/SelectServices";
+import BravmmModal from "./Components/BravmmModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 styled(SafeAreaView);
+
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [servicesList, setServicesList] = useState<ModalDataInterface[]>();
@@ -46,8 +47,8 @@ const Home = () => {
    * @function useEffect
    * @description useEffect to fetch actionJsonData when ModalData is defined
    */
-  useEffect(() => {
-    const services = actionReactionJsonDataService.getServices();
+    useEffect(() => {
+        const services = actionReactionJsonDataService.getServices(router);
 
     services.then((services) => {
       setServicesList(services);
@@ -64,7 +65,7 @@ const Home = () => {
    * @description useEffect to fetch actionJsonData when ModalData is defined
    */
   useEffect(() => {
-    const services = actionReactionJsonDataService.getServices();
+    const services = actionReactionJsonDataService.getServices(router);
 
     services.then((services) => {
       setServicesList(services);
