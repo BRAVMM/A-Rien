@@ -17,7 +17,7 @@ const Page = () => {
     const [datas, setDatas] = React.useState<string>("");
 
     useEffect(() => {
-        if (Object.keys(datas).length !== 0) {
+        if (Object.keys(JSON.parse(datas)).length !== 0) {
             console.log("data filled");
             console.log(datas);
         } else {

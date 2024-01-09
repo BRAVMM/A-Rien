@@ -60,7 +60,13 @@ app.use('/area', AreaRouter);
 app.use('/services', ServicesRouter);
 
 const addServicesToDB = async () => {
-    const SERVICES: any[] = [];
+    interface ServiceEntry {
+        id: number;
+        name: string;
+        actionsId: number[];
+        reactionsId: number[];
+    }
+    const SERVICES: ServiceEntry[] = [];
 
     if (process.env.SPOTIFY_SERVICE_ID) {
         try {
@@ -125,7 +131,14 @@ const addServicesToDB = async () => {
 };
 
 const addActionsToDB = async () => {
-    const ACTIONS: any[] = [
+    interface ActionEntry {
+        id: number;
+        name: string;
+        description: string;
+        args: { title: string; type: string; description: string; range?: [number, number]; }[];
+        reactionsIds: number[];
+    }
+    const ACTIONS: { name: string; actions: ActionEntry[]; }[] = [
         {
             name: 'Spotify',
             actions: [
@@ -228,7 +241,13 @@ const addActionsToDB = async () => {
 
 
 const addReactionsToDB = async () => {
-    const REACTIONS: any[] = [
+    interface ReactionEntry {
+        id: number;
+        name: string;
+        description: string;
+        args: { title: string; type: string; description: string; range?: [number, number]; }[];
+    }
+    const REACTIONS: { name: string; reactions: ReactionEntry[]; }[] = [
         {
             name: 'Spotify',
             reactions: [

@@ -174,27 +174,63 @@ Add your service to the DB in `/back/src/index.ts`:
 
 ```typescript
 const addServicesToDB = async () => {
-    const SERVICES: any[] = [
-        {
-            id: 1,
-            name: 'Spotify',
-            actionsId: [1, 2, 3, 4, 5, 6, 7],
-            reactionsId: [1, 2],
-        },
-        {
-            id: 2,
-            name: 'Timer',
-            actionsId: [8],
-            reactionsId: [],
-        },
-        // Add your service here
-        {
-            id: 3,
-            name: '<YourService>',
-            actionsId: [1, 2, 3, 4, 5],
-            reactionsId: [1, 2],
+    interface ServiceEntry {
+        id: number;
+        name: string;
+        actionsId: number[];
+        reactionsId: number[];
+    }
+    const SERVICES: ServiceEntry[] = [];
+
+    if (process.env.SPOTIFY_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.SPOTIFY_SERVICE_ID),
+                name: 'Spotify',
+                actionsId: [1, 2, 3, 4, 5, 6, 7],
+                reactionsId: [1, 2],
+            });
+        } catch (error) {
+            console.error("Error while loading Spotify service: " + error);
         }
-    ];
+    }
+    if (process.env.TIMER_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.TIMER_SERVICE_ID),
+                name: 'Timer',
+                actionsId: [8],
+                reactionsId: [],
+            });
+        } catch (error) {
+            console.error("Error while loading Timer service: " + error);
+        }
+    }
+    if (process.env.DISCORD_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.DISCORD_SERVICE_ID),
+                name: 'Discord',
+                actionsId: [],
+                reactionsId: [3],
+            });
+        } catch (error) {
+            console.error("Error while loading Discord service: " + error);
+        }
+    }
+    // Add your service here
+    if (process.env.<YOUR_SERVICE>_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.<YOUR_SERVICE>_SERVICE_ID),
+                name: '<your_service_name>',
+                actionsId: [],
+                reactionsId: [],
+            });
+        } catch (error) {
+            console.error("Error while loading <your_service> service: " + error);
+        }
+    }
 
     for (const service of SERVICES) {
         if (await Service.findOne({where: {name: service.name}})) {
@@ -360,7 +396,13 @@ Add your reactions to the DB in `/back/src/index.ts`:
 
 ```typescript
 const addReactionsToDB = async () => {
-    const REACTIONS: any[] = [
+    interface ReactionEntry {
+        id: number;
+        name: string;
+        description: string;
+        args: { title: string; type: string; description: string; range?: [number, number]; }[];
+    }
+    const REACTIONS: { name: string; reactions: ReactionEntry[]; }[] = [
         {
             name: 'Spotify',
             reactions: [
