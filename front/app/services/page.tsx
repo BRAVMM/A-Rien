@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import TextSection from "../Components/TextSection";
 import { AreaDetailsInterface } from "../Interfaces/AreaDetails.Interface";
 import SpotifyButtonOAuth from "../Components/services/LoginSpotify";
+import DiscordButtonOAuth from "../Components/services/CreateWebhookDiscord";
 import Cookies from 'js-cookie';
 
 function getAreas() {
@@ -182,6 +183,7 @@ export default function Services() {
           <Image src="/logo1.svg" alt="Logo" width={70} height={70} />
         </div>
         <SpotifyButtonOAuth/>
+        <DiscordButtonOAuth/>
         <div className="flex items-center justify-center h-1/6 text-white text-3xl truncate">
           <p>Select a service</p>
         </div>
