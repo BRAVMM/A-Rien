@@ -17,16 +17,13 @@ export default function Profile() {
 
   useEffect(() => {
     const checkToken = async () => {
-      // Vérifier si le cookie "token" existe
       const token = Cookies.get("token");
 
       if (!token) {
-        // Rediriger vers la page de connexion si le cookie n'est pas présent
         router.push("/login");
         return;
       }
 
-      // Si le cookie est présent, effectuer la requête pour obtenir les données de l'utilisateur
       const response = await fetch(process.env.NEXT_PUBLIC_API + "/users/me", {
         method: "GET",
         headers: {
@@ -39,32 +36,12 @@ export default function Profile() {
         const data = await response.json();
         setUser(data);
       } else {
-        // Rediriger vers la page de connexion en cas d'échec de la requête
         router.push("/login");
       }
     };
 
     checkToken();
   }, [router]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch(process.env.NEXT_PUBLIC_API + "/users/me", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + Cookies.get("token"),
-        },
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <div className="relative h-screen flex">

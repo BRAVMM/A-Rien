@@ -15,7 +15,10 @@ export default function Redirect() {
       const callApi = async () => {
         await registerTokenService(new MicroSoftDataBody(codeFound), "/services/microsoft/registerToken")
       }
-      callApi()
+      if (codeFound) {
+        setCode(codeFound);
+        callApi();
+      }
     }, []);
 
 

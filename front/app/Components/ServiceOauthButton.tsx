@@ -38,7 +38,7 @@ const ServiceConnection: React.FC<ServiceConnectionProps> = ({ user, service, on
       });
       if (response) {
         const data = await response.json();
-        if (data.OAuthData.ownerId) {
+        if (data?.OAuthData?.ownerId) {
           setMicrosoftLogin(true);
         }
       }
