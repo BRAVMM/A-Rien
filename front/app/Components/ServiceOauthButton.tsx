@@ -6,9 +6,10 @@ import Cookies from "js-cookie";
 interface ServiceConnectionProps {
   user: any;
   service: string;
+  onClick: () => void;
 }
 
-const ServiceConnection: React.FC<ServiceConnectionProps> = ({ user, service }) => {
+const ServiceConnection: React.FC<ServiceConnectionProps> = ({ user, service, onClick }) => {
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -21,7 +22,7 @@ const ServiceConnection: React.FC<ServiceConnectionProps> = ({ user, service }) 
   return (
     <div className="mt-4 text-white text-center">
       <p>Service: {service}</p>
-      {user ? (
+      {!user ? (
         <button
           className="text-white text-xl font-bold mt-2 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-fourthly rounded-md px-4 hover:bg-indigo-500 focus-visible:outline-indigo-600"
           onClick={handleLogout}
@@ -31,7 +32,7 @@ const ServiceConnection: React.FC<ServiceConnectionProps> = ({ user, service }) 
       ) : (
         <button
           className="text-white text-xl font-bold mt-2 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-fourthly rounded-md px-4 hover:bg-indigo-500 focus-visible:outline-indigo-600"
-          onClick={handleLogin}
+          onClick={onClick}
         >
           Login
         </button>

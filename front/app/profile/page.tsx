@@ -11,6 +11,10 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
+  const AUTH_ENDPOINT = `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_MICROSOFT_TENANT_ID}/oauth2/v2.0/authorize`;
+  const RESPONSE_TYPE = "code";
+  const SCOPE = "openid profile offline_access email user.read";
+
   useEffect(() => {
     const checkToken = async () => {
       // Vérifier si le cookie "token" existe
@@ -62,7 +66,6 @@ export default function Profile() {
     fetchData();
   }, []);
 
-
   return (
     <div className="relative h-screen flex">
       <div className="w-1/6 h-full overflow-hidden bg-gradient-radial from-[#24204A] to-[#0B0534]">
@@ -85,8 +88,13 @@ export default function Profile() {
             Logout
           </button>
           <p className="text-lg font-bold mt-[20%]">Service Connection</p>
-          <ServiceConnection user={user} service="Spotify" />
-          <ServiceConnection user={user} service="TrackerGG" />
+          <ServiceConnection
+            user={user}
+            service="Microsoft"
+            onClick={() => {
+              window.location.href = `${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_MICROSOFT_REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
+            }}
+          />
         </div>
       </div>
       <div className="flex-1 relative h-full">
