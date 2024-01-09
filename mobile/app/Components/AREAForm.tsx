@@ -1,11 +1,18 @@
 /**
  * @client
  */
-import React, { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {styled} from "nativewind";
+import React, {useState} from "react";
+import {Text, TextInput, TouchableOpacity, View} from "react-native";
 
 /* Interfaces */
-import { ActionJsonArray } from "../Interfaces/ActionJson.interface";
+import {ActionJsonArray} from "../Interfaces/ActionJson.interface";
+import colors from "../../constants/Colors";
+
+const StyledView = styled(View);
+const StyledText = styled(Text);
+const StyledTextInput = styled(TextInput);
+const StyledTouchableOpacity = styled(TouchableOpacity);
 
 /**
  * @component AREAForm component
@@ -33,10 +40,15 @@ const AREAForm: React.FC<{
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <StyledView
+      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+    >
       {fields.map((field) => (
-        <View key={field.title} style={{ marginBottom: 10 }}>
-          <TextInput
+        <StyledView
+          key={field.title}
+          style={{ marginBottom: 10, width: "80%" }}
+        >
+          <StyledTextInput
             value={formData[field.title] || ""}
             onChangeText={(text) => {
               if (field.range) {
@@ -58,20 +70,38 @@ const AREAForm: React.FC<{
               }
             }}
             placeholder={field.description}
-            style={{ borderWidth: 1, padding: 10, width: 200 }}
+            placeholderTextColor={colors.light.background}
+            className="text-center w-[100%] h-10 bg-white rounded-2xl"
           />
-        </View>
+        </StyledView>
       ))}
-      <TouchableOpacity
+      <StyledTouchableOpacity
         onPress={() => handleSubmit()}
+        className="p-3 rounded-2xl mt-5"
         style={{
-          backgroundColor: error ? "red" : "#382B59",
-          padding: 10,
-          borderRadius: 5,
+          // Add additional styling here if needed
+          backgroundColor: colors.light.fourthly,
+          width: "50%",
         }}
-      />
-      {error && <Text style={{ color: "red", marginTop: 10 }}>{error}</Text>}
-    </View>
+      >
+        <StyledText
+          style={{
+            // Add additional styling here if needed
+            color: "#FFFFFF",
+            textAlign: "center",
+            fontSize: 16,
+            fontWeight: "bold",
+          }}
+        >
+          Submit
+        </StyledText>
+      </StyledTouchableOpacity>
+      {error && (
+        <StyledText className="text-[#FF0000] text-center mt-2">
+          {error}
+        </StyledText>
+      )}
+    </StyledView>
   );
 };
 

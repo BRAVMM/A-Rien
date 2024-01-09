@@ -1,12 +1,16 @@
-import {styled, withExpoSnack} from "nativewind";
-import React, {useEffect, useState} from "react";
-import {Image, SafeAreaView, Text, TouchableOpacity, View,} from "react-native";
+import { styled, withExpoSnack } from "nativewind";
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import AREACreationModal from "./AREACreation";
-import {ModalDataInterface} from "../Interfaces/ModalData.interface";
+import { ModalDataInterface } from "../Interfaces/ModalData.interface";
 import actionReactionJsonDataService from "../Utils/actionReactionJsonData.serivce";
-import colors from "../../constants/Colors";
-import {LinearGradient} from "expo-linear-gradient";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -65,34 +69,34 @@ const SelectServices = () => {
 
   return (
     // eslint-disable-next-line react/jsx-no-undef
-      <StyledSafeAreaView className="flex-1 justify-center">
-        {service ? (
-          <AREACreationModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            ModalData={service}
-          />
-        ) : null}
-        <StyledView>
-          {servicesList !== undefined &&
-            servicesList?.map((service) => (
-              <StyledTouchableOpacity
-                key={service.id}
-                className="flex items-center justify-center w-[30%] h-[30%] m-5"
-                onPress={() => handleModal(service)}
-              >
-                <Image
-                  // @ts-ignore
-                  source={servicePicture[service.name]}
-                  style={{width: 100, height: 100}}
-                />
-                <StyledText className="text-white text-2xl font-bold absolute left-[150%]">
-                  {service.name}
-                </StyledText>
-              </StyledTouchableOpacity>
-            ))}
-        </StyledView>
-      </StyledSafeAreaView>
+    <StyledSafeAreaView className="flex-1 justify-center">
+      {service ? (
+        <AREACreationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          ModalData={service}
+        />
+      ) : null}
+      <StyledView>
+        {servicesList !== undefined &&
+          servicesList?.map((service) => (
+            <StyledTouchableOpacity
+              key={service.id}
+              className="flex items-center justify-center w-[30%] h-[30%] m-5"
+              onPress={() => handleModal(service)}
+            >
+              <Image
+                // @ts-ignore
+                source={servicePicture[service.name]}
+                style={{ width: 100, height: 100 }}
+              />
+              <StyledText className="text-white text-2xl font-bold absolute left-[150%]">
+                {service.name}
+              </StyledText>
+            </StyledTouchableOpacity>
+          ))}
+      </StyledView>
+    </StyledSafeAreaView>
   );
 };
 

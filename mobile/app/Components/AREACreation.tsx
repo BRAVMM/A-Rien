@@ -1,6 +1,6 @@
+import { styled } from "nativewind";
 import React, { useEffect, useState } from "react";
 import {
-  Modal,
   SafeAreaView,
   ScrollView,
   Text,
@@ -9,6 +9,8 @@ import {
 } from "react-native";
 
 import AREAForm from "./AREAForm";
+import BravmmModal from "./BravmmModal";
+import colors from "../../constants/Colors";
 import {
   ModalDataInterface,
   ServiceActionInterface,
@@ -16,7 +18,6 @@ import {
 } from "../Interfaces/ModalData.interface";
 import actionReactionJsonDataService from "../Utils/actionReactionJsonData.serivce";
 import { storeArea } from "../Utils/callApi";
-import BravmmModal from "./BravmmModal";
 
 const AREACreationModal: React.FC<{
   isOpen: boolean;
@@ -31,6 +32,10 @@ const AREACreationModal: React.FC<{
     ENTER_AREA_NAME_AND_VALIDATE,
     VALIDATE_OR_ADD_FORM,
   }
+
+  const StyledText = styled(Text);
+  const StyledTouchableOpacity = styled(TouchableOpacity);
+  const StyledView = styled(View);
 
   const [isThereAnOauthToken, setIsThereAnOauthToken] = useState<JSX.Element>();
   const [actionJsonData, setActionJsonDatas] =
@@ -181,24 +186,41 @@ const AREACreationModal: React.FC<{
       return isThereAnOauthToken;
     }
     return (
-      <View className="flex flex-col items-center justify-center">
-        <Text>{ModalData.name}</Text>
-        <View className="flex flex-col items-center justify-center">
+      <StyledView className="flex flex-col justify-center top-[50%]">
+        <StyledView className="flex flex-col justify-center">
           {actionJsonData?.map((action) => (
-            <View key={action.id}>
-              <TouchableOpacity
+            <StyledView
+              key={action.id}
+              className="flex justify-center top-[10%] left-[10%]"
+            >
+              <StyledTouchableOpacity
                 onPress={() => {
                   setAction(action);
                   setStep(Step.SELECT_SERVICE_ACTION_DATA);
                 }}
-                className="flex items-center justify-center text-white font-semibold py-2 px-4 rounded-lg w-32 text-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-primary hover:bg-indigo-500 focus-visible:outline-indigo-600"
+                className="p-5 rounded-2xl mt-5"
+                style={{
+                  // Add additional styling here if needed
+                  backgroundColor: colors.light.thirdly,
+                  width: "80%",
+                }}
               >
-                <Text>{action.name}</Text>
-              </TouchableOpacity>
-            </View>
+                <StyledText
+                  style={{
+                    // Add additional styling here if needed
+                    color: "#FFFFFF",
+                    textAlign: "center",
+                    fontSize: 16,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {action.name}
+                </StyledText>
+              </StyledTouchableOpacity>
+            </StyledView>
           ))}
-        </View>
-      </View>
+        </StyledView>
+      </StyledView>
     );
   };
 
@@ -236,7 +258,6 @@ const AREACreationModal: React.FC<{
     );
   };
 
-
   /**
    * @function HTMLselectReaction
    * @description HTML for select Reaction
@@ -246,20 +267,37 @@ const AREACreationModal: React.FC<{
   const HTMLselectReaction = (): JSX.Element => {
     return (
       <View className="flex flex-col items-center justify-center">
-        <Text>{ModalData.name}</Text>
         <View className="flex flex-col items-center justify-center">
           {reactionJsonData?.map((reaction) => (
-            <View key={reaction.id}>
-              <TouchableOpacity
+            <StyledView
+              key={reaction.id}
+              className="flex justify-center top-[10%] left-[10%]"
+            >
+              <StyledTouchableOpacity
                 onPress={() => {
                   setStep(Step.SELECT_SERVICE_REACTION_DATA);
                   updateReaction(reaction);
                 }}
-                className="flex items-center justify-center text-white font-semibold py-2 px-4 rounded-lg w-32 text-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-primary hover:bg-indigo-500 focus-visible:outline-indigo-600"
+                className="p-5 rounded-2xl mt-5"
+                style={{
+                  // Add additional styling here if needed
+                  backgroundColor: colors.light.thirdly,
+                  width: "80%",
+                }}
               >
-                <Text>{reaction.name}</Text>
-              </TouchableOpacity>
-            </View>
+                <StyledText
+                  style={{
+                    // Add additional styling here if needed
+                    color: "#FFFFFF",
+                    textAlign: "center",
+                    fontSize: 16,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {reaction.name}
+                </StyledText>
+              </StyledTouchableOpacity>
+            </StyledView>
           ))}
         </View>
       </View>
@@ -295,14 +333,53 @@ const AREACreationModal: React.FC<{
   const HTMLvalidateOrAddForm = (): JSX.Element => {
     return (
       <View className="flex flex-col items-center justify-center">
-        <TouchableOpacity onPress={() => setStep(Step.SELECT_SERVICE_REACTION)}>
-          <Text>Add an other reaction</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => setStep(Step.ENTER_AREA_NAME_AND_VALIDATE)}
-        >
-          <Text>Submit AREA</Text>
-        </TouchableOpacity>
+        <StyledView className="flex justify-center top-[10%] left-[10%]">
+          <StyledTouchableOpacity
+            onPress={() => setStep(Step.SELECT_SERVICE_REACTION)}
+            className="p-5 rounded-2xl mt-5"
+            style={{
+              // Add additional styling here if needed
+              backgroundColor: colors.light.thirdly,
+              width: "80%",
+            }}
+          >
+            <StyledText
+              style={{
+                // Add additional styling here if needed
+                color: "#FFFFFF",
+                textAlign: "center",
+                fontSize: 16,
+                fontWeight: "bold",
+              }}
+            >
+              Add an other reaction
+            </StyledText>
+          </StyledTouchableOpacity>
+        </StyledView>
+
+        <StyledView className="flex justify-center items-center top-[10%]">
+          <StyledTouchableOpacity
+            onPress={() => setStep(Step.ENTER_AREA_NAME_AND_VALIDATE)}
+            className="p-3 rounded-2xl mt-5"
+            style={{
+              // Add additional styling here if needed
+              backgroundColor: colors.light.fourthly,
+              width: "50%",
+            }}
+          >
+            <StyledText
+              style={{
+                // Add additional styling here if needed
+                color: "#FFFFFF",
+                textAlign: "center",
+                fontSize: 16,
+                fontWeight: "bold",
+              }}
+            >
+              Submit Area
+            </StyledText>
+          </StyledTouchableOpacity>
+        </StyledView>
       </View>
     );
   };
@@ -344,9 +421,19 @@ const AREACreationModal: React.FC<{
     }
     const newActionTokenIds: number[] = [];
 
-    newActionTokenIds.push((await actionReactionJsonDataService.getOauthIdsFromActionId(action.id))[0]);
+    newActionTokenIds.push(
+      (
+        await actionReactionJsonDataService.getOauthIdsFromActionId(action.id)
+      )[0],
+    );
     for (const reaction of reactions) {
-      newActionTokenIds.push((await actionReactionJsonDataService.getOauthIdsFromReactionId(reaction.id))[0]);
+      newActionTokenIds.push(
+        (
+          await actionReactionJsonDataService.getOauthIdsFromReactionId(
+            reaction.id,
+          )
+        )[0],
+      );
     }
     const reactionIds: number[] = reactions.map((reaction) => reaction.id);
 
@@ -393,12 +480,30 @@ const AREACreationModal: React.FC<{
   };
 
   return (
-    <BravmmModal visible={isOpen} animationType="slide" onRequestClose={onClose} transparent={true} style={{flex: 1, position: "absolute", top: 0, left: 0}}>
+    <BravmmModal
+      visible={isOpen}
+      animationType="slide"
+      onRequestClose={onClose}
+      transparent={true}
+      style={{ flex: 1, position: "absolute", top: 0, left: 0 }}
+    >
       <SafeAreaView style={{ flex: 1, padding: 20 }}>
-        <TouchableOpacity onPress={onClose}>
-          <Text>Close</Text>
-        </TouchableOpacity>
-        <ScrollView>
+        <StyledView className="flex flex-col items-center justify-center top-[7%]">
+          <StyledText className="text-5xl font-bold text-white items-center">
+            {ModalData.name}
+          </StyledText>
+          {step === Step.SELECT_SERVICE_ACTION ? (
+            <StyledText className="text-white text-2xl font-bold top-[30%]">
+              Select an Action
+            </StyledText>
+          ) : null}
+          {step === Step.SELECT_SERVICE_REACTION ? (
+            <StyledText className="text-white text-2xl font-bold top-[30%]">
+              Select a reaction
+            </StyledText>
+          ) : null}
+        </StyledView>
+        <ScrollView style={{ marginTop: "15%" }}>
           <RenderContent />
         </ScrollView>
       </SafeAreaView>
