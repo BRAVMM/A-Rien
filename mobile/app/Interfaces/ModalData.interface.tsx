@@ -12,10 +12,10 @@ import { ActionJsonArray } from "./ActionJson.interface";
  * @property {number[]} reactionIds
  */
 interface ModalDataInterface {
-    name: string;
-    id: number;
-    actionIds: number[];
-    reactionIds: number[];
+  name: string;
+  id: number;
+  actionIds: number[];
+  reactionIds: number[];
 }
 
 /**
@@ -23,12 +23,11 @@ interface ModalDataInterface {
  * @description Interface for ServiceActionInterface
  */
 interface ServiceActionInterface {
-    id: number;
-    name: string;
-    args: ActionJsonArray;
-    reactionIds: number[];
+  id: number;
+  name: string;
+  args: ActionJsonArray;
+  reactionIds: number[];
 }
-
 
 // REACTION
 
@@ -37,10 +36,10 @@ interface ServiceActionInterface {
  * @description Interface for ReactionJson
  */
 interface ReactionJson {
-    title: string;
-    type: string;
-    description: string;
-    range?: number[];
+  title: string;
+  type: string;
+  description: string;
+  range?: number[];
 }
 
 /**
@@ -54,10 +53,14 @@ interface ReactionJsonArray extends Array<ReactionJson> {}
  * @description Interface for ServiceReactionInterface
  */
 interface ServiceReactionInterface {
-    id: number;
-    name: string;
-    args: ReactionJsonArray;
-    actionIds: number[];
+  id: number;
+  name: string;
+  args: ReactionJsonArray;
+  actionIds: number[];
 }
 
-export type { ModalDataInterface, ServiceActionInterface, ServiceReactionInterface };
+export type {
+  ModalDataInterface,
+  ServiceActionInterface,
+  ServiceReactionInterface,
+};

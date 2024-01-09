@@ -11,16 +11,19 @@ const App = () => {
     if (!token) {
       return false;
     }
-    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/users/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+    const response = await fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/users/me`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     return response.ok;
-  }
+  };
 
   async function checkAuth() {
     if (await isLogged()) {

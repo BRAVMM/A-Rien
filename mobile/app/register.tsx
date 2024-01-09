@@ -3,7 +3,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "expo-router";
 import { withExpoSnack, styled } from "nativewind";
 import React, { useEffect, useState } from "react";
-import colors from "../constants/Colors";
 import {
   Image,
   Text,
@@ -12,7 +11,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
-import {color} from "ansi-fragments";
+
+import colors from "../constants/Colors";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
