@@ -6,6 +6,7 @@ const getRedirectUri = (mobile: boolean) : string | undefined => {
 
 const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthData> => {
     const MICROSOFT_CLIENT_ID = process.env.MICROSOFT_CLIENT_ID;
+    const MICROSOFT_CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET;
     const MICROSOFT_REDIRECT_URI = getRedirectUri(mobile);
     const TENANT_ID = process.env.MICROSOFT_CLIENT_TENANT_ID;
 
@@ -24,11 +25,13 @@ const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthDat
     });
 
     try {
+        const authHeader = !mobile ? 'Basic ' + Buffer.from(`${MICROSOFT_CLIENT_ID}:${MICROSOFT_CLIENT_SECRET}`).toString('base64') : '';
 
         const microsoftResponse = await fetch(tokenEndpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': authHeader,
             },
             body: params.toString(),
         });
