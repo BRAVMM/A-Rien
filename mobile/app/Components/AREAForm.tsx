@@ -26,6 +26,10 @@ const AREAForm: React.FC<{
   };
 
   const handleSubmit = () => {
+    if (fields.some((field) => !formData[field.title])) {
+      setError("All fields must be filled");
+      return;
+    }
     const outputData = fields.map((field) => ({
       [field.title]: formData[field.title] || "",
     }));
