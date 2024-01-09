@@ -41,7 +41,8 @@ const discordAuth = async (req: Request, res: Response, next: NextFunction): Pro
         next()
     } catch (error) {
         if (error instanceof Error) {
-            res.status(500).json({ error: error })
+            console.error(error)
+            res.status(500).json({ error: 'Internal server error' })
             return;
         }
         console.error(error)
