@@ -23,7 +23,6 @@ import authenticateUser from "../../../services/API/Discord/authService.service"
  * Response Body: { "error": "Unexpected error was caught" }
  */
 const discordAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-
     try {
         const code: string = req.body.code;
         const guildId: string = req.body.guildId;

@@ -64,7 +64,7 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
             expiresIn: expiresIn,
             ownerId: userInfo.userId,
             OAuthEmail: "",
-            guildId: req.params.guildId,
+            datas: { guildId: req.params.guildId }
         });
         return res.status(201).json({ id: OAuthData.id })
     } catch (error) {

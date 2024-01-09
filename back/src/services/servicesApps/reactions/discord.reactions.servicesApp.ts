@@ -20,13 +20,19 @@ namespace DiscordReactions {
                 console.error("OAuth token not found");
                 return false;
             }
-            const reactionDataParsed: any = JSON.parse(reactionData.toString());
-            // TODO: get guildId from reactionDataParsed
-            const guildId: string | null = "";
             if (!process.env.DISCORD_API_ENDPOINT) {
                 console.error("Discord API endpoint not found");
                 return false;
             }
+
+            const oAuthData: any | undefined = await OAuthService.getOAuthDataFromId(oauthId, ownerId);
+            const guildId: string | null = oAuthData?.datas?.guildId;
+
+            if (!guildId) {
+                console.error("Guild ID not found");
+                return false;
+            }
+
             const response = await fetch(`${process.env.DISCORD_API_ENDPOINT}/${guildId}/${oauthToken}`, {
                 method: "POST",
                 headers: {

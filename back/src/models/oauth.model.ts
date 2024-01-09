@@ -12,6 +12,7 @@ class OAuth extends Model {
     public OAuthEmail!: string;
     public expiresIn!: number;
     public ownerId!: number;
+    public datas!: JSON;
 
     public static initialize(sequelize: Sequelize) {
         OAuth.init(
@@ -54,6 +55,10 @@ class OAuth extends Model {
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },
+                datas: {
+                    type: DataTypes.JSON,
+                    allowNull: true,
+                }
             },
             {
                 sequelize,

@@ -38,7 +38,15 @@ const DiscordButtonOAuth: React.FC = () => {
                 console.error('State is different : ' + queryState + ' != ' + state)
                 return
             }
-            await registerTokenService(new DiscordDataBody(queryCode, queryGuildId), REGISTER_TOKEN_ROUTE);
+            const returnValue: Boolean = await registerTokenService(new DiscordDataBody(queryCode, queryGuildId), REGISTER_TOKEN_ROUTE);
+            if (returnValue) {
+                console.log('Token registered !')
+                Cookies.remove('state')
+                Cookies.remove('code')
+                Cookies.remove('guild_id')
+            } else {
+                console.error('Token not registered...')
+            }
         } catch(error) {
             console.log(error)
         }

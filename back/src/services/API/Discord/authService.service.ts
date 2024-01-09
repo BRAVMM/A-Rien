@@ -12,14 +12,13 @@ import { OAuthData } from "../../../interfaces/token.interface";
  * @throws Will throw an error if the request to Discord's API fails or if the response cannot be parsed as JSON.
  */
 const authenticateUser = async (code: string): Promise<OAuthData> => {
-    const DISCORD_REDIRECT_URI : string = process.env.DISCORD_REDIRECT_URI ?? ''
-
+    const DISCORD_REDIRECT_URI : string = process.env.DISCORD_REDIRECT_URI ?? '';
 
     if (!process.env.DISCORD_REDIRECT_URI || !process.env.DISCORD_CLIENT_ID || DISCORD_REDIRECT_URI.length === 0 || !process.env.DISCORD_SERVICE_ID || !process.env.DISCORD_API_ENDPOINT) {
-        throw new Error ("Bad env configuration")
+        console.error("error : Bad env configuration");
+        throw new Error ("Bad env configuration");
     }
     const DISCORD_SERVICE_ID : number = Number(process.env.DISCORD_SERVICE_ID)
-
     try {
         const discordResponse = await fetch(`${process.env.DISCORD_API_ENDPOINT}/oauth2/token`, {
             method: 'POST',
@@ -34,6 +33,10 @@ const authenticateUser = async (code: string): Promise<OAuthData> => {
             }).toString()
         });
         const data = await discordResponse.json();
+        if (!discordResponse.ok || !data.access_token || !data.refresh_token || !data.expires_in) {
+            console.error("authenticateUser : Failed to authenticate with Discord");
+            throw new Error('Failed to authenticate with Discord');
+        }
         const oauthData: OAuthData = {
             accessToken: data.access_token,
             refreshToken: data.refresh_token,

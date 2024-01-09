@@ -11,7 +11,7 @@
 interface ActionJsonInterface {
     title: string;
     type: string;
-    description: string;
+    description?: string;
     range?: number[];
 }
 

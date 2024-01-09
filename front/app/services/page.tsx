@@ -137,7 +137,7 @@ export default function Services() {
    * @description redirectNotLogged to redirect the user if not logged
    */
   async function redirectNotLogged() {
-    const token: string | null = Cookies.get("token");
+    const token: string | undefined = Cookies.get("token");
 
     if (!token) {
       console.log("No token");

@@ -13,7 +13,7 @@ const Page = () => {
         { title: "Date", type: "date" },
         // Add more fields as needed
     ];
-    const [datas, setDatas] = React.useState<{ [key: string]: string }>({});
+    const [datas, setDatas] = React.useState<string>("");
 
     useEffect(() => {
         if (Object.keys(datas).length !== 0) {
