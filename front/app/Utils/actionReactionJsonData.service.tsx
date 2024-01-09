@@ -45,6 +45,8 @@ namespace actionReactionJsonDataService {
         try {
             const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getServices`, "GET", null)
             if (response.ok === false) {
+                console.log(response);
+                console.log("public api = ", process.env.NEXT_PUBLIC_API);
                 console.error("error getServices : ", response.status, response.statusText);
                 return [];
             }

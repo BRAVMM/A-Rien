@@ -1,19 +1,12 @@
-import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation } from "expo-router";
-import { styled, withExpoSnack } from "nativewind";
-import React, { useEffect, useState } from "react";
-import {
-  Image,
-  SafeAreaView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import {LinearGradient} from "expo-linear-gradient";
+import {useNavigation} from "expo-router";
+import {styled, withExpoSnack} from "nativewind";
+import React, {useEffect, useState} from "react";
+import {Image, SafeAreaView, Text, TextInput, TouchableOpacity, View,} from "react-native";
 
 import BravmmModal from "./Components/BravmmModal";
 import SelectServices from "./Components/SelectServices";
-import { ModalDataInterface } from "./Interfaces/ModalData.interface";
+import {ModalDataInterface} from "./Interfaces/ModalData.interface";
 import actionReactionJsonDataService from "./Utils/actionReactionJsonData.serivce";
 import colors from "../constants/Colors";
 
@@ -47,9 +40,6 @@ const Home = () => {
    * @description useEffect to fetch actionJsonData when ModalData is defined
    */
   useEffect(() => {
-    if (isModalOpen) {
-      console.log("Modal is open");
-    }
   }, [isModalOpen]);
 
   /**
@@ -68,6 +58,18 @@ const Home = () => {
   const handleSearch = () => {
     console.log("Search");
   };
+
+  /**
+   * @function useEffect
+   * @description useEffect to fetch actionJsonData when ModalData is defined
+   */
+  useEffect(() => {
+    const services = actionReactionJsonDataService.getServices();
+
+    services.then((services) => {
+      setServicesList(services);
+    });
+  }, []);
 
   const redirectToProfile = () => {
     router.navigate("profile" as never);
@@ -116,7 +118,7 @@ const Home = () => {
           animationType="slide"
           transparent={true}
           visible={isModalOpen}
-          style={{ flex: 1, position: "absolute", top: 0, left: 0 }}
+          style={{flex: 1, position: "absolute", top: 0, left: 0}}
           onRequestClose={() => {
             setIsModalOpen(false);
           }}

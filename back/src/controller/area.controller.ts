@@ -85,7 +85,7 @@ const getReactionsFromActionId = async (req: Request, res: Response): Promise<vo
             res.status(400).json({error: "Action not found"});
             return;
         }
-        const reactions: Reaction[] | null = await AreaMiddleware.getReactionsFromIds(action.reactionsIds);
+        const reactions: Reaction[] | null = await AreaMiddleware.getReactionsFromIds(action.reactionsIds, (req as CustomRequest).user.userId);
 
         res.status(200).json(reactions);
     } catch (error: any) {

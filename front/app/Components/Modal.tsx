@@ -52,9 +52,7 @@ const ModalUI: React.FC<{
       return;
     }
     const actionTokenIds: number[] = await actionReactionJsonDataService.getOauthIdsFromServiceId(ModalData.id);
-    console.log("actionTokenIds", actionTokenIds);
     if (actionTokenIds.length === 0) {
-      console.error("Error in checkIfThereIsAnOauthToken: actionTokenIds is empty");
       setIsThereAnOauthToken(
         <div className="flex flex-col items-center justify-center">
           You must be connected to the service to create an AREA
