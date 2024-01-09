@@ -39,21 +39,23 @@ import { EncryptionService } from '../../services/encryption.service';
  */
 const registerToken = async (req: Request, res: Response): Promise<Response> => {
     const userInfo: TokenData = (req as CustomRequest).user
+    const { accessToken, refreshToken, expiresIn, serviceId } = req.body;
+    const guildId = req.params.guildId;
+
+    if (!process.env.DISCORD_SERVICE_ID || Number(process.env.DISCORD_SERVICE_ID) !== serviceId) {
+        return res.status(400).json({ error: "Wrong service id" });
+    }
+    if (!accessToken || !refreshToken || !expiresIn) {
+        return res.status(401).json({ error: "No tokens provided" });
+    }
+    if (!guildId) {
+        return res.status(401).json({ error: "No guild ID provided" });
+    }
 
     try {
-        const { accessToken, refreshToken, expiresIn, serviceId } = req.body
-        const encryptedAccessToken: { iv: string; content: string } = EncryptionService.encrypt(accessToken)
-        const encryptedRefreshToken: { iv: string; content: string } = EncryptionService.encrypt(refreshToken)
+        const encryptedAccessToken: { iv: string; content: string } = EncryptionService.encrypt(accessToken);
+        const encryptedRefreshToken: { iv: string; content: string } = EncryptionService.encrypt(refreshToken);
 
-        if (!process.env.DISCORD_SERVICE_ID || Number(process.env.DISCORD_SERVICE_ID) !== serviceId) {
-            return res.status(400).json({ error: "Wrong service id" })
-        }
-        if (!accessToken || !refreshToken || !expiresIn) {
-            return res.status(401).json({ error: "No tokens provided" })
-        }
-        if (!req.params.guildId) {
-            return res.status(401).json({ error: "No guild ID provided" })
-        }
         const OAuthData = await OAuth.create({
             serviceId: serviceId,
             encryptedAccessToken: encryptedAccessToken.content,
