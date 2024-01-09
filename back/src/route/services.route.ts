@@ -12,5 +12,6 @@ import refreshMicrosoftTokens from '../middleware/services/refreshCallback/micro
 /** Definitions of routes */
 router.post('/spotify/registerToken', verifyToken, spotifyAuth, refreshTokens, userAlreadyAuth, spotifyController.registerToken)
 router.post('/microsoft/registerToken', verifyToken, microsoftAuth, userAlreadyAuthMicrosoft, microsoftController.registerToken)
+router.get('/microsoft/userHasToken', verifyToken, microsoftController.userHasToken)
 
 export default router;

@@ -42,4 +42,18 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
     }
 }
 
-export { registerToken };
+const userHasToken = async (req: Request, res: Response): Promise<Response> => {
+    const userInfo : TokenData = (req as CustomRequest).user
+    try {
+        const OAuthData = await OAuth.findOne({where: {ownerId: userInfo.userId, serviceId: process.env.MICROSOFT_SERVICE_ID}})
+        if (!OAuthData) {
+            return res.status(400).json({ error: "No token found" })
+        }
+        return res.status(200).json({ OAuthData })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({ error: "An unexpected error occurred" })
+    }
+}
+
+export { registerToken , userHasToken }
