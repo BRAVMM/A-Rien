@@ -1,9 +1,13 @@
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Modal, TouchableOpacity } from "react-native";
+import {Modal, TouchableOpacity, View} from "react-native";
 
 import colors from "../../constants/Colors";
+import {styled} from "nativewind";
+import {black} from "colorette";
+
+const StyledView = styled(View);
 
 const BravmmModal: React.FC<{
   visible: boolean;
@@ -21,12 +25,6 @@ const BravmmModal: React.FC<{
   transparent,
 }) => {
   return (
-    <LinearGradient
-      colors={[colors.light.primary, colors.light.background]} // Start with your original color and end with gray
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={{ flex: 1 }}
-    >
       <Modal
         animationType={animationType}
         visible={visible}
@@ -34,15 +32,22 @@ const BravmmModal: React.FC<{
         style={style}
         transparent={transparent}
       >
-        <TouchableOpacity onPress={onRequestClose}>
+        <TouchableOpacity onPress={onRequestClose} style={{height: "10%"}}/>
+        <TouchableOpacity onPress={onRequestClose} style={{position: "absolute", top: "11%", left: "90%", zIndex: 20,  width: "5%", height: "5%"}}>
           <Image
-            source={require("./../../assets/images/close.png")}
-            style={{ width: 75, height: 75, top: "30%", left: "80%" }}
+              source={require("./../../assets/images/close.png")}
+              style={{width: "100%", height: "100%"}}
           />
         </TouchableOpacity>
-        {children}
+        <LinearGradient
+            colors={[colors.light.secondary, colors.light.background]} // Start with your original color and end with gray
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={{flex: 1, borderRadius: 25, backgroundColor: "black"}}
+        >
+          {children}
+        </LinearGradient>
       </Modal>
-    </LinearGradient>
   );
 };
 

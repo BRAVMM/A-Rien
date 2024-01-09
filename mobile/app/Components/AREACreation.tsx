@@ -16,6 +16,7 @@ import {
 } from "../Interfaces/ModalData.interface";
 import actionReactionJsonDataService from "../Utils/actionReactionJsonData.serivce";
 import { storeArea } from "../Utils/callApi";
+import BravmmModal from "./BravmmModal";
 
 const AREACreationModal: React.FC<{
   isOpen: boolean;
@@ -392,7 +393,7 @@ const AREACreationModal: React.FC<{
   };
 
   return (
-    <Modal visible={isOpen} animationType="slide" onRequestClose={onClose}>
+    <BravmmModal visible={isOpen} animationType="slide" onRequestClose={onClose} transparent={true} style={{flex: 1, position: "absolute", top: 0, left: 0}}>
       <SafeAreaView style={{ flex: 1, padding: 20 }}>
         <TouchableOpacity onPress={onClose}>
           <Text>Close</Text>
@@ -401,7 +402,7 @@ const AREACreationModal: React.FC<{
           <RenderContent />
         </ScrollView>
       </SafeAreaView>
-    </Modal>
+    </BravmmModal>
   );
 };
 

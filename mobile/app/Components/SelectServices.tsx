@@ -65,12 +65,6 @@ const SelectServices = () => {
 
   return (
     // eslint-disable-next-line react/jsx-no-undef
-    <LinearGradient
-      colors={[colors.light.primary, colors.light.background]} // Start with your original color and end with gray
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}
-      style={{flex: 1}}
-    >
       <StyledSafeAreaView className="flex-1 justify-center">
         {service ? (
           <AREACreationModal
@@ -99,7 +93,6 @@ const SelectServices = () => {
             ))}
         </StyledView>
       </StyledSafeAreaView>
-    </LinearGradient>
   );
 };
 

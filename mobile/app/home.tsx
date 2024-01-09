@@ -17,129 +17,130 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledSafeAreaView = styled(SafeAreaView);
 
 const Home = () => {
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [servicesList, setServicesList] = useState<ModalDataInterface[]>();
-  const [service, setService] = useState<ModalDataInterface>();
-  const [search, setSearch] = useState<string>("");
-  const router = useNavigation();
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [servicesList, setServicesList] = useState<ModalDataInterface[]>();
+    const [service, setService] = useState<ModalDataInterface>();
+    const [search, setSearch] = useState<string>("");
+    const router = useNavigation();
 
-  const servicePicture: { [key: string]: string } = {
-    Discord: require("./../assets/images/logos/Discord_logo.png"),
-    Twitch: require("./../assets/images/logos/Twitch_logo.png"),
-    Spotify: require("./../assets/images/logos/Spotify_logo.png"),
-    Teams: require("./../assets/images/logos/Teams_logo.png"),
-    Gmail: require("./../assets/images/logos/Gmail_logo.png"),
-    Outlook: require("./../assets/images/logos/Outlook_logo.png"),
-    TrackerGG: require("./../assets/images/logos/TrackerGG_logo.png"),
-    Onedrive: require("./../assets/images/logos/Onedrive_logo.png"),
-    Weather: require("./../assets/images/logos/Weather_logo.png"),
-    Timer: require("./../assets/images/logos/Timer_logo.png"),
-  };
+    const servicePicture: { [key: string]: string } = {
+        Discord: require("./../assets/images/logos/Discord_logo.png"),
+        Twitch: require("./../assets/images/logos/Twitch_logo.png"),
+        Spotify: require("./../assets/images/logos/Spotify_logo.png"),
+        Teams: require("./../assets/images/logos/Teams_logo.png"),
+        Gmail: require("./../assets/images/logos/Gmail_logo.png"),
+        Outlook: require("./../assets/images/logos/Outlook_logo.png"),
+        TrackerGG: require("./../assets/images/logos/TrackerGG_logo.png"),
+        Onedrive: require("./../assets/images/logos/Onedrive_logo.png"),
+        Weather: require("./../assets/images/logos/Weather_logo.png"),
+        Timer: require("./../assets/images/logos/Timer_logo.png"),
+    };
 
-  /**
-   * @function useEffect
-   * @description useEffect to fetch actionJsonData when ModalData is defined
-   */
-  useEffect(() => {
-    if (isModalOpen) {
-      console.log("Modal is open");
+    /**
+     * @function useEffect
+     * @description useEffect to fetch actionJsonData when ModalData is defined
+     */
+    useEffect(() => {
+        if (isModalOpen) {
+            console.log("Modal is open");
+        }
+    }, [isModalOpen]);
+
+    /**
+     * @function useEffect
+     * @description useEffect to fetch actionJsonData when ModalData is defined
+     */
+    useEffect(() => {
+        const services = actionReactionJsonDataService.getServices();
+
+        services.then((services) => {
+            setServicesList(services);
+        });
+    }, []);
+
+    // TODO: Implement search functionality
+    const handleSearch = () => {
+        console.log("Search");
     }
-  }, [isModalOpen]);
 
-  /**
-   * @function useEffect
-   * @description useEffect to fetch actionJsonData when ModalData is defined
-   */
-  useEffect(() => {
-    const services = actionReactionJsonDataService.getServices();
+    /**
+     * @function handleModal
+     * @description handleModal to open the modal
+     * @param {ModalDataInterface} service - service to display in the modal
+     */
+    const handleModal = (service: ModalDataInterface) => {
+        setService(service);
+        setIsModalOpen(true);
+    };
 
-    services.then((services) => {
-      setServicesList(services);
-    });
-  }, []);
+    const redirectToProfile = () => {
+        router.navigate("profile" as never);
+    };
 
-  // TODO: Implement search functionality
-  const handleSearch = () => {
-    console.log("Search");
-  }
-
-  /**
-   * @function handleModal
-   * @description handleModal to open the modal
-   * @param {ModalDataInterface} service - service to display in the modal
-   */
-  const handleModal = (service: ModalDataInterface) => {
-    setService(service);
-    setIsModalOpen(true);
-  };
-
-  const redirectToProfile = () => {
-    router.navigate("profile" as never);
-  };
-
-  return (
-    <LinearGradient
-      colors={[colors.light.primary, colors.light.background]} // Start with your original color and end with gray
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}
-      style={{flex: 1}}
-    >
-      <StyledText className="text-white text-2xl font-bold top-[10%] left-[10%]">
-        Your AREAs
-      </StyledText>
-
-      <TouchableOpacity
-        onPress={() => redirectToProfile()}
-        className="w-1/6 h-1/6 flex items-center justify-center"
-      >
-        <Image
-          source={require("./../assets/images/logobravm.png")}
-          style={{width: 45, height: 55, top: "70%", left: "80%"}}
-        />
-      </TouchableOpacity>
-
-      <StyledView className="top-[10%] items-center z-10">
-        <StyledTextInput
-          autoCapitalize="none"
-          value={search}
-          onChangeText={(text) => setSearch(text)}
-          className="p-4 text-sm rounded-lg w-[90%]"
-          style={{backgroundColor: colors.light.background}}
-          placeholder="Search services"
-        />
-        <StyledTouchableOpacity
-          onPress={handleSearch}
-          className="absolute end-2.5 bottom-2.5 rounded-lg h-8 w-20 flex items-center justify-center"
-          style={{left: "70%", backgroundColor: colors.light.secondary}}
+    return (
+        <LinearGradient
+            colors={[colors.light.primary, colors.light.background]} // Start with your original color and end with gray
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={{flex: 1}}
         >
-          <StyledText className="text-white text-sm">Search</StyledText>
-        </StyledTouchableOpacity>
-      </StyledView>
+            <StyledText className="text-white text-2xl font-bold top-[10%] left-[10%]">
+                Your AREAs
+            </StyledText>
 
-      <BravmmModal
-        animationType="slide"
-        transparent={true}
-        visible={isModalOpen}
-        onRequestClose={() => {
-          setIsModalOpen(false);
-        }}
-      >
-        <SelectServices/>
-      </BravmmModal>
-      <StyledTouchableOpacity
-        onPress={() => setIsModalOpen(true)}
-        className="w-[100%] h-[11%] absolute top-[90%] left-[80%]"
-      >
-        <Image
-          source={require("./../assets/images/plus.png")}
-          style={{
-            width: "16.75%",
-            height: "70%",
-          }}
-        />
-      </StyledTouchableOpacity>
-    </LinearGradient>
-  );
+            <TouchableOpacity
+                onPress={() => redirectToProfile()}
+                className="w-1/6 h-1/6 flex items-center justify-center"
+            >
+                <Image
+                    source={require("./../assets/images/logobravm.png")}
+                    style={{width: 45, height: 55, top: "70%", left: "80%"}}
+                />
+            </TouchableOpacity>
+            <SafeAreaView style={{flex: 1}}>
+                <StyledView className="top-[10%] items-center z-10">
+                    <StyledTextInput
+                        autoCapitalize="none"
+                        value={search}
+                        onChangeText={(text) => setSearch(text)}
+                        className="p-4 text-sm rounded-lg w-[90%]"
+                        style={{backgroundColor: colors.light.background}}
+                        placeholder="Search services"
+                    />
+                    <StyledTouchableOpacity
+                        onPress={handleSearch}
+                        className="absolute end-2.5 bottom-2.5 rounded-lg h-8 w-20 flex items-center justify-center"
+                        style={{left: "70%", backgroundColor: colors.light.secondary}}
+                    >
+                        <StyledText className="text-white text-sm">Search</StyledText>
+                    </StyledTouchableOpacity>
+                </StyledView>
+
+                <BravmmModal
+                    animationType="slide"
+                    transparent={true}
+                    visible={isModalOpen}
+                    style={{flex: 1, position: "absolute", top: 0, left: 0}}
+                    onRequestClose={() => {
+                        setIsModalOpen(false);
+                    }}
+                >
+                    <SelectServices/>
+                </BravmmModal>
+                <StyledView className="absolute top-[90%] left-[75%]" style={{width: 60, height: 60}}>
+                    <StyledTouchableOpacity
+                        onPress={() => setIsModalOpen(true)}
+                        className="flex-1 justify-center items-center"
+                    >
+                        <Image
+                            source={require("./../assets/images/plus.png")}
+                            style={{width: "100%", height: "100%"}}
+                        />
+                    </StyledTouchableOpacity>
+                </StyledView>
+            </SafeAreaView>
+        </LinearGradient>
+    );
 };
 
 export default withExpoSnack(Home);
