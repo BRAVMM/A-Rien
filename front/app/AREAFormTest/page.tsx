@@ -17,7 +17,16 @@ const Page = () => {
     const [datas, setDatas] = React.useState<string>("");
 
     useEffect(() => {
-        if (Object.keys(JSON.parse(datas)).length !== 0) {
+        try {
+            if (Object.keys(JSON.parse(datas)).length !== 0) {
+                console.log("data filled");
+                console.log(datas);
+            } else {
+                console.log("nope");
+            }
+        } catch (error) {
+            console.error("Failed to parse datas:", error);
+        }
             console.log("data filled");
             console.log(datas);
         } else {
