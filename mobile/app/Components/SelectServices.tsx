@@ -2,7 +2,7 @@ import { styled, withExpoSnack } from "nativewind";
 import React, { useEffect, useState } from "react";
 import {
   Image,
-  SafeAreaView,
+  SafeAreaView, ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -74,25 +74,38 @@ const SelectServices = () => {
           ModalData={service}
         />
       ) : null}
-      <StyledView>
-        {servicesList !== undefined &&
-          servicesList?.map((service) => (
-            <StyledTouchableOpacity
-              key={service.id}
-              className="flex items-center justify-center w-[30%] h-[30%] m-5"
-              onPress={() => handleModal(service)}
-            >
-              <Image
-                // @ts-ignore
-                source={servicePicture[service.name]}
-                style={{ width: 100, height: 100 }}
-              />
-              <StyledText className="text-white text-2xl font-bold absolute left-[150%]">
-                {service.name}
-              </StyledText>
-            </StyledTouchableOpacity>
-          ))}
+      <StyledView className="flex flex-row items-center justify-center mt-[15%]">
+        <StyledText className="text-white text-4xl font-bold">
+          Select a service
+        </StyledText>
       </StyledView>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          flex: 1,
+          justifyContent: "center",
+        }}
+      >
+        <StyledView className="mb-[70%]">
+          {servicesList !== undefined &&
+            servicesList?.map((service) => (
+              <StyledTouchableOpacity
+                key={service.id}
+                className="flex items-center justify-center w-[30%] h-[30%] m-5"
+                onPress={() => handleModal(service)}
+              >
+                <Image
+                  // @ts-ignore
+                  source={servicePicture[service.name]}
+                  style={{ width: 100, height: 100 }}
+                />
+                <StyledText className="text-white text-2xl font-bold absolute left-[150%]">
+                  {service.name}
+                </StyledText>
+              </StyledTouchableOpacity>
+            ))}
+        </StyledView>
+      </ScrollView>
     </StyledSafeAreaView>
   );
 };
