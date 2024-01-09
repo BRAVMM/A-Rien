@@ -11,6 +11,10 @@ export default function Profile() {
   const [user, setUser] = useState(null);
   const router = useRouter();
 
+  const [editableUsername, setEditableUsername] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [error, setError] = useState('');
+
   const AUTH_ENDPOINT = `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_MICROSOFT_TENANT_ID}/oauth2/v2.0/authorize`;
   const RESPONSE_TYPE = "code";
   const SCOPE = "openid profile offline_access email user.read";
@@ -42,6 +46,45 @@ export default function Profile() {
 
     checkToken();
   }, [router]);
+
+  const handleEditClick = () => {
+    setEditableUsername(user?.username || '');
+    setIsEditing(true);
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+  };
+
+  const handleSaveClick = async () => {
+    const token = Cookies.get('token');
+
+    if (!token) {
+      router.push('/login');
+      return;
+    }
+
+    const response = await fetch(process.env.NEXT_PUBLIC_API + '/users/modifyUsername', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+      body: JSON.stringify({
+        username: user?.username,
+        newUsername: editableUsername
+      }),
+    });
+
+    if (response.ok) {
+      const updatedUserData = await response.json();
+      setUser(updatedUserData);
+      setIsEditing(false);
+    } else {
+      console.error('Error updating username');
+      setError('Error updating username');
+    }
+  };
 
   return (
     <div className="relative h-screen flex">
@@ -76,7 +119,40 @@ export default function Profile() {
       </div>
       <div className="flex-1 relative h-full">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-radial from-[#24204A] to-[#0B0534]">
-          <h1>Profile</h1>
+          {isEditing ? (
+            <div className="flex flex-col items-center justify-center h-full">
+              <input
+                type="text"
+                className="border-2 border-white rounded-md p-2 mb-4 text-black"
+                value={editableUsername}
+                onChange={(e) => setEditableUsername(e.target.value)}
+              />
+              <div className="flex">
+                <button
+                  className="text-white text-xl font-bold mr-4 bg-fourthly rounded-md px-4 hover:bg-indigo-500"
+                  onClick={handleSaveClick}
+                >
+                  Save
+                </button>
+                <button
+                  className="text-white text-xl font-bold bg-fourthly rounded-md px-4 hover:bg-indigo-500"
+                  onClick={handleCancelClick}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <h1 className="text-white text-4xl font-bold">{user?.username}</h1>
+              <button
+                className="text-white text-xl font-bold ml-4 bg-fourthly rounded-md px-4 hover:bg-indigo-500"
+                onClick={handleEditClick}
+              >
+                Edit
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

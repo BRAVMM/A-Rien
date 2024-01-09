@@ -8,5 +8,7 @@ router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.post('/logout', verifyToken, userController.logout);
 router.get('/me', verifyToken, userController.getUserInfo);
+router.delete('/delete', verifyToken, userController.deleteAccount);
+router.put('/modifyUsername', verifyToken, userController.modifyUsername);
 
 export default router;
