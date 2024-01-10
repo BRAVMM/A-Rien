@@ -181,7 +181,7 @@ const addActionsToDB = async () => {
                         description: 'Enter a number (in minutes)',
                         range: [1, 1440],
                     }],
-                    reactionsIds: [2],
+                    reactionsIds: [2, 3],
                 },
             ]
         },
@@ -242,6 +242,28 @@ const addReactionsToDB = async () => {
                             type: 'string',
                             description: "Enter a playlist id",
                         },
+                    ],
+                },
+            ]
+        },
+        {
+            name: 'Outlook',
+            reactions: [
+                {
+                    id: 3,
+                    name: 'Send email',
+                    description: 'Send an email',
+                    args: [
+                        {
+                            title: "emailPayload",
+                            type: 'string',
+                            description: "Enter an email where to send the message",
+                        },
+                        {
+                            title: "message",
+                            type: 'string',
+                            description: "Enter a message",
+                        }
                     ],
                 },
             ]
