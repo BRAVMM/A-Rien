@@ -11,10 +11,15 @@ class Service extends Model {
     public static initialize(sequelize: Sequelize) {
         Service.init(
             {
+                _id: {
+                    type: DataTypes.INTEGER,
+                    autoIncrement: true,
+                    primaryKey: true,
+                },
                 id: {
                     type: DataTypes.INTEGER,
-                    primaryKey: true,
-                    autoIncrement: true,
+                    unique: false,
+                    allowNull: false,
                 },
                 name: {
                     type: DataTypes.STRING,
