@@ -313,11 +313,17 @@ const getAreas = async (req: Request, res: Response): Promise<void> => {
                 res.status(400).json({error: "Action not found"});
                 return;
             }
+            const service = await AreaMiddleware.getServiceFromActionId(action.id);
+            if (!service) {
+                res.status(400).json({error: "Service not found"});
+                return;
+            }
+
             const actionTitle = JSON.parse(actionData.title)["AREA name"];
             const area: AreaData = {
                 id: actionData.id,
                 title: actionTitle,
-                actionName: action.name,
+                serviceName: service.name,
                 isActivated: actionData.isActivated
             };
             areas.push(area);

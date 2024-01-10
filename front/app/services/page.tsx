@@ -35,12 +35,6 @@ export default function Services() {
   const [areas, setAreas] = useState<AreaDetailsInterface[]>([]);
   const router = useRouter();
 
-  useEffect(() => {
-    actionReactionJsonDataService.getAreas().then((areas) => {
-      setAreas(areas);
-    });
-  }, []);
-
   /**
    * @function useEffect
    * @description useEffect to fetch actionJsonData when ModalData is defined
@@ -56,11 +50,7 @@ export default function Services() {
    * @description useEffect to fetch actionJsonData when ModalData is defined
    */
   useEffect(() => {
-    const services = actionReactionJsonDataService.getServices();
-
-    services.then((services) => {
-      setServicesList(services);
-    });
+    fetchAreas();
   }, []);
 
   /**
@@ -71,6 +61,14 @@ export default function Services() {
     redirectNotLogged();
   }
     , []);
+
+  async function fetchAreas() {
+    const services = actionReactionJsonDataService.getServices();
+    const areaData = actionReactionJsonDataService.getAreas();
+
+    setServicesList(await services);
+    setAreas(await areaData);
+  }
 
   /**
    * @function redirectNotLogged
@@ -160,7 +158,7 @@ export default function Services() {
               className="w-full h-1/2 flex items-center justify-center"
               onClick={() => handleModal(service)}            >
               <IconService
-                path={servicePicture[service.name]}
+                path={getImageFromName(service.name)}
                 witdh={100}
                 height={100}
                 name={service.name}
@@ -181,7 +179,7 @@ export default function Services() {
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-20">
                 {areas.length > 0 ? areas.map((area: AreaDetailsInterface) => (
                   <div key={area.id} className="h-56 w-56">
-                    <AreaIcon id={area.id} image={getImageFromName(area.actionName)} name={area.title} status={area.isActivated} />
+                    <AreaIcon image={getImageFromName(area.serviceName)} name={area.title} status={area.isActivated} />
                   </div>
                 ))
                   : <p className="font-bold justify-center" >No areas</p>

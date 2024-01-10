@@ -14,7 +14,7 @@
 interface AreaDetailsInterface {
     id: number;
     title: string;
-    actionName: string;
+    serviceName: string;
     isActivated: boolean;
 }
 

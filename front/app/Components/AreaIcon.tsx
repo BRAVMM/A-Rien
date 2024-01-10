@@ -1,9 +1,14 @@
 import React from "react";
 import Image from "next/image"; // Import from next/image
-import { AreaDetailsInterface } from "../Interfaces/AreaDetails.Interface";
 import Pastille from "./Pastille";
 
-function AreaIcon({ id, image, name, status }: AreaDetailsInterface) {
+interface AreaIconProps {
+  image: string;
+  name: string;
+  status: boolean;
+}
+
+function AreaIcon({ image, name, status }: AreaIconProps) {
   return (
     <div className="flex items-center container flex-col aspect-square bg-[#382B59] rounded-xl overflow-hidden">
       <div className="flex basis-1/3 w-full flex-row">
