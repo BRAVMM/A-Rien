@@ -182,6 +182,53 @@ const getOauthIdsFromReactionId = async (req: Request, res: Response): Promise<v
     }
 }
 
+const getAreas = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user: TokenData = (req as CustomRequest).user;
+        const actionData: ActionData[] | null = await AreaMiddleware.getActionDataFromOwnerId(user.userId);
+
+        if (!actionData) {
+            res.status(400).json({error: "ActionData not found"});
+            return;
+        }
+        const areas: Area[] = [];
+        for (let i: number = 0; i < actionData.length; i++) {
+            const actionDataTemp: ActionData = actionData[i];
+            const action: Action | null = await AreaMiddleware.getActionFromId(actionDataTemp.actionId);
+
+            if (!action) {
+                res.status(400).json({error: "Action not found"});
+                return;
+            }
+            const reactionsData: ReactionData[] | null = await AreaMiddleware.getReactionDataFromIds(actionDataTemp.reactionsDataIds);
+
+            if (!reactionsData) {
+                res.status(400).json({error: "ReactionsData not found"});
+                return;
+            }
+            const reactions: Reaction[] | null = await AreaMiddleware.getReactionsFromIds(action.reactionsIds);
+
+            if (!reactions) {
+                res.status(400).json({error: "Reactions not found"});
+                return;
+            }
+            const area: Area = {
+                id: actionDataTemp.id,
+                name: actionDataTemp.title,
+                action: action,
+                actionData: actionDataTemp.data,
+                reactions: reactions,
+                reactionsData: reactionsData
+            }
+            areas.push(area);
+        }
+        res.status(200).json(areas);
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
 /**
  * Store area
  * @param req - This is the request object containing the area data
@@ -266,5 +313,6 @@ export {
     storeArea,
     getOauthIdsFromServiceId,
     getOauthIdsFromActionId,
-    getOauthIdsFromReactionId
+    getOauthIdsFromReactionId,
+    getAreas
 };
