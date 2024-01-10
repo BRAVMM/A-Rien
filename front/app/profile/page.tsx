@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Cookies from "js-cookie";
 import ServiceConnection from "../Components/ServiceOauthButton";
+import SpotifyButtonOAuth from "../Components/services/LoginSpotify";
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -112,9 +113,10 @@ export default function Profile() {
             user={user}
             service="Microsoft"
             onClick={() => {
-              window.location.href = `${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_MICROSOFT_REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
+              window.location.href = `${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_MICROSOFT_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_MICROSOFT_REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}&prompt=select_account`;
             }}
           />
+          <SpotifyButtonOAuth/>
         </div>
       </div>
       <div className="flex-1 relative h-full">
