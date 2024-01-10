@@ -24,6 +24,7 @@ const App = () => {
                 },
             );
         } catch (error) {
+            console.error("Error checking login status:", error);
             return false;
         }
         return response.ok;
@@ -37,7 +38,9 @@ const App = () => {
         }
     }
 
-    checkAuth().then(r => r);
+    (async () => {
+        await checkAuth();
+    })();
     return <></>;
 };
 
