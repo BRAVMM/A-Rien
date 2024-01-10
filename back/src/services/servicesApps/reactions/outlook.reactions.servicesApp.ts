@@ -19,11 +19,7 @@ namespace OutlookReactions {
      * @returns {Promise<boolean>} - The result of the reaction
      */
     export const reactionOutlookSendEmail = async (ownerId: number, oauthId: number, actionData: JSON, reactionData: JSON): Promise<boolean> => {
-        console.log("azeazeazezaeazeazezaezaezaeeazeaz");
         const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
-        console.log(oauthId);
-        console.log(ownerId);
-        console.log("azeazeazezaeazeazezaezaezaeeazeaz");
         if (oauthToken === null) {
             console.error("OAuth token not found");
             return false;
@@ -35,45 +31,36 @@ namespace OutlookReactions {
         const emailPayload = reactionDataParsed[0].emailPayload;
         const message = reactionDataParsed[1].message;
 
-        console.log("emailPayload : " + emailPayload);
-        console.log("message : " + message);
-
         const headers = new Headers({
             'Authorization': `Bearer ${oauthToken}`,
             'Content-Type': 'application/json',
         });
-
-        const emailData: any =
-                {
-                    message: {
-                        subject: "Meet for lunch?",
-                        body: {
-                            contentType: "Text",
-                            content: message
-                        },
-                        toRecipients: [
-                            {
-                                emailAddress: {
-                                    address: emailPayload
-                                }
-                            }
-                        ]
-                    },
-                    saveToSentItems: "true"
-                }
-
+        const emailData = {
+            "message": {
+                "subject": "Meet for lunch?",
+                "body": {
+                    "contentType": "Text",
+                    "content": message.toString()
+                },
+                "toRecipients": [
+                    {
+                        "emailAddress": {
+                            "address": emailPayload.toString()
+                        }
+                    }
+                ]
+            },
+            "saveToSentItems": "true"
+        }
         const response = await fetch(apiUrl, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(emailData),
         });
-
-        const data = await response.json();
-
-        console.log(data);
-        console.log(actionData);
-        console.log(reactionData);
-        console.log("reactionDataParsed : " + reactionDataParsed[0]);
+        if (!response.ok) {
+            console.error("Error sending email");
+            return false;
+        }
         return true;
     }
 }
