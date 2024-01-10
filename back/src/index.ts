@@ -72,6 +72,18 @@ const addServicesToDB = async () => {
             name: 'Timer',
             actionsId: [8],
             reactionsId: [],
+        },
+        {
+            id: 4,
+            name: 'Teams',
+            actionsId: [],
+            reactionsId: [],
+        },
+        {
+            id: 5,
+            name: 'Outlook',
+            actionsId: [],
+            reactionsId: [],
         }
     ];
 
@@ -170,6 +182,18 @@ const addActionsToDB = async () => {
                         range: [1, 1440],
                     }],
                     reactionsIds: [2],
+                },
+            ]
+        },
+        {
+            name: 'Teams',
+            actions: [
+                {
+                    id: 9,
+                    name: 'When a new message is received',
+                    description: 'When a new message is received',
+                    args: [],
+                    reactionsIds: [3],
                 },
             ]
         }
