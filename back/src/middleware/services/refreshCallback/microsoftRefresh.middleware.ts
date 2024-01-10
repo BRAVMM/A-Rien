@@ -1,5 +1,5 @@
 import { OAuth } from "../../../models/oauth.model";
-import getRefreshedToken from "../../../services/API/Spotify/refreshToken.service";
+import getRefreshedToken from "../../../services/API/Microsoft/refreshToken.services";
 import { EncryptionService } from "../../../services/encryption.service";
 
 /**
@@ -33,6 +33,7 @@ const refreshMicrosoftTokens = async (tokens : OAuth[]): Promise<void> => {
         } else {
             throw new Error("Could not refresh Microsoft tokens")
         }
+
     }
 }
 
