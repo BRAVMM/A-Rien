@@ -19,6 +19,7 @@ namespace OutlookReactions {
      * @returns {Promise<boolean>} - The result of the reaction
      */
     export const reactionOutlookSendEmail = async (ownerId: number, oauthId: number, actionData: JSON, reactionData: JSON): Promise<boolean> => {
+        console.log("azeazeazezaeazeazezaezaezaeeazeaz");
         const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
         console.log(oauthId);
         console.log(ownerId);
