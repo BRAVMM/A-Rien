@@ -3,7 +3,7 @@
  */
 
 /* Services */
-import {OAuthService} from "../../oauth.service";
+import { OAuthService } from "../../oauth.service";
 
 /**
  * @namespace OutlookReactions
@@ -31,32 +31,36 @@ namespace OutlookReactions {
 
         const apiUrl = 'https://graph.microsoft.com/v1.0/me/sendMail';
         const actionDataParsed: any = actionData;
-        const reactionDataParsed: any = JSON.parse(JSON.stringify(reactionData));
+        const reactionDataParsed: any = JSON.parse(reactionData.toString());
         const emailPayload = reactionDataParsed[0].emailPayload;
         const message = reactionDataParsed[1].message;
+
+        console.log("emailPayload : " + emailPayload);
+        console.log("message : " + message);
 
         const headers = new Headers({
             'Authorization': `Bearer ${oauthToken}`,
             'Content-Type': 'application/json',
         });
 
-        const emailData = {
-            "message": {
-                "subject": emailPayload,
-                "body": {
-                    "contentType": "Text",
-                    "content": message
-                },
-                "toRecipients": [
-                    {
-                        "emailAddress": {
-                            "address": emailPayload
-                        }
-                    }
-                ]
-            },
-            "saveToSentItems": "false"
-        };
+        const emailData: any =
+                {
+                    message: {
+                        subject: "Meet for lunch?",
+                        body: {
+                            contentType: "Text",
+                            content: message
+                        },
+                        toRecipients: [
+                            {
+                                emailAddress: {
+                                    address: emailPayload
+                                }
+                            }
+                        ]
+                    },
+                    saveToSentItems: "true"
+                }
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -69,8 +73,9 @@ namespace OutlookReactions {
         console.log(data);
         console.log(actionData);
         console.log(reactionData);
+        console.log("reactionDataParsed : " + reactionDataParsed[0]);
         return true;
     }
 }
 
-export {OutlookReactions};
+export { OutlookReactions };
