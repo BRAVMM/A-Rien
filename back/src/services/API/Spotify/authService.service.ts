@@ -17,7 +17,8 @@ const getRedirectUri = (mobile: boolean) : string | undefined => {
  */
 const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthData> => {
     if (!process.env.SPOTIFY_REDIRECT_URI_WEB && !process.env.SPOTIFY_CLIENT_ID && !process.env.SPOTIFY_REDIRECT_URI_MOBILE && !process.env.SPOTIFY_SERVICE_ID) {
-        throw new Error ("Bad env configuration")
+        console.error("Les variables d'environnement Spotify ne sont pas définies")
+        throw new Error ("Les variables d'environnement Spotify ne sont pas définies")
     }
     const SPOTIFY_SERVICE_ID : number = Number(process.env.SPOTIFY_SERVICE_ID)
     const SPOTIFY_REDIRECT_URI : string = getRedirectUri(mobile) ?? ''

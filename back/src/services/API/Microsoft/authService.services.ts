@@ -11,6 +11,7 @@ const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthDat
     const TENANT_ID = process.env.MICROSOFT_CLIENT_TENANT_ID;
 
     if (!MICROSOFT_CLIENT_ID || !MICROSOFT_REDIRECT_URI || !TENANT_ID) {
+        console.error("Les variables d'environnement Microsoft ne sont pas définies")
         throw new Error("Les variables d'environnement Microsoft ne sont pas définies");
     }
 
@@ -37,7 +38,6 @@ const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthDat
         });
 
         const data = await microsoftResponse.json();
-        console.log(data);
         if (!microsoftResponse.ok) {
             console.error({errorMessage: "\x1b[31mAn error was caught\x1b[0m"} , data)
             throw new Error("Microsoft API error");

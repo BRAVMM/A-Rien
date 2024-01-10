@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
-import { Button } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { styled, withExpoSnack } from 'nativewind';
 
 const REGISTER_TOKEN_ROUTE = "/services/spotify/registerToken";
 
@@ -11,9 +12,13 @@ const discovery = {
   tokenEndpoint: 'https://accounts.spotify.com/api/token',
 };
 
-export default function App() {
-    const route = useRoute()
+const StyledView = styled(View);
+const StyledText = styled(Text);
+
+export default function LoginSpotify() {
     const clientID: string = process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_ID ?? ''
+    const [fetchError, setFetchError] = React.useState<boolean>(false)
+
 
     const [request, response, promptAsync] = useAuthRequest(
         {
@@ -48,8 +53,8 @@ export default function App() {
           throw new Error(error.error);
         }
       } catch (error) {
-        console.log(error)
-        return
+        console.error(error)
+        throw new Error("Error couldn't fetch API")
       }
     } 
 
@@ -57,17 +62,31 @@ export default function App() {
       if (response?.type === 'success') {
         const { code } = response.params;
 
-        apiCall(code)
+        if (code) {
+          const launchApiCall = async () => {
+            try {
+               await apiCall(code)
+            } catch (error) {
+              setFetchError(true);
+            }
+          }
+          launchApiCall()
+        }
       }
     }, [response]);
 
     return (
-      <Button
-        disabled={!request}
-        title="Login"
-        onPress={() => {
-          promptAsync();
-        }}
-      />
+      <StyledView>
+        <Button
+          /* @end */
+          title="Login"
+          onPress={() => {
+            promptAsync();
+          }}
+        />
+        {fetchError && <StyledText className="text-red-600">Error login failed.</StyledText>}
+    </StyledView>
     );
 }
+
+export default withExpoSnack(LoginSpotify);

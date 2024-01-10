@@ -4,21 +4,25 @@ import {
   useAuthRequest,
   useAutoDiscovery,
 } from 'expo-auth-session';
-import { Button } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { styled, withExpoSnack } from 'nativewind';
+
+const StyledView = styled(View);
+const StyledText = styled(Text);
 
 export default function LoginMicrosoft() {
 // Endpoint
-const discovery = useAutoDiscovery(
-  process.env.EXPO_PUBLIC_MICROSOFT_AUTHORIZE ?? '',
-);
-const redirectUri = makeRedirectUri({
-  scheme: 'myapp',
-  path: 'home',
-});
-const clientId = process.env.EXPO_PUBLIC_MICROSOFT_CLIENT_ID ?? '';
-
-const REGISTER_TOKEN_ROUTE = "/services/microsoft/registerToken";
+  const discovery = useAutoDiscovery(
+    process.env.EXPO_PUBLIC_MICROSOFT_AUTHORIZE ?? '',
+  );
+  const redirectUri = makeRedirectUri({
+    scheme: 'myapp',
+    path: 'home',
+  });
+  const clientId = process.env.EXPO_PUBLIC_MICROSOFT_CLIENT_ID ?? '';
+  const REGISTER_TOKEN_ROUTE = "/services/microsoft/registerToken";
+  const [fetchError, setFetchError] = React.useState<boolean>(false)
 
   const [request, response, promptAsync] = useAuthRequest(
     {
@@ -50,8 +54,8 @@ const REGISTER_TOKEN_ROUTE = "/services/microsoft/registerToken";
         throw new Error(error.error);
       }
     } catch (error) {
-      console.log(error)
-      return
+      console.error(error)
+      throw new Error("Error couldn't fetch API")
     }
   }
 
@@ -59,11 +63,21 @@ const REGISTER_TOKEN_ROUTE = "/services/microsoft/registerToken";
     if (response?.type === 'success') {
       const { code } = response.params;
 
-      apiCall(code)
+      if (code) {
+        const launchApiCall = async () => {
+          try {
+             await apiCall(code)
+          } catch (error) {
+            setFetchError(true);
+          }
+        }
+        launchApiCall()
+      }
     }
   }, [response]);
 
   return (
+    <StyledView>
       <Button
         /* @end */
         title="Login"
@@ -71,5 +85,9 @@ const REGISTER_TOKEN_ROUTE = "/services/microsoft/registerToken";
           promptAsync();
         }}
       />
+      {fetchError && <StyledText className="text-red-600">Error login failed.</StyledText>}
+    </StyledView>
   );
 }
+
+export default withExpoSnack(LoginMicrosoft);
