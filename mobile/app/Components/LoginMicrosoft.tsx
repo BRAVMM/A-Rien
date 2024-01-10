@@ -11,7 +11,7 @@ import { styled, withExpoSnack } from 'nativewind';
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
-export default function LoginMicrosoft() {
+const LoginMicrosoft = () => {
 // Endpoint
   const discovery = useAutoDiscovery(
     process.env.EXPO_PUBLIC_MICROSOFT_AUTHORIZE ?? '',

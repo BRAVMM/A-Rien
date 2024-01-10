@@ -15,7 +15,7 @@ const discovery = {
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
-export default function LoginSpotify() {
+const LoginSpotify = () => {
     const clientID: string = process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_ID ?? ''
     const [fetchError, setFetchError] = React.useState<boolean>(false)
 
