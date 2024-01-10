@@ -4,7 +4,7 @@ import { useMsal } from '@azure/msal-react';
 
 const AUTH_ENDPOINT = `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_MICROSOFT_TENANT_ID}/oauth2/v2.0/authorize`;
 const RESPONSE_TYPE = "code";
-const SCOPE = "openid profile offline_access email user.read mail.read mail.send";
+const SCOPE = "openid profile offline_access email user.readwrite user.read mail.read mail.send chat.readwrite";
 
 const MicrosoftButtonLogin: React.FC = () => {
   return (
