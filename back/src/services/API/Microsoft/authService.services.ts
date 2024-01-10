@@ -55,4 +55,4 @@ const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthDat
     }
 }
 
-export default authenticateUser
+export default authenticateUser 
