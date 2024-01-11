@@ -83,13 +83,11 @@ const EditArea = ({area, setNeedRefresh, setIsModalOpen}: {
                     thumbColor={isActivated ? colors.light.superlight : colors.light.sixthly}
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={async () => {
-                        console.log("toggleArea")
                         if (await toggleArea(area.id)) {
-                            console.log("toggleArea success")
                             setIsActivated(!isActivated);
                             setNeedRefresh(true)
                         } else {
-                            console.log("toggleArea failed")
+                            console.error("toggleArea failed")
                         }
                     }}
                     value={isActivated}
