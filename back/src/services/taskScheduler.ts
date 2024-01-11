@@ -38,6 +38,7 @@ const REACTIONS_FUNCTIONS: reactionFunction = {
     2: SpotifyReactions.reactionSpotifyAddRandomToPlaylist,
     3: OutlookReactions.reactionOutlookSendEmail,
     4: TeamsReactions.reactionTeamsSendMessage,
+    5: TeamsReactions.reactionTeamsSendMessageInTeamChannel,
 };
 
 /**

@@ -77,7 +77,7 @@ const addServicesToDB = async () => {
             id: 4,
             name: 'Teams',
             actionsId: [],
-            reactionsId: [4],
+            reactionsId: [4, 5],
         },
         {
             id: 4,
@@ -181,7 +181,7 @@ const addActionsToDB = async () => {
                         description: 'Enter a number (in minutes)',
                         range: [1, 1440],
                     }],
-                    reactionsIds: [2, 3, 4],
+                    reactionsIds: [2, 3, 4, 5],
                 },
             ]
         },
@@ -288,6 +288,23 @@ const addReactionsToDB = async () => {
                         }
                     ],
                 },
+                {
+                    id: 5,
+                    name: 'Send message to team channel',
+                    description: 'Send a message to the channel of a team chosen',
+                    args: [
+                        {
+                            title: "convName",
+                            type: 'string',
+                            description: "Link of the channel",
+                        },
+                        {
+                            title: "message",
+                            type: 'string',
+                            description: "Enter the message you want to send",
+                        }
+                    ],
+                }
             ]
         }
     ];
