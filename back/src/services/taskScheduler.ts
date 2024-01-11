@@ -39,6 +39,7 @@ const REACTIONS_FUNCTIONS: reactionFunction = {
     3: OutlookReactions.reactionOutlookSendEmail,
     4: TeamsReactions.reactionTeamsSendMessage,
     5: TeamsReactions.reactionTeamsSendMessageInTeamChannel,
+    6: OutlookReactions.reactionOutlookCreateFolder,
 };
 
 /**

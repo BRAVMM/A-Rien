@@ -83,7 +83,7 @@ const addServicesToDB = async () => {
             id: 4,
             name: 'Outlook',
             actionsId: [],
-            reactionsId: [3],
+            reactionsId: [3, 6],
         }
     ];
 
@@ -181,7 +181,7 @@ const addActionsToDB = async () => {
                         description: 'Enter a number (in minutes)',
                         range: [1, 1440],
                     }],
-                    reactionsIds: [2, 3, 4, 5],
+                    reactionsIds: [2, 3, 4, 5, 6],
                 },
             ]
         },
@@ -266,6 +266,18 @@ const addReactionsToDB = async () => {
                         }
                     ],
                 },
+                {
+                    id: 6,
+                    name: 'Create Folder',
+                    description: 'Create a folder',
+                    args: [
+                        {
+                            title: "folderName",
+                            type: 'string',
+                            description: "Enter a folder name",
+                        }
+                    ],
+                }
             ]
         },
         {

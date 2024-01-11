@@ -66,7 +66,7 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
 
     const params = new URLSearchParams({
         client_id: MICROSOFT_CLIENT_ID,
-        scope: 'openid email profile user.read', // Ajoutez ou modifiez les scopes selon les besoins
+        scope: 'openid email profile user.read mail.readwrite', // Ajoutez ou modifiez les scopes selon les besoins
         code: code,
         redirect_uri: MICROSOFT_REDIRECT_URI,
         grant_type: 'authorization_code',

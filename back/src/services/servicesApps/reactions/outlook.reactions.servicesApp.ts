@@ -63,6 +63,49 @@ namespace OutlookReactions {
         }
         return true;
     }
+
+
+    /**
+     * Add a song to a playlist
+     * @param ownerId - The id of the owner
+     * @param oauthId - The id of the OAuth
+     * @param actionData - The action data
+     * @param reactionData - The reaction data
+     * @returns {Promise<boolean>} - The result of the reaction
+     */
+
+    export const reactionOutlookCreateFolder = async (ownerId: number, oauthId: number, actionData: JSON, reactionData: JSON): Promise<boolean> => {
+        const oauthToken: string | null = await OAuthService.getDecryptedAccessTokenFromId(oauthId, ownerId);
+        if (oauthToken === null) {
+            console.error("OAuth token not found");
+            return false;
+        }
+
+        const apiUrl = 'https://graph.microsoft.com/v1.0/me/mailFolders';
+        const actionDataParsed: any = actionData;
+        const reactionDataParsed: any = JSON.parse(reactionData.toString());
+        const folderName = reactionDataParsed[0].folderName;
+
+        const headers = new Headers({
+            'Authorization': `Bearer ${oauthToken}`,
+            'Content-Type': 'application/json',
+        });
+        const folderData = {
+                "displayName": folderName.toString(),
+                "isHidden": false,
+        }
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(folderData),
+        });
+        console.log(response);
+        if (!response.ok) {
+            console.error("Error creating folder");
+            return false;
+        }
+        return true;
+    }
 }
 
 export { OutlookReactions };

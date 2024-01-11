@@ -54,11 +54,11 @@ namespace TimerTriggers {
                 timerTriggerData.timer.setMinutes(timerTriggerData.timer.getMinutes() + timerTriggerData.gap);
                 return {data: null, result: true};
             } else {
-                return {data: null, result: true};
+                return {data: null, result: false};
             }
         } catch (error) {
             console.error('Error executing reaction timer add to playlist:', error);
-            return {data: null, result: true};
+            return {data: null, result: false};
         }
     }
 }
