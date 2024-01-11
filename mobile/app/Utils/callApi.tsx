@@ -175,7 +175,6 @@ export async function toggleArea(areaId: number): Promise<boolean> {
     try {
         const bearer = await AsyncStorage.getItem("token");
 
-        console.log("areaId: " + areaId);
         const response = await fetch(
             process.env.EXPO_PUBLIC_API_URL + "/area/toggleArea",
             {
@@ -195,7 +194,6 @@ export async function toggleArea(areaId: number): Promise<boolean> {
             return false;
         }
     } catch (error) {
-        console.log(error);
         return false;
     }
     return true;

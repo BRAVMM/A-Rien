@@ -234,7 +234,6 @@ namespace actionReactionJsonDataService {
     const _areas: AreaDetailsInterface[] = [];
     const token: string | null = await AsyncStorage.getItem("token");
 
-    console.log("getAreas token : ", token);
     if (!token) {
       return _areas;
     }
@@ -245,21 +244,18 @@ namespace actionReactionJsonDataService {
           null,
           router
       );
+      const data = await response.json();
       if (!response.ok) {
-        console.log("getAreas error : " + response.status + " - " + response.statusText);
+        console.error(data.error);
         return _areas;
       }
-      const data = await response.json();
-      console.log("getAreas data : ", data);
       if (data) {
         data.forEach((area: AreaDetailsInterface) => {
           _areas.push(area);
         });
       }
     } catch (error) {
-      console.error("Error:", error);
     }
-    console.log("getAreas : ", _areas);
     return _areas;
   }
 }

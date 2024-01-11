@@ -262,13 +262,13 @@ namespace AreaMiddleware {
             if (!action || action.ownerId !== ownerId) {
                 return false;
             }
-            for (const reactionId of action.reactionsDataIds) {
+            for (const reactionId of action.reactionsDataIds || []) {
                 const reaction = await Reaction.findByPk(reactionId);
                 if (reaction) {
-                    await reaction.destroy();
+                    await reaction.destroy({transaction: dbTransaction});
                 }
             }
-            await action.destroy();
+            await action.destroy({transaction: dbTransaction});
             await dbTransaction.commit();
             return true;
         } catch (error) {
@@ -287,11 +287,11 @@ namespace AreaMiddleware {
                 return false;
             }
             action.isActivated = !action.isActivated;
-            await action.save();
+            await action.save({transaction: dbTransaction});
             await dbTransaction.commit();
             return true;
         } catch (error) {
-            dbTransaction.rollback();
+            await dbTransaction.rollback();
             console.error(`Error toggling area with ID ${actionId}:`, error);
             return false;
         }
