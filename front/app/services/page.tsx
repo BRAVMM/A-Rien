@@ -41,9 +41,6 @@ export default function Services() {
    * @description useEffect to fetch actionJsonData when ModalData is defined
    */
   useEffect(() => {
-    if (isModalOpen) {
-      console.log("Modal is open");
-    }
   }, [isModalOpen]);
 
   /**

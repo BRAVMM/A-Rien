@@ -1,16 +1,17 @@
 interface DataBody {
-    getString(): string;
+  getString(): string;
 }
 
 class SpotifyDataBody implements DataBody {
-    readonly code: string;
-    constructor(code: string) {
-        this.code = code
-    }
+  readonly code: string;
 
-    getString(): string {
-        return JSON.stringify({code : this.code})
-    }
+  constructor(code: string) {
+    this.code = code;
+  }
+
+  getString(): string {
+    return JSON.stringify({ code: this.code });
+  }
 }
 
 export type { DataBody };
