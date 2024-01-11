@@ -319,7 +319,7 @@ const getAreas = async (req: Request, res: Response): Promise<void> => {
                 return;
             }
 
-            const actionTitle = JSON.parse(actionData.title)["AREA name"];
+            const actionTitle = JSON.parse(actionData.title)[0]["AREA name"];
             const area: AreaData = {
                 id: actionData.id,
                 title: actionTitle,
@@ -335,6 +335,50 @@ const getAreas = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
+const eraseArea = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user: TokenData = (req as CustomRequest).user;
+        const actionDataId: number = req.body.areaId;
+
+        if (!actionDataId) {
+            res.status(400).json({error: "Please provide actionDataId"});
+            return;
+        }
+        const result = await AreaMiddleware.eraseArea(actionDataId, user.userId);
+        if (!result) {
+            res.status(400).json({error: "Area not found, or you are not the owner"});
+            return;
+        }
+        res.status(200).json({message: "Area erased"});
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
+const toggleArea = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user: TokenData = (req as CustomRequest).user;
+        const actionDataId: number = req.body.areaId;
+
+        console.log("toggleArea: " + actionDataId);
+        console.log("toggleArea: " + user.userId);
+        if (!actionDataId) {
+            res.status(400).json({error: "Please provide actionDataId"});
+            return;
+        }
+        const result = await AreaMiddleware.toggleArea(actionDataId, user.userId);
+        if (!result) {
+            res.status(400).json({error: "Area not found, or you are not the owner"});
+            return;
+        }
+        res.status(200).json({message: "Area toggled"});
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
 export {
     getActionsFromServiceId,
     getReactionsFromActionId,
@@ -343,5 +387,7 @@ export {
     getOauthIdsFromServiceId,
     getOauthIdsFromActionId,
     getOauthIdsFromReactionId,
-    getAreas
+    getAreas,
+    eraseArea,
+    toggleArea
 };

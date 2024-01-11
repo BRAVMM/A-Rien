@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
 
 import {ModalDataInterface, ServiceActionInterface, ServiceReactionInterface,} from "../Interfaces/ModalData.interface";
+import {AreaDetailsInterface} from "../Interfaces/areaData.interface";
 
 /**
  * @namespace actionReactionJsonDataService
@@ -224,6 +225,43 @@ namespace actionReactionJsonDataService {
       return [];
     }
   };
+
+  /**
+   * Retrieves the areas from the server.
+   * @returns An array of AreaDetailsInterface representing the areas.
+   */
+  export const getAreas = async (router: NavigationProp<ReactNavigation.RootParamList>): Promise<AreaDetailsInterface[]> => {
+    const _areas: AreaDetailsInterface[] = [];
+    const token: string | null = await AsyncStorage.getItem("token");
+
+    console.log("getAreas token : ", token);
+    if (!token) {
+      return _areas;
+    }
+    try {
+      const response: Response = await requestApi(
+          `${process.env.EXPO_PUBLIC_API_URL}/area/getAreas`,
+          "GET",
+          null,
+          router
+      );
+      if (!response.ok) {
+        console.log("getAreas error : " + response.status + " - " + response.statusText);
+        return _areas;
+      }
+      const data = await response.json();
+      console.log("getAreas data : ", data);
+      if (data) {
+        data.forEach((area: AreaDetailsInterface) => {
+          _areas.push(area);
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    console.log("getAreas : ", _areas);
+    return _areas;
+  }
 }
 
 export default actionReactionJsonDataService;

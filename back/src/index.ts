@@ -25,27 +25,27 @@ if (isNaN(INTERVAL)) {
 }
 
 // Initialize the database connection
-db.sequelize.sync()// {force: true} to drop the tables and recreate them
+db.sequelize.sync({force: false})// {force: true} to drop the tables and recreate them
     .then(() => {
         console.log('Database sync completed.');
-
-        addServicesToDB().then(() => {
-            console.log('Services added to DB');
-        }).catch((err: any) => {
-            console.error('Error adding services to DB:', err);
-        });
-
-        addActionsToDB().then(() => {
-            console.log('Actions added to DB');
-        }).catch((err: any) => {
-            console.error('Error adding actions to DB:', err);
-        });
-
-        addReactionsToDB().then(() => {
-            console.log('Reactions added to DB');
-        }).catch((err: any) => {
-            console.error('Error adding reactions to DB:', err);
-        });
+        //
+        // addServicesToDB().then(() => {
+        //     console.log('Services added to DB');
+        // }).catch((err: any) => {
+        //     console.error('Error adding services to DB:', err);
+        // });
+        //
+        // addActionsToDB().then(() => {
+        //     console.log('Actions added to DB');
+        // }).catch((err: any) => {
+        //     console.error('Error adding actions to DB:', err);
+        // });
+        //
+        // addReactionsToDB().then(() => {
+        //     console.log('Reactions added to DB');
+        // }).catch((err: any) => {
+        //     console.error('Error adding reactions to DB:', err);
+        // });
     })
     .catch((err: any) => {
         console.error('Error syncing the database:', err);
