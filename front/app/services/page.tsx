@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import TextSection from "../Components/TextSection";
 import { AreaDetailsInterface } from "../Interfaces/AreaDetails.Interface";
 import SpotifyButtonOAuth from "../Components/services/LoginSpotify";
+import DiscordButtonOAuth from "../Components/services/CreateWebhookDiscord";
 import Cookies from 'js-cookie';
 
 export default function Services() {
@@ -40,9 +41,6 @@ export default function Services() {
    * @description useEffect to fetch actionJsonData when ModalData is defined
    */
   useEffect(() => {
-    if (isModalOpen) {
-      console.log("Modal is open");
-    }
   }, [isModalOpen]);
 
   /**
@@ -147,7 +145,8 @@ export default function Services() {
         <div className="flex items-center justify-start ml-[8%] mt-[5%] h-1/6 w-full">
           <Image src="/logo1.svg" alt="Logo" width={70} height={70} />
         </div>
-        <SpotifyButtonOAuth />
+        <SpotifyButtonOAuth/>
+        <DiscordButtonOAuth/>
         <div className="flex items-center justify-center h-1/6 text-white text-3xl truncate">
           <p>Select a service</p>
         </div>

@@ -166,17 +166,33 @@ namespace AreaMiddleware {
     /**
      * Get reactions from ids
      * @param reactionsIds - The ids of the reactions
-     * @returns {Promise<Reaction[] | null>}
+     * @param ownerId - The id of the owner
+     * @returns {Promise<Reaction[] | null>} - The reactions compatible with the action
      */
-    export const getReactionsFromIds = async (reactionsIds: number[]): Promise<Reaction[] | null> => {
+    export const getReactionsFromIds = async (reactionsIds: number[], ownerId?: number): Promise<Reaction[] | null> => {
         try {
-            return await Reaction.findAll(
+            const reactions = await Reaction.findAll(
                 {
                     where: {
                         id: reactionsIds
                     }
                 }
             );
+            console.log("ownerId : " + ownerId);
+            if (ownerId) {
+                const availableReactions: Reaction[] = [];
+                if (!reactions) {
+                    return null;
+                }
+                for (const reaction of reactions) {
+                    const oauthIds: number[] | null = await getOauthIdsFromReactionId(reaction.id, ownerId);
+                    if (oauthIds && oauthIds.length > 0) {
+                        availableReactions.push(reaction);
+                    }
+                }
+                return availableReactions;
+            }
+            return reactions;
         } catch (error) {
             console.error(`Error retrieving reactions with IDs ${reactionsIds}:`, error);
             return null;
@@ -234,6 +250,26 @@ namespace AreaMiddleware {
             console.error(`Error retrieving oauthIds with service ID ${serviceId}:`, error);
             return null;
         }
+    }
+}
+
+/**
+ * Get Oauth ids from action id
+ * @param reactionId - The id of the reaction
+ * @param ownerId - The id of the owner
+ * @returns {Promise<number[] | null>} - The oauth ids
+ */
+const getOauthIdsFromReactionId = async (reactionId: number, ownerId: number): Promise<number[] | null> => {
+    try {
+        const service: Service | null = await AreaMiddleware.getServiceFromReactionId(reactionId);
+
+        if (!service) {
+            throw new Error(`Service not found for reaction ID ${reactionId}`);
+        }
+        return await AreaMiddleware.getOauthIdsFromServiceId(service.id, ownerId);
+    } catch (error) {
+        console.error(`Error retrieving oauthIds with reaction ID ${reactionId}:`, error);
+        return null;
     }
 }
 

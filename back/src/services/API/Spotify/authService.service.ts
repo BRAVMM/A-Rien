@@ -17,8 +17,8 @@ const getRedirectUri = (mobile: boolean) : string | undefined => {
  */
 const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthData> => {
     if (!process.env.SPOTIFY_REDIRECT_URI_WEB && !process.env.SPOTIFY_CLIENT_ID && !process.env.SPOTIFY_REDIRECT_URI_MOBILE && !process.env.SPOTIFY_SERVICE_ID) {
-        console.error("Les variables d'environnement Spotify ne sont pas définies")
-        throw new Error ("Les variables d'environnement Spotify ne sont pas définies")
+        console.error("error : Bad env configuration")
+        throw new Error ("Bad env configuration")
     }
     const SPOTIFY_SERVICE_ID : number = Number(process.env.SPOTIFY_SERVICE_ID)
     const SPOTIFY_REDIRECT_URI : string = getRedirectUri(mobile) ?? ''
@@ -37,8 +37,9 @@ const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthDat
             }).toString()
         });
         const data = await spotifyResponse.json();
-        if (!spotifyResponse.ok) {
-            console.error({errorMessage: "An error was caught", error: data.error})
+        if (!spotifyResponse.ok || !data.access_token || !data.refresh_token || !data.expires_in) {
+            console.error({errorMessage: "An error was caught ", error: data.error})
+            throw new Error('Failed to authenticate with Spotify');
         }
         const oauthData: OAuthData = {
             accessToken: data.access_token,

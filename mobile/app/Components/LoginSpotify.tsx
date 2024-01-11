@@ -8,8 +8,8 @@ import { styled, withExpoSnack } from 'nativewind';
 const REGISTER_TOKEN_ROUTE = "/services/spotify/registerToken";
 
 const discovery = {
-  authorizationEndpoint: 'https://accounts.spotify.com/authorize',
-  tokenEndpoint: 'https://accounts.spotify.com/api/token',
+  authorizationEndpoint: "https://accounts.spotify.com/authorize",
+  tokenEndpoint: "https://accounts.spotify.com/api/token",
 };
 
 const StyledView = styled(View);
@@ -20,31 +20,33 @@ const LoginSpotify = () => {
     const [fetchError, setFetchError] = React.useState<boolean>(false)
 
 
-    const [request, response, promptAsync] = useAuthRequest(
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId: clientID,
+      scopes: ["user-read-email", "playlist-modify-public"],
+      usePKCE: false,
+      extraParams: {
+        show_dialog: "true",
+      },
+      redirectUri: makeRedirectUri({
+        scheme: "myapp",
+        path: "home",
+      }),
+    },
+    discovery,
+  );
+
+  const apiCall = async (code: string) => {
+    try {
+      const bearer = await AsyncStorage.getItem("token");
+
+      const response = await fetch(
+        process.env.EXPO_PUBLIC_API_URL + REGISTER_TOKEN_ROUTE,
         {
-          clientId: clientID,
-          scopes: ['user-read-email', 'playlist-modify-public'],
-          usePKCE: false,
-          extraParams: {
-            show_dialog: 'true'
-          },
-          redirectUri: makeRedirectUri({
-            scheme: 'myapp',
-            path: 'home'
-          }),
-        },
-        discovery,
-    );
-
-    const apiCall = async (code: string) => {
-      try {
-        const bearer = await AsyncStorage.getItem("token")
-
-        const response = await fetch(process.env.EXPO_PUBLIC_API_URL + REGISTER_TOKEN_ROUTE, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${bearer}`,
+            Authorization: `Bearer ${bearer}`,
           },
           body: JSON.stringify({code: code, mobile: true}),
         });
@@ -56,11 +58,11 @@ const LoginSpotify = () => {
         console.error(error)
         throw new Error("Error couldn't fetch API")
       }
-    } 
+  };
 
-    React.useEffect(() => {
-      if (response?.type === 'success') {
-        const { code } = response.params;
+  React.useEffect(() => {
+    if (response?.type === "success") {
+      const { code } = response.params;
 
         if (code) {
           const launchApiCall = async () => {
