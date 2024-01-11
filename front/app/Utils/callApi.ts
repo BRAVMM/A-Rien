@@ -91,8 +91,9 @@ export async function registerTokenService(data : DataBody, serviceRoute : strin
     }
   } catch (error) {
     console.error(error);
-    return;
+    return false;
   }
+  return true;
 }
 
 export async function storeArea(name: string, actionId: number, reactionIds: number[], actionData: any, reactionData: any, oauthTokens: number[]): Promise<any> {
