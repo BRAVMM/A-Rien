@@ -1,51 +1,40 @@
-import {LinearGradient} from "expo-linear-gradient";
-import {useNavigation} from "expo-router";
-import {styled, withExpoSnack} from "nativewind";
-import React, {useEffect, useState} from "react";
-import {Image, SafeAreaView, Text, TextInput, TouchableOpacity, View,} from "react-native";
-
+import React, { useEffect, useState } from "react";
+import {
+  Image,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useNavigation } from "expo-router";
+import { styled, withExpoSnack } from "nativewind";
 import BravmmModal from "./Components/BravmmModal";
 import SelectServices from "./Components/SelectServices";
-import {ModalDataInterface} from "./Interfaces/ModalData.interface";
+import { ModalDataInterface } from "./Interfaces/ModalData.interface";
 import actionReactionJsonDataService from "./Utils/actionReactionJsonData.serivce";
 import colors from "../constants/Colors";
+import {color} from "ansi-fragments";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 styled(SafeAreaView);
+
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [servicesList, setServicesList] = useState<ModalDataInterface[]>();
-  const [service, setService] = useState<ModalDataInterface>();
   const [search, setSearch] = useState<string>("");
   const router = useNavigation();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const servicePicture: { [key: string]: string } = {
     Discord: require("./../assets/images/logos/Discord_logo.png"),
-    Twitch: require("./../assets/images/logos/Twitch_logo.png"),
-    Spotify: require("./../assets/images/logos/Spotify_logo.png"),
-    Teams: require("./../assets/images/logos/Teams_logo.png"),
-    Gmail: require("./../assets/images/logos/Gmail_logo.png"),
-    Outlook: require("./../assets/images/logos/Outlook_logo.png"),
-    TrackerGG: require("./../assets/images/logos/TrackerGG_logo.png"),
-    Onedrive: require("./../assets/images/logos/Onedrive_logo.png"),
-    Weather: require("./../assets/images/logos/Weather_logo.png"),
-    Timer: require("./../assets/images/logos/Timer_logo.png"),
+    // Add other service logos here
   };
 
-  /**
-   * @function useEffect
-   * @description useEffect to fetch actionJsonData when ModalData is defined
-   */
-  useEffect(() => {
-  }, [isModalOpen]);
-
-  /**
-   * @function useEffect
-   * @description useEffect to fetch actionJsonData when ModalData is defined
-   */
   useEffect(() => {
     const services = actionReactionJsonDataService.getServices();
 
@@ -54,47 +43,35 @@ const Home = () => {
     });
   }, []);
 
-  // TODO: Implement search functionality
   const handleSearch = () => {
     console.log("Search");
   };
 
-  /**
-   * @function useEffect
-   * @description useEffect to fetch actionJsonData when ModalData is defined
-   */
-  useEffect(() => {
-    const services = actionReactionJsonDataService.getServices();
-
-    services.then((services) => {
-      setServicesList(services);
-    });
-  }, []);
-
-  const redirectToProfile = () => {
-    router.navigate("profile" as never);
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
     <LinearGradient
-      colors={[colors.light.primary, colors.light.background]} // Start with your original color and end with gray
+      colors={[colors.light.primary, colors.light.background]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={{ flex: 1 }}
     >
-      <StyledText className="text-white text-2xl font-bold top-[10%] left-[10%]">
+      <StyledText className="text-white text-2xl font-bold top-[8%] left-[10%]">
         Your AREAs
       </StyledText>
 
-      <TouchableOpacity
-        onPress={() => redirectToProfile()}
-        className="w-1/6 h-1/6 flex items-center justify-center"
+      <StyledTouchableOpacity
+        onPress={toggleDropdown}
+        className="flex-1 top-[7%] w-[12%] left-[80%] absolute z-30"
       >
         <Image
           source={require("./../assets/images/logobravm.png")}
-          style={{ width: 45, height: 55, top: "70%", left: "80%" }}
+          style={{ width: 45, height: 55 }}
         />
-      </TouchableOpacity>
+      </StyledTouchableOpacity>
+
       <SafeAreaView style={{ flex: 1 }}>
         <StyledView className="top-[10%] items-center z-10">
           <StyledTextInput
@@ -114,11 +91,44 @@ const Home = () => {
           </StyledTouchableOpacity>
         </StyledView>
 
+        {isDropdownOpen && (
+          <View
+            style={{
+              top: "3%",
+              left: "56%",
+              backgroundColor: colors.light.primary,
+              borderRadius: 10,
+              zIndex: 10,
+              height: "10%",
+              width: "40%",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                setIsDropdownOpen(false);
+                router.navigate("profile" as never); // Navigate to the profile screen
+              }}
+              style={{ padding: 10 }}
+            >
+              <StyledText className="text-white">Profile</StyledText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setIsDropdownOpen(false);
+                router.navigate("home" as never); // Navigate to the home screen
+              }}
+              style={{ padding: 10 }}
+            >
+              <StyledText className="text-white">Home</StyledText>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <BravmmModal
           animationType="slide"
           transparent={true}
           visible={isModalOpen}
-          style={{flex: 1, position: "absolute", top: 0, left: 0}}
+          style={{ flex: 1, position: "absolute", top: 0, left: 0 }}
           onRequestClose={() => {
             setIsModalOpen(false);
           }}
