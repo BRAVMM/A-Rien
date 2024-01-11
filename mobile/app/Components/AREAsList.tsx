@@ -187,6 +187,7 @@ const AreasList = ({search}: { search: string }) => {
                                     }}>
                                     {area.title}
                                 </StyledText>
+                                <StyledView className={`w-4 h-4 rounded-full ${area.isActivated ? "bg-green-500" : "bg-red-500"} relative top-[-10%] left-[10%] z-10`}/>
                             </StyledView>
                             :
                             <ActivityIndicator size="large" color={colors.light.fourthly}/>
