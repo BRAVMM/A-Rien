@@ -8,6 +8,7 @@ import AREACreationModal from "./Components/AREACreation";
 import {LinearGradient} from "expo-linear-gradient";
 import colors from "../constants/Colors";
 import {useNavigation} from "expo-router";
+import {ImageSourcePropType} from "react-native";
 
 
 const StyledView = styled(View);
@@ -36,7 +37,7 @@ const Home = () => {
     const [search, setSearch] = useState<string>("");
     const router = useNavigation();
 
-    const servicePicture: { [key: string]: string } = {
+    const servicePicture: { [key: string]: ImageSourcePropType } = {
         "Discord": require("./../assets/images/logos/Discord_logo.png"),
         "Twitch": require("./../assets/images/logos/Twitch_logo.png"),
         "Spotify": require("./../assets/images/logos/Spotify_logo.png"),
@@ -47,6 +48,13 @@ const Home = () => {
         "Onedrive": require("./../assets/images/logos/Onedrive_logo.png"),
         "Weather": require("./../assets/images/logos/Weather_logo.png"),
         "Timer": require("./../assets/images/logos/Timer_logo.png"),
+    }
+
+    function getServicePicture(serviceName: string): ImageSourcePropType {
+        if (servicePicture[serviceName] === undefined) {
+            return require('./../assets/images/logo1.svg');
+        }
+        return servicePicture[serviceName];
     }
 
     /**
@@ -141,7 +149,7 @@ const Home = () => {
                             className="flex items-center justify-center w-[30%] h-[30%] m-5"
                             onPress={() => handleModal(service)}>
                             <Image
-                                source={servicePicture[service.name]}
+                                source={getServicePicture(service.name)}
                                 style={{width: 100, height: 100}}
                             />
                             <StyledText className="text-white text-2xl font-bold absolute left-[150%]">
