@@ -20,27 +20,29 @@ const Profile = () => {
 
   useEffect(() => {
     const checkToken = async () => {
-      // Vérifier si le cookie "token" existe
       const token = await AsyncStorage.getItem("token");
+      let response: Response;
 
       if (!token) {
-        // Rediriger vers la page de connexion si le cookie n'est pas présent
         router.navigate("login" as never);
         return;
       }
 
-      // Si le cookie est présent, effectuer la requête pour obtenir les données de l'utilisateur
-      const response = await fetch(
-        process.env.EXPO_PUBLIC_API_URL + "/users/me",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
+      try {
+        response = await fetch(
+          process.env.EXPO_PUBLIC_API_URL + "/users/me",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
           },
-        },
-      );
-
+        );
+      } catch (e) {
+        router.navigate("login" as never);
+        return;
+      }
       if (response.ok) {
         const data = await response.json();
         setUser(data);
@@ -55,17 +57,22 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(
-        process.env.EXPO_PUBLIC_API_URL + "/users/me",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + (await AsyncStorage.getItem("token")),
-          },
-        },
-      );
+      let response: Response;
 
+      try {
+        response = await fetch(
+          process.env.EXPO_PUBLIC_API_URL + "/users/me",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + (await AsyncStorage.getItem("token")),
+            },
+          },
+        );
+      } catch (e) {
+        return;
+      }
       if (response.ok) {
         const data = await response.json();
         setUser(data);
