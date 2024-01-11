@@ -123,7 +123,7 @@ const EditArea = ({area, setNeedRefresh, setIsModalOpen}: {
     );
 }
 
-const AreasList = () => {
+const AreasList = ({search}: { search: string }) => {
     const [areas, setAreas] = useState<AreaDetailsInterface[]>([]);
     const router = useNavigation();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -132,7 +132,6 @@ const AreasList = () => {
 
     async function fetchAreas() {
         const areaData = await actionReactionJsonDataService.getAreas(router);
-
         setAreas(areaData);
     }
 
@@ -146,6 +145,17 @@ const AreasList = () => {
             setNeedRefresh(false);
         }
     }, [needRefresh]);
+
+    useEffect(() => {
+        if (search !== "") {
+            const filteredAreas = areas.filter((area) => {
+                return area.title.toLowerCase().includes(search.toLowerCase());
+            });
+            setAreas(filteredAreas);
+        } else {
+            fetchAreas();
+        }
+    }, [search]);
 
 
     return (

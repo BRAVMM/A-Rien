@@ -112,7 +112,7 @@ const Home = () => {
                         value={search}
                     />
 
-                <AreasList/>
+                <AreasList search={search}/>
 
                 <BravmmModal
                     animationType="slide"
