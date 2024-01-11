@@ -25,7 +25,7 @@ if (isNaN(INTERVAL)) {
 }
 
 // Initialize the database connection
-db.sequelize.sync({force: true}) // {force: true} to drop the tables and recreate them
+db.sequelize.sync({force: false}) // {force: true} to drop the tables and recreate them
     .then(() => {
         console.log('Database sync completed.');
 
@@ -273,18 +273,18 @@ const addReactionsToDB = async () => {
             reactions: [
                 {
                     id: 4,
-                    name: 'Send private message',
-                    description: 'Send a private message to user choosen',
+                    name: 'Send group message',
+                    description: 'Send a message to the group choosen',
                     args: [
                         {
-                            title: "emailPayload",
+                            title: "convName",
                             type: 'string',
-                            description: "Enter an email where to send the message",
+                            description: "Enter a group conversation name",
                         },
                         {
                             title: "message",
                             type: 'string',
-                            description: "Enter a message",
+                            description: "Enter the message you want to send",
                         }
                     ],
                 },
