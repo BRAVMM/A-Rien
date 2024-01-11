@@ -50,6 +50,7 @@ const authenticateUserSpotify  = async (code: string, mobile: boolean): Promise<
         console.log("\x1b[32mUser successfully connected to spotify, access token = \x1b[0m", oauthData.accessToken)
         return oauthData
     } catch (error) {
+        console.error("\x1b[31mAn error was caught in authenticateUserSpotify\x1b[0m", error)
         throw error;
     }
 }
@@ -59,8 +60,9 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
     const MICROSOFT_CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET;
     const MICROSOFT_REDIRECT_URI = process.env.MICROSOFT_REDIRECT_URI;
     const TENANT_ID = process.env.MICROSOFT_CLIENT_TENANT_ID;
+    const MICROSOFT_SERVICE_ID : number = Number(process.env.MICROSOFT_SERVICE_ID)
 
-    if (!MICROSOFT_CLIENT_ID || !MICROSOFT_CLIENT_SECRET || !MICROSOFT_REDIRECT_URI || !TENANT_ID) {
+    if (!MICROSOFT_CLIENT_ID || !MICROSOFT_CLIENT_SECRET || !MICROSOFT_REDIRECT_URI || !TENANT_ID || !MICROSOFT_SERVICE_ID) {
         throw new Error("Les variables d'environnement Microsoft ne sont pas définies");
     }
 
@@ -97,11 +99,12 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
             expiresIn: data.expires_in,
-            serviceId: 10, // TODO: replace by correct services ID's
+            serviceId: MICROSOFT_SERVICE_ID,
         }
         console.log("\x1b[32mUser successfully connected to microsoft, access token = \x1b[0m", oauthData.accessToken)
         return oauthData
     } catch (error) {
+        console.error("\x1b[31mAn error was caught in authenticateUserMicrosoft\x1b[0m", error)
         throw error;
     }
 }
