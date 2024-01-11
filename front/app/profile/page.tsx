@@ -7,7 +7,7 @@ import Image from "next/image";
 import Cookies from "js-cookie";
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function Profile() {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data: JSON = await response.json();
         setUser(data);
       } else {
         // Rediriger vers la page de connexion en cas d'échec de la requête

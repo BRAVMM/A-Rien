@@ -38,7 +38,7 @@ const ModalUI: React.FC<{
    * @description Clear datas when modal is open or close
    * @returns {void}
    */
-  const clearDatas = () => {
+  function clearDatas() {
     setAction(undefined);
     setActionDatas("");
     setReactions(undefined);
@@ -47,7 +47,7 @@ const ModalUI: React.FC<{
     setStep(Step.SELECT_SERVICE_ACTION);
   }
 
-  const checkIfThereIsAnOauthToken = async () => {
+  async function checkIfThereIsAnOauthToken() {
     if (ModalData === undefined) {
       return;
     }
@@ -109,7 +109,7 @@ const ModalUI: React.FC<{
         setReactionJsonDatas(reactionJsonData);
       });
     }
-  }, [actionDatas]);
+  }, [actionDatas, action, Step.SELECT_SERVICE_REACTION]);
 
   /**
    * @function useEffect
@@ -119,7 +119,7 @@ const ModalUI: React.FC<{
     if (reactionDatas !== undefined) {
       setStep(Step.VALIDATE_OR_ADD_FORM);
     }
-  }, [reactionDatas]);
+  }, [reactionDatas, Step.VALIDATE_OR_ADD_FORM]);
 
   /* Update functions */
   /**

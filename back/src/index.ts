@@ -60,20 +60,62 @@ app.use('/area', AreaRouter);
 app.use('/services', ServicesRouter);
 
 const addServicesToDB = async () => {
-    const SERVICES: any[] = [
-        {
-            id: 1,
-            name: 'Spotify',
-            actionsId: [1, 2, 3, 4, 5, 6, 7],
-            reactionsId: [1, 2],
-        },
-        {
-            id: 2,
-            name: 'Timer',
-            actionsId: [8],
-            reactionsId: [],
+    interface ServiceEntry {
+        id: number;
+        name: string;
+        actionsId: number[];
+        reactionsId: number[];
+    }
+    const SERVICES: ServiceEntry[] = [];
+
+    if (process.env.SPOTIFY_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.SPOTIFY_SERVICE_ID),
+                name: 'Spotify',
+                actionsId: [1, 2, 3, 4, 5, 6, 7],
+                reactionsId: [1, 2],
+            });
+        } catch (error) {
+            console.error("Error while loading Spotify service: " + error);
         }
-    ];
+    }
+    if (process.env.TIMER_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.TIMER_SERVICE_ID),
+                name: 'Timer',
+                actionsId: [8],
+                reactionsId: [],
+            });
+        } catch (error) {
+            console.error("Error while loading Timer service: " + error);
+        }
+    }
+    if (process.env.DISCORD_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.DISCORD_SERVICE_ID),
+                name: 'Discord',
+                actionsId: [],
+                reactionsId: [3],
+            });
+        } catch (error) {
+            console.error("Error while loading Discord service: " + error);
+        }
+    }
+    if (process.env.MICROSOFT_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.MICROSOFT_SERVICE_ID),
+                name: 'Microsoft',
+                actionsId: [],
+                reactionsId: [],
+            });
+        } catch (error) {
+            console.error("Error while loading Microsoft service: " + error);
+        }
+    }
 
     for (const service of SERVICES) {
         if (await Service.findOne({where: {name: service.name}})) {
@@ -89,7 +131,14 @@ const addServicesToDB = async () => {
 };
 
 const addActionsToDB = async () => {
-    const ACTIONS: any[] = [
+    interface ActionEntry {
+        id: number;
+        name: string;
+        description: string;
+        args: { title: string; type: string; description: string; range?: [number, number]; }[];
+        reactionsIds: number[];
+    }
+    const ACTIONS: { name: string; actions: ActionEntry[]; }[] = [
         {
             name: 'Spotify',
             actions: [
@@ -192,7 +241,13 @@ const addActionsToDB = async () => {
 
 
 const addReactionsToDB = async () => {
-    const REACTIONS: any[] = [
+    interface ReactionEntry {
+        id: number;
+        name: string;
+        description: string;
+        args: { title: string; type: string; description: string; range?: [number, number]; }[];
+    }
+    const REACTIONS: { name: string; reactions: ReactionEntry[]; }[] = [
         {
             name: 'Spotify',
             reactions: [
@@ -217,6 +272,23 @@ const addReactionsToDB = async () => {
                             title: "playlistId",
                             type: 'string',
                             description: "Enter a playlist id",
+                        },
+                    ],
+                },
+            ]
+        },
+        {
+            name: 'Discord',
+            reactions: [
+                {
+                    id: 3,
+                    name: 'Send message',
+                    description: 'Send a message to a channel',
+                    args: [
+                        {
+                            title: "message",
+                            type: 'string',
+                            description: "Enter a message",
                         },
                     ],
                 },

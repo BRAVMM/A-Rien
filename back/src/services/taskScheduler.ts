@@ -18,6 +18,7 @@ import {SpotifyTriggers} from "./servicesApps/triggers/spotify.triggers.services
 import {TimerTriggers} from "./servicesApps/triggers/timer.triggers.servicesApp";
 /* Import all reactions functions */
 import {SpotifyReactions} from "./servicesApps/reactions/spotify.reactions.servicesApp";
+import {DiscordReactions} from "./servicesApps/reactions/discord.reactions.servicesApp";
 
 /* Constants */
 const ACTIONS_FUNCTIONS: actionFunction = {
@@ -34,6 +35,7 @@ const ACTIONS_FUNCTIONS: actionFunction = {
 const REACTIONS_FUNCTIONS: reactionFunction = {
     1: SpotifyReactions.reactionSpotifyAddToPlaylistFromASong,
     2: SpotifyReactions.reactionSpotifyAddRandomToPlaylist,
+    3: DiscordReactions.reactionDiscordSendMessage,
 };
 
 /**

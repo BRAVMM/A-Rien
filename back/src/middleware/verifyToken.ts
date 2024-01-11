@@ -15,7 +15,6 @@ if (!process.env.JWT_SECRET) {
  * @param {NextFunction} next - This is the next request that will be called
  */
 const verifyToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-
     if (req.headers && req.headers.authorization) {
         const secret : Secret = process.env.JWT_SECRET as Secret;
 

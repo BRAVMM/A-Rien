@@ -65,6 +65,28 @@ const json: MyJson = {
             description: "The user likes a message"
           }
         ]
+      },
+      {
+        name: "Timer",
+        actions: [
+          {
+            name: "When X time stamped",
+            description: "When X time is stamped (in minutes)"
+          }
+        ],
+        reactions: [
+        ]
+      },
+      {
+        name: "Discord",
+        actions: [
+        ],
+        reactions: [
+          {
+            name: "send_message",
+            description: "Send a message to a channel"
+          }
+        ]
       }
     ]
   }
