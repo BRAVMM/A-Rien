@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import {useNavigation} from "expo-router";
 
 import AREACreationModal from "./AREACreation";
 import { ModalDataInterface } from "../Interfaces/ModalData.interface";
@@ -21,6 +22,7 @@ const SelectServices = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [servicesList, setServicesList] = useState<ModalDataInterface[]>();
   const [service, setService] = useState<ModalDataInterface>();
+  const router = useNavigation();
 
   const servicePicture: { [key: string]: string } = {
     Discord: require("./../../assets/images/logos/Discord_logo.png"),
@@ -47,7 +49,7 @@ const SelectServices = () => {
    * @description useEffect to fetch actionJsonData when ModalData is defined
    */
   useEffect(() => {
-    const services = actionReactionJsonDataService.getServices();
+    const services = actionReactionJsonDataService.getServices(router);
 
     services.then((services) => {
       setServicesList(services);

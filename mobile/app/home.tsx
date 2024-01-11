@@ -35,8 +35,19 @@ const Home = () => {
     // Add other service logos here
   };
 
+  /**
+   * @function useEffect
+   * @description useEffect to fetch actionJsonData when ModalData is defined
+   */
   useEffect(() => {
-    const services = actionReactionJsonDataService.getServices();
+  }, [isModalOpen]);
+
+  /**
+   * @function useEffect
+   * @description useEffect to fetch actionJsonData when ModalData is defined
+   */
+    useEffect(() => {
+        const services = actionReactionJsonDataService.getServices(router);
 
     services.then((services) => {
       setServicesList(services);
@@ -47,8 +58,20 @@ const Home = () => {
     console.log("Search");
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  /**
+   * @function useEffect
+   * @description useEffect to fetch actionJsonData when ModalData is defined
+   */
+  useEffect(() => {
+    const services = actionReactionJsonDataService.getServices(router);
+
+    services.then((services) => {
+      setServicesList(services);
+    });
+  }, []);
+
+  const redirectToProfile = () => {
+    router.navigate("profile" as never);
   };
 
   return (

@@ -45,15 +45,13 @@ namespace actionReactionJsonDataService {
         try {
             const response: Response = await requestApi(`${process.env.NEXT_PUBLIC_API}/area/getServices`, "GET", null)
             if (response.ok === false) {
-                console.log(response);
-                console.log("public api = ", process.env.NEXT_PUBLIC_API);
                 console.error("error getServices : ", response.status, response.statusText);
                 return [];
             }
             const services: ModalDataInterface[] = await response.json();
             return services;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }
@@ -73,10 +71,9 @@ namespace actionReactionJsonDataService {
             }
             const actionJsonData: ServiceActionInterface[] = await response.json();
 
-            console.log("actionJsonData", actionJsonData);
             return actionJsonData;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }
@@ -97,7 +94,7 @@ namespace actionReactionJsonDataService {
             const reactionJsonData: ServiceReactionInterface[] = await response.json();
             return reactionJsonData;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }
@@ -116,10 +113,9 @@ namespace actionReactionJsonDataService {
                 return [];
             }
             const oauthIds: number[] = await response.json();
-            console.log("oauthIds", oauthIds);
             return oauthIds;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }
@@ -138,10 +134,9 @@ namespace actionReactionJsonDataService {
                 return [];
             }
             const oauthIds: number[] = await response.json();
-            console.log("oauthIds", oauthIds);
             return oauthIds;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }
@@ -160,10 +155,9 @@ namespace actionReactionJsonDataService {
                 return [];
             }
             const oauthIds: number[] = await response.json();
-            console.log("oauthIds", oauthIds);
             return oauthIds;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }

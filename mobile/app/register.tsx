@@ -154,7 +154,7 @@ const Register = () => {
           className="bg-cyan p-2 rounded-2xl mt-5 w-[40%]"
           style={{ backgroundColor: colors.light.secondary }}
         >
-          <StyledText className="text-white text-center text-2xl font-bold">
+          <StyledText style={{ color: "white", fontSize: 20, fontWeight: "bold", textAlign: "center" }}>
             Register
           </StyledText>
         </StyledTouchableOpacity>

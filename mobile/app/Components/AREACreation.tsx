@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import {useNavigation} from "expo-router";
 
 import AREAForm from "./AREAForm";
 import BravmmModal from "./BravmmModal";
@@ -47,6 +48,7 @@ const AREACreationModal: React.FC<{
   const [actionDatas, setActionDatas] = useState<string>("");
   const [reactions, setReactions] = useState<ServiceReactionInterface[]>();
   const [reactionDatas, setReactionDatas] = useState<string[]>();
+  const router = useNavigation();
 
   /* Clear functions */
   /**
@@ -69,6 +71,7 @@ const AREACreationModal: React.FC<{
     }
     const actionTokenIds: number[] =
       await actionReactionJsonDataService.getOauthIdsFromServiceId(
+        router,
         ModalData.id,
       );
     if (actionTokenIds.length === 0) {
@@ -102,7 +105,7 @@ const AREACreationModal: React.FC<{
       return;
     }
     const actionJsonData_: Promise<ServiceActionInterface[]> =
-      actionReactionJsonDataService.getActionJsonData(ModalData.id);
+      actionReactionJsonDataService.getActionJsonData(router, ModalData.id);
 
     actionJsonData_.then((actionJsonData_) => {
       setActionJsonDatas(actionJsonData_);
@@ -121,7 +124,8 @@ const AREACreationModal: React.FC<{
         return;
       }
       const reactionDatas = actionReactionJsonDataService.getReactionJsonData(
-        action.id,
+          router,
+          action.id,
       );
       reactionDatas.then((reactionJsonData) => {
         if (reactionJsonData === undefined) {
@@ -233,7 +237,8 @@ const AREACreationModal: React.FC<{
         return;
       }
       const reactionDatas = actionReactionJsonDataService.getReactionJsonData(
-        action.id,
+          router,
+          action.id,
       );
       reactionDatas.then((reactionJsonData) => {
         if (reactionJsonData === undefined) {
@@ -419,14 +424,15 @@ const AREACreationModal: React.FC<{
 
     newActionTokenIds.push(
       (
-        await actionReactionJsonDataService.getOauthIdsFromActionId(action.id)
+        await actionReactionJsonDataService.getOauthIdsFromActionId(router, action.id)
       )[0],
     );
     for (const reaction of reactions) {
       newActionTokenIds.push(
         (
           await actionReactionJsonDataService.getOauthIdsFromReactionId(
-            reaction.id,
+              router,
+              reaction.id,
           )
         )[0],
       );
