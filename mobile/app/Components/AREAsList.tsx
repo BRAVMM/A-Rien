@@ -3,7 +3,17 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator, Switch} from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    Image,
+    ScrollView,
+    ActivityIndicator,
+    Switch,
+    Animated,
+    RefreshControl
+} from 'react-native';
 import {useNavigation} from 'expo-router';
 import {styled} from 'nativewind';
 import colors from "../../constants/Colors";
@@ -127,6 +137,7 @@ const AreasList = ({search}: { search: string }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [areaToEdit, setAreaToEdit] = useState<AreaDetailsInterface>();
     const [needRefresh, setNeedRefresh] = useState(false);
+    const [refreshing, setRefreshing] = React.useState(false);
 
     async function fetchAreas() {
         const areaData = await actionReactionJsonDataService.getAreas(router);
@@ -139,8 +150,9 @@ const AreasList = ({search}: { search: string }) => {
 
     useEffect(() => {
         if (needRefresh) {
-            fetchAreas();
-            setNeedRefresh(false);
+            fetchAreas().then(r => {
+                setNeedRefresh(false);
+            });
         }
     }, [needRefresh]);
 
@@ -155,10 +167,25 @@ const AreasList = ({search}: { search: string }) => {
         }
     }, [search]);
 
+    const onRefresh = () => {
+        setNeedRefresh(true);
+        setRefreshing(true);
+        setTimeout(() => {
+            if (!needRefresh) {
+                setRefreshing(false);
+            }
+        }, 500);
+    }
 
     return (
         <StyledView className="flex-1">
-            <StyledScrollView className="flex-1" showsHorizontalScrollIndicator={true}>
+            <StyledScrollView className="flex-1"
+                              showsHorizontalScrollIndicator={true}
+                              refreshControl={
+                                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+                                                  tintColor={colors.light.superlight}/>
+                              }
+            >
                 {areas.map((area: any) => (
                     <StyledTouchableOpacity
                         key={area.id}
@@ -185,7 +212,8 @@ const AreasList = ({search}: { search: string }) => {
                                     }}>
                                     {area.title}
                                 </StyledText>
-                                <StyledView className={`w-4 h-4 rounded-full ${area.isActivated ? "bg-green-500" : "bg-red-500"} relative top-[-10%] left-[10%] z-10`}/>
+                                <StyledView
+                                    className={`w-4 h-4 rounded-full ${area.isActivated ? "bg-green-500" : "bg-red-500"} relative top-[-10%] left-[10%] z-10`}/>
                             </StyledView>
                             :
                             <ActivityIndicator size="large" color={colors.light.fourthly}/>
