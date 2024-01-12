@@ -3,5 +3,9 @@
 import { redirect } from 'next/navigation'
 
 export default function DownloadApk() {
-    redirect('https://github.com/BRAVMM/A-Rien/releases/latest/download/a-rien.apk')
+    if (!process.env.NEXT_PUBLIC_APK_DOWNLOAD_URL) {
+        console.error('NEXT_PUBLIC_APK_DOWNLOAD_URL is not set')
+        return null
+    }
+    redirect(process.env.NEXT_PUBLIC_APK_DOWNLOAD_URL)
 }
