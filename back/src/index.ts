@@ -128,7 +128,6 @@ const addServicesToDB = async () => {
         } catch (error) {
             console.error("Error while loading Microsoft service: " + error);
         }
-        
     }
 
     for (const service of SERVICES) {
