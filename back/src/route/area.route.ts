@@ -12,5 +12,7 @@ router.get('/getOauthIdsFromActionId/:actionId', verifyToken, areaController.get
 router.get('/getOauthIdsFromReactionId/:reactionId', verifyToken, areaController.getOauthIdsFromReactionId);
 router.get ('/getAreas', verifyToken, areaController.getAreas);
 router.post('/storeArea', verifyToken, areaController.storeArea);
+router.post('/eraseArea', verifyToken, areaController.eraseArea);
+router.post('/toggleArea', verifyToken, areaController.toggleArea);
 
 export default router;
