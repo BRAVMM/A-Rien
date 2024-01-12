@@ -31,17 +31,37 @@ namespace TriggersMiddleware {
     }
 
     /**
+     * Retrieves actions data based on the owner ID.
+     * @param ownerId - The ID of the owner.
+     * @returns A promise that resolves to an array of ActionData objects.
+     */
+    export const getActionsDataFromOwnerId = async (ownerId: number): Promise<ActionData[]> => {
+        try {
+            return await ActionData.findAll(
+                {
+                    where: {
+                        ownerId: ownerId
+                    }
+                }
+            );
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+    }
+
+    /**
      * Get a reaction data from an id
      * @param reactionDataId - The id of the reaction data
      * @returns {Promise<ReactionData | null>} - The reaction data
      */
-    export const getReactionDataFromId = async (owenerId: number, reactionDataId: number): Promise<ReactionData | null> => {
+    export const getReactionDataFromId = async (ownerId: number, reactionDataId: number): Promise<ReactionData | null> => {
         try {
             return await ReactionData.findOne(
                 {
                     where: {
                         id: reactionDataId,
-                        ownerId: owenerId
+                        ownerId: ownerId
                     }
                 }
             );

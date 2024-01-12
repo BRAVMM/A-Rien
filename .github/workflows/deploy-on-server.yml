@@ -27,8 +27,8 @@ jobs:
             git switch main
             git pull origin main
             cp -r ./* /home/beafowl/A-Rien
-            cp /root/.env /home/beafowl/A-Rien/back
-            cp /root/.env.development /home/beafowl/A-Rien/front
+            cp /root/back/.env /home/beafowl/A-Rien/back/.env
+            cp /root/front/.env /home/beafowl/A-Rien/front/.env
             sh /home/beafowl/re.sh &
 
       - name: executing remote ssh commands using ssh key
@@ -46,6 +46,6 @@ jobs:
             git switch dev
             git pull origin dev
             cp -r ./* /home/beafowl/A-Rien
-            cp /root/.env /home/beafowl/A-Rien/back
-            cp /root/.env.development /home/beafowl/A-Rien/front
+            cp /root/back/.env /home/beafowl/A-Rien/back/.env
+            cp /root/front/.env /home/beafowl/A-Rien/front/.env
             sh /home/beafowl/re.sh &
