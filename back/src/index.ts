@@ -60,32 +60,62 @@ app.use('/area', AreaRouter);
 app.use('/services', ServicesRouter);
 
 const addServicesToDB = async () => {
-    const SERVICES: any[] = [
-        {
-            id: 1,
-            name: 'Spotify',
-            actionsId: [1, 2, 3, 4, 5, 6, 7],
-            reactionsId: [1, 2],
-        },
-        {
-            id: 2,
-            name: 'Timer',
-            actionsId: [8],
-            reactionsId: [],
-        },
-        {
-            id: 4,
-            name: 'Teams',
-            actionsId: [],
-            reactionsId: [4, 5],
-        },
-        {
-            id: 4,
-            name: 'Outlook',
-            actionsId: [],
-            reactionsId: [3, 6],
+    interface ServiceEntry {
+        id: number;
+        name: string;
+        actionsId: number[];
+        reactionsId: number[];
+    }
+    const SERVICES: ServiceEntry[] = [];
+
+    if (process.env.SPOTIFY_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.SPOTIFY_SERVICE_ID),
+                name: 'Spotify',
+                actionsId: [1, 2, 3, 4, 5, 6, 7],
+                reactionsId: [1, 2],
+            });
+        } catch (error) {
+            console.error("Error while loading Spotify service: " + error);
         }
-    ];
+    }
+    if (process.env.TIMER_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.TIMER_SERVICE_ID),
+                name: 'Timer',
+                actionsId: [8],
+                reactionsId: [],
+            });
+        } catch (error) {
+            console.error("Error while loading Timer service: " + error);
+        }
+    }
+    if (process.env.DISCORD_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.DISCORD_SERVICE_ID),
+                name: 'Discord',
+                actionsId: [],
+                reactionsId: [3],
+            });
+        } catch (error) {
+            console.error("Error while loading Discord service: " + error);
+        }
+    }
+    if (process.env.MICROSOFT_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.MICROSOFT_SERVICE_ID),
+                name: 'Microsoft',
+                actionsId: [],
+                reactionsId: [4, 5, 6, 7],
+            });
+        } catch (error) {
+            console.error("Error while loading Microsoft service: " + error);
+        }
+    }
 
     for (const service of SERVICES) {
         if (await Service.findOne({where: {name: service.name}})) {
@@ -101,7 +131,14 @@ const addServicesToDB = async () => {
 };
 
 const addActionsToDB = async () => {
-    const ACTIONS: any[] = [
+    interface ActionEntry {
+        id: number;
+        name: string;
+        description: string;
+        args: { title: string; type: string; description: string; range?: [number, number]; }[];
+        reactionsIds: number[];
+    }
+    const ACTIONS: { name: string; actions: ActionEntry[]; }[] = [
         {
             name: 'Spotify',
             actions: [
@@ -181,7 +218,7 @@ const addActionsToDB = async () => {
                         description: 'Enter a number (in minutes)',
                         range: [1, 1440],
                     }],
-                    reactionsIds: [2, 3, 4, 5, 6],
+                    reactionsIds: [2, 3, 4, 5, 6, 7],
                 },
             ]
         },
@@ -216,7 +253,13 @@ const addActionsToDB = async () => {
 
 
 const addReactionsToDB = async () => {
-    const REACTIONS: any[] = [
+    interface ReactionEntry {
+        id: number;
+        name: string;
+        description: string;
+        args: { title: string; type: string; description: string; range?: [number, number]; }[];
+    }
+    const REACTIONS: { name: string; reactions: ReactionEntry[]; }[] = [
         {
             name: 'Spotify',
             reactions: [
@@ -247,37 +290,20 @@ const addReactionsToDB = async () => {
             ]
         },
         {
-            name: 'Outlook',
+            name: 'Discord',
             reactions: [
                 {
                     id: 3,
-                    name: 'Send email',
-                    description: 'Send an email',
+                    name: 'Send message',
+                    description: 'Send a message to a channel',
                     args: [
-                        {
-                            title: "emailPayload",
-                            type: 'string',
-                            description: "Enter an email where to send the message",
-                        },
                         {
                             title: "message",
                             type: 'string',
                             description: "Enter a message",
-                        }
+                        },
                     ],
                 },
-                {
-                    id: 6,
-                    name: 'Create Folder',
-                    description: 'Create a folder',
-                    args: [
-                        {
-                            title: "folderName",
-                            type: 'string',
-                            description: "Enter a folder name",
-                        }
-                    ],
-                }
             ]
         },
         {
@@ -318,7 +344,41 @@ const addReactionsToDB = async () => {
                     ],
                 }
             ]
-        }
+        },
+        {
+            name: 'Outlook',
+            reactions: [
+                {
+                    id: 6,
+                    name: 'Send email',
+                    description: 'Send an email',
+                    args: [
+                        {
+                            title: "emailPayload",
+                            type: 'string',
+                            description: "Enter an email where to send the message",
+                        },
+                        {
+                            title: "message",
+                            type: 'string',
+                            description: "Enter a message",
+                        }
+                    ],
+                },
+                {
+                    id: 7,
+                    name: 'Create Folder',
+                    description: 'Create a folder',
+                    args: [
+                        {
+                            title: "folderName",
+                            type: 'string',
+                            description: "Enter a folder name",
+                        }
+                    ],
+                }
+            ]
+        },
     ];
 
     for (const service of REACTIONS) {

@@ -20,6 +20,7 @@ import {TimerTriggers} from "./servicesApps/triggers/timer.triggers.servicesApp"
 import {SpotifyReactions} from "./servicesApps/reactions/spotify.reactions.servicesApp";
 import { OutlookReactions } from './servicesApps/reactions/outlook.reactions.servicesApp';
 import { TeamsReactions } from './servicesApps/reactions/teams.reactions.servicesApp';
+import {DiscordReactions} from "./servicesApps/reactions/discord.reactions.servicesApp";
 
 /* Constants */
 const ACTIONS_FUNCTIONS: actionFunction = {
@@ -36,10 +37,11 @@ const ACTIONS_FUNCTIONS: actionFunction = {
 const REACTIONS_FUNCTIONS: reactionFunction = {
     1: SpotifyReactions.reactionSpotifyAddToPlaylistFromASong,
     2: SpotifyReactions.reactionSpotifyAddRandomToPlaylist,
-    3: OutlookReactions.reactionOutlookSendEmail,
+    3: DiscordReactions.reactionDiscordSendMessage,
     4: TeamsReactions.reactionTeamsSendMessage,
     5: TeamsReactions.reactionTeamsSendMessageInTeamChannel,
-    6: OutlookReactions.reactionOutlookCreateFolder,
+    6: OutlookReactions.reactionOutlookSendEmail,
+    7: OutlookReactions.reactionOutlookCreateFolder,
 };
 
 /**

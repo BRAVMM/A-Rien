@@ -2,7 +2,8 @@
  * @fileoverview service for actionJsonData
  */
 
-import {ModalDataInterface, ServiceActionInterface, ServiceReactionInterface} from "../Interfaces/ModalData.interface";
+import { ModalDataInterface, ServiceActionInterface, ServiceReactionInterface } from "../Interfaces/ModalData.interface";
+import { AreaDetailsInterface } from "../Interfaces/AreaDetails.Interface";
 import Cookies from "js-cookie";
 
 /**
@@ -51,7 +52,7 @@ namespace actionReactionJsonDataService {
             const services: ModalDataInterface[] = await response.json();
             return services;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }
@@ -71,10 +72,9 @@ namespace actionReactionJsonDataService {
             }
             const actionJsonData: ServiceActionInterface[] = await response.json();
 
-            console.log("actionJsonData", actionJsonData);
             return actionJsonData;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }
@@ -95,7 +95,7 @@ namespace actionReactionJsonDataService {
             const reactionJsonData: ServiceReactionInterface[] = await response.json();
             return reactionJsonData;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }
@@ -114,10 +114,9 @@ namespace actionReactionJsonDataService {
                 return [];
             }
             const oauthIds: number[] = await response.json();
-            console.log("oauthIds", oauthIds);
             return oauthIds;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }
@@ -136,10 +135,9 @@ namespace actionReactionJsonDataService {
                 return [];
             }
             const oauthIds: number[] = await response.json();
-            console.log("oauthIds", oauthIds);
             return oauthIds;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
     }
@@ -158,12 +156,46 @@ namespace actionReactionJsonDataService {
                 return [];
             }
             const oauthIds: number[] = await response.json();
-            console.log("oauthIds", oauthIds);
             return oauthIds;
         } catch (error) {
-            console.log(error);
+            console.error(error);
             return [];
         }
+    }
+
+    /**
+     * Retrieves the areas from the server.
+     * @returns An array of AreaDetailsInterface representing the areas.
+     */
+    export const getAreas = async (): Promise<AreaDetailsInterface[]> => {
+        const _areas: AreaDetailsInterface[] = [];
+        const token: string | undefined = Cookies.get("token");
+
+        if (!token) {
+            return _areas;
+        }
+        try {
+            const response = await fetch(process.env.NEXT_PUBLIC_API + "/area/getAreas", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token,
+                },
+            });
+            if (!response.ok) {
+                console.log("getAreas error : " + response.status + " - " + response.statusText);
+                return _areas;
+            }
+            const data = await response.json();
+            if (data) {
+                data.forEach((area: AreaDetailsInterface) => {
+                    _areas.push(area);
+                });
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+        return _areas;
     }
 }
 
