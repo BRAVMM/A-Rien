@@ -22,6 +22,7 @@ import {AreaDetailsInterface} from "../Interfaces/areaData.interface";
 import {Ionicons} from "@expo/vector-icons";
 import BravmmModal from "./BravmmModal";
 import {eraseArea, toggleArea} from "../Utils/callApi";
+import {FadeLoading} from 'react-native-fade-loading';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -185,17 +186,18 @@ const AreasList = ({search}: { search: string }) => {
                                   <RefreshControl refreshing={refreshing} onRefresh={onRefresh}
                                                   tintColor={colors.light.superlight}/>
                               }
+                              endFillColor={colors.light.background}
             >
                 {areasToDisplay.map((area: any) => (
                     <StyledTouchableOpacity
                         key={area.id}
-                        className="flex-row items-center justify-between px-4 py-4 border-b border-gray-200"
+                        className="flex-row items-center justify-between px-4 py-4"
                         onPress={() => {
                             setAreaToEdit(area);
                             setIsModalOpen(true)
                         }}
                     >
-                        {area && area.length !== 0 ?
+                        {area && area.serviceName && area.title ?
                             <StyledView className="flex-row items-center justify-between px-8 py-4 w-full">
                                 <StyledImage
                                     style={{width: 80, height: 80, marginRight: 20}}
@@ -216,7 +218,18 @@ const AreasList = ({search}: { search: string }) => {
                                     className={`w-4 h-4 rounded-full ${area.isActivated ? "bg-green-500" : "bg-red-500"} relative top-[-10%] left-[10%] z-10`}/>
                             </StyledView>
                             :
-                            <ActivityIndicator size="large" color={colors.light.fourthly}/>
+                            <View style={{
+                                flex: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: "100%",
+                                height: 80
+                            }}>
+                                <FadeLoading primaryColor={colors.light.secondary} secondaryColor={colors.light.thirdly}
+                                             duration={5000}
+                                             style={{width: "100%", height: "100%"}} animated={true} visible={true}
+                                             children={<></>}/>
+                            </View>
                         }
                     </StyledTouchableOpacity>
                 ))}
