@@ -108,13 +108,27 @@ const addServicesToDB = async () => {
         try {
             SERVICES.push({
                 id: Number(process.env.MICROSOFT_SERVICE_ID),
-                name: 'Microsoft',
-                actionsId: [],
-                reactionsId: [4, 5, 6, 7],
+                name: 'Outlook',
+                actionsId: [10],
+                reactionsId: [6, 7],
             });
         } catch (error) {
             console.error("Error while loading Microsoft service: " + error);
         }
+        
+    }
+    if (process.env.MICROSOFT_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.MICROSOFT_SERVICE_ID),
+                name: 'Teams',
+                actionsId: [],
+                reactionsId: [4, 5],
+            });
+        } catch (error) {
+            console.error("Error while loading Microsoft service: " + error);
+        }
+        
     }
 
     for (const service of SERVICES) {
@@ -231,6 +245,18 @@ const addActionsToDB = async () => {
                     description: 'When a new message is received',
                     args: [],
                     reactionsIds: [3],
+                },
+            ]
+        },
+        {
+            name: 'Outlook',
+            actions: [
+                {
+                    id: 10,
+                    name: 'When a new email is received',
+                    description: 'When a new email is received',
+                    args: [],
+                    reactionsIds: [6],
                 },
             ]
         }

@@ -94,6 +94,15 @@ export default function Profile() {
           <Image src="/logo1.svg" alt="Logo" width={100} height={100} />
         </div>
 
+        <button
+          className="ml-[10%] text-white text-xl font-bold mt-10 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-fourthly rounded-md px-4 hover:bg-indigo-500 focus-visible:outline-indigo-600"
+          onClick={() => {
+            router.push("/services");
+          }}
+        >
+          BACK
+        </button>
+
         <div className="flex flex-col items-center justify-center mt-4">
           <div className="w-32 h-32 mt-1/10 bg-white rounded-full"></div>
           <p className="mt-10 text-white text-center text-xl font-bold">
