@@ -20,7 +20,7 @@ const getRedirectUri = (mobile: boolean): string | undefined => {
  * @returns {Promise<OAuthData>} - A promise that resolves to an `OAuthData` object containing the access token, refresh token, and expiry time.
  * @throws {Error} - Throws an error if the request to Discord's API fails or if the response cannot be parsed as JSON.
  */
-const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthData> => {
+const authenticateUserDiscord = async (code: string, mobile: boolean): Promise<OAuthData> => {
     if (!process.env.DISCORD_REDIRECT_URI_WEB || !process.env.DISCORD_REDIRECT_URI_MOBILE || !process.env.DISCORD_CLIENT_ID || !process.env.DISCORD_SERVICE_ID || !process.env.DISCORD_API_ENDPOINT) {
         console.error("error : Bad env configuration");
         throw new Error("Bad env configuration");
@@ -54,8 +54,9 @@ const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthDat
         console.log("\x1b[32mUser successfully connected to discord, access token = \x1b[0m", oauthData.accessToken)
         return oauthData
     } catch (error) {
+        console.error("\x1b[31mAn error was caught in authenticateUserDiscord\x1b[0m", error)
         throw error;
     }
 }
 
-export default authenticateUser
+export default authenticateUserDiscord

@@ -7,6 +7,8 @@ import {Service} from "../models/service.model";
 import {Action} from "../models/action.model";
 import {Reaction} from "../models/reaction.model";
 import {OAuth} from "../models/oauth.model";
+import {ActionData} from "../models/actionData.model";
+import db from "../models";
 
 /**
  * @namespace AreaMiddleware
@@ -249,6 +251,49 @@ namespace AreaMiddleware {
         } catch (error) {
             console.error(`Error retrieving oauthIds with service ID ${serviceId}:`, error);
             return null;
+        }
+    }
+
+    export const eraseArea = async (actionId: number, ownerId: number): Promise<boolean> => {
+        const dbTransaction = await db.sequelize.transaction();
+
+        try {
+            const action = await ActionData.findByPk(actionId);
+            if (!action || action.ownerId !== ownerId) {
+                return false;
+            }
+            for (const reactionId of action.reactionsDataIds || []) {
+                const reaction = await Reaction.findByPk(reactionId);
+                if (reaction) {
+                    await reaction.destroy({transaction: dbTransaction});
+                }
+            }
+            await action.destroy({transaction: dbTransaction});
+            await dbTransaction.commit();
+            return true;
+        } catch (error) {
+            console.error(`Error erasing area with ID ${actionId}:`, error);
+            await dbTransaction.rollback();
+            return false;
+        }
+    }
+
+    export const toggleArea = async (actionId: number, ownerId: number): Promise<boolean> => {
+        const dbTransaction = await db.sequelize.transaction();
+
+        try {
+            const action = await ActionData.findByPk(actionId);
+            if (!action || action.ownerId !== ownerId) {
+                return false;
+            }
+            action.isActivated = !action.isActivated;
+            await action.save({transaction: dbTransaction});
+            await dbTransaction.commit();
+            return true;
+        } catch (error) {
+            await dbTransaction.rollback();
+            console.error(`Error toggling area with ID ${actionId}:`, error);
+            return false;
         }
     }
 }
