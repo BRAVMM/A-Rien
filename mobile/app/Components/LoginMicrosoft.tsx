@@ -4,7 +4,7 @@ import {
   useAuthRequest,
   useAutoDiscovery,
 } from 'expo-auth-session';
-import { Button, Text, View } from 'react-native';
+import { Button, Linking, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styled, withExpoSnack } from 'nativewind';
 
@@ -18,7 +18,7 @@ const LoginMicrosoft = () => {
   );
   const redirectUri = makeRedirectUri({
     scheme: 'myapp',
-    path: 'home',
+    path: 'profile',
   });
   const clientId = process.env.EXPO_PUBLIC_MICROSOFT_CLIENT_ID ?? '';
   const REGISTER_TOKEN_ROUTE = "/services/microsoft/registerToken";
@@ -39,55 +39,52 @@ const LoginMicrosoft = () => {
 
   const apiCall = async (code: string) => {
     try {
-      const bearer = await AsyncStorage.getItem("token")
+      const bearer = await AsyncStorage.getItem("token");
 
-      const response = await fetch(process.env.EXPO_PUBLIC_API_URL + REGISTER_TOKEN_ROUTE, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${bearer}`,
-        },
-        body: JSON.stringify({code: code, mobile: true}),
-      });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error);
+      const response = await fetch(
+        process.env.EXPO_PUBLIC_API_URL + REGISTER_TOKEN_ROUTE,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${bearer}`,
+          },
+          body: JSON.stringify({code: code, mobile: true}),
+        });
+        if (!response.ok) {
+          const error = await response.json();
+          return false
+        }
+        return true
+      } catch (error) {
+        console.error(error)
+        return false
       }
-    } catch (error) {
-      console.error(error)
-      throw new Error("Error couldn't fetch API")
-    }
   }
 
-  React.useEffect(() => {
-    if (response?.type === 'success') {
-      const { code } = response.params;
+  const handleLogin = (async () => {
+    const response = await promptAsync();
 
-      if (code) {
-        const launchApiCall = async () => {
-          try {
-             await apiCall(code)
-          } catch (error) {
-            setFetchError(true);
+    if (response?.type === "success") {
+      const { code } = response.params
+        if (code) {
+          if (!await apiCall(code)) {
+            setFetchError(false)
           }
         }
-        launchApiCall()
       }
-    }
-  }, [response]);
+  })
 
-  return (
-    <StyledView>
-      <Button
-        /* @end */
-        title="Login"
-        onPress={() => {
-          promptAsync();
-        }}
-      />
-      {fetchError && <StyledText className="text-red-600">Error login failed.</StyledText>}
+    return (
+      <StyledView>
+        <Button
+          /* @end */
+          title="Login"
+          onPress={handleLogin}
+        />
+        {fetchError && <StyledText className="text-red-600">Error login failed.</StyledText>}
     </StyledView>
-  );
+    );
 }
 
 export default withExpoSnack(LoginMicrosoft);
