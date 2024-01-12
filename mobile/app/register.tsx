@@ -74,9 +74,9 @@ const Register = () => {
         },
       );
       if (response.ok) {
-        setRegisterSuccess(true);
         const token = await response.json();
         await AsyncStorage.setItem("token", token.token);
+        setRegisterSuccess(true);
       } else {
         const errorResponse = await response.json();
         handleError(errorResponse);
