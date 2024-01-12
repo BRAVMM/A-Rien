@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {DataBody} from "../Interfaces/dataBody.interface";
+import {UserDataInterface} from "../Interfaces/UserData.interface";
 
 /**
  * loginUser - Function to perform a user login by making an API call.
@@ -198,4 +199,122 @@ export async function toggleArea(areaId: number): Promise<boolean> {
         return false;
     }
     return true;
+}
+
+export async function getUserInfo(): Promise<UserDataInterface | null> {
+    let response: Response;
+
+    try {
+        const token = await AsyncStorage.getItem("token");
+        response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/users/me",
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            },
+        );
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error);
+        }
+        return data;
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
+};
+
+export async function updateUserUsername(username: string): Promise<any> {
+    try {
+        const bearer = await AsyncStorage.getItem("token");
+
+        const response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/users/me/username",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${bearer}`,
+                },
+                body: JSON.stringify({
+                    username,
+                }),
+            },
+        );
+        if (!response.ok) {
+            const error = await response.json();
+            console.error(error.error);
+            return error;
+        }
+        return response;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+export async function updateUserEmail(email: string): Promise<any> {
+    try {
+        const bearer = await AsyncStorage.getItem("token");
+
+        const response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/users/me/email",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${bearer}`,
+                },
+                body: JSON.stringify({
+                    email,
+                }),
+            },
+        );
+        if (!response.ok) {
+            const error = await response.json();
+            console.error(error.error);
+            return error;
+        }
+        return response;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+export async function updateUserPassword(
+    oldPassword: string,
+    newPassword: string,
+): Promise<any> {
+    try {
+        const bearer = await AsyncStorage.getItem("token");
+
+        const body = {
+            oldPassword,
+            newPassword,
+        }
+        const response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/users/me/password",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${bearer}`,
+                },
+                body: JSON.stringify(body),
+            },
+        );
+        if (!response.ok) {
+            const error = await response.json();
+            console.error(error.error);
+            return error;
+        }
+        return response;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
 }

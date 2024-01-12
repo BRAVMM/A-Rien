@@ -16,7 +16,7 @@ const AnimatedBackground = ({children}: { children: React.ReactNode }) => {
                 end={{x: 1, y: 1}}
                 style={{flex: 1}}
             >
-                <FadeLoading primaryColor={colors.light.primary} secondaryColor={colors.light.fifthly}
+                <FadeLoading primaryColor={colors.light.primary} secondaryColor={colors.light.fourthly}
                              animated={true}
                              duration={20000}
                              style={{flex: 1, width: "100%", height: "100%", position: "absolute", top: 0, left: 0, opacity: 0.3}}
