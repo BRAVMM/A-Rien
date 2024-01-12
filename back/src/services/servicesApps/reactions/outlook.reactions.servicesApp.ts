@@ -110,7 +110,7 @@ namespace OutlookReactions {
                 return false;
             }
         } catch (error) {
-            return false;
+            throw new Error("Error creating folder")
         }
         return true;
     }
