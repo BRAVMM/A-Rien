@@ -9,7 +9,7 @@ import ServiceConnection from "../Components/ServiceOauthButton";
 import SpotifyButtonOAuth from "../Components/services/LoginSpotify";
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any | null>(null);
   const router = useRouter();
 
   const [editableUsername, setEditableUsername] = useState('');
@@ -38,7 +38,7 @@ export default function Profile() {
       });
 
       if (response.ok) {
-        const data = await response.json();
+        const data: JSON = await response.json();
         setUser(data);
       } else {
         router.push("/login");

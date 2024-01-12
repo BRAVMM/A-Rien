@@ -10,4 +10,6 @@ RUN npm install -g typescript@4.4.3
 
 RUN npm install
 
-ENTRYPOINT ["npm", "run", "dev"]
+RUN npm run build
+
+ENTRYPOINT ["npm", "start"]
