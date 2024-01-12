@@ -33,7 +33,6 @@ const refreshMicrosoftTokens = async (tokens : OAuth[]): Promise<void> => {
         } else {
             throw new Error("Could not refresh Microsoft tokens")
         }
-
     }
 }
 
