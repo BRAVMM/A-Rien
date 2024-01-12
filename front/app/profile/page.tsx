@@ -117,6 +117,13 @@ export default function Profile() {
             }}
           />
           <SpotifyButtonOAuth/>
+          <ServiceConnection
+            user={user}
+            service="Tracker GG"
+            onClick={() => {
+              alert("Tracker GG");
+            }}
+          />
         </div>
       </div>
       <div className="flex-1 relative h-full">
