@@ -129,6 +129,13 @@ const Profile = () => {
               Connect to Spotify
             </StyledText>
           </StyledTouchableOpacity>
+          <StyledTouchableOpacity onPress={() => {
+                router.navigate("Components/LoginDiscord" as never);
+              }}>
+            <StyledText className="text-white text-2xl font-bold">
+              Connect to Discord
+            </StyledText>
+          </StyledTouchableOpacity>
           <StyledTouchableOpacity>
             <StyledText className="text-white text-2xl font-bold">
               Connect to Microsoft

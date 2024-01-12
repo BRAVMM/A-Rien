@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeRedirectUri, useAuthRequest } from 'expo-auth-session';
-import { Button } from 'react-native';
+import { Button, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -15,6 +15,10 @@ export default function App() {
     const route = useRoute()
     const clientID: string = process.env.EXPO_PUBLIC_DISCORD_CLIENT_ID ?? ''
 
+    console.log("redirectUri" + makeRedirectUri({
+        scheme: 'myapp',
+        path: 'home'
+    }));
     const [request, response, promptAsync] = useAuthRequest(
         {
             clientId: clientID,
@@ -62,13 +66,15 @@ export default function App() {
     }, [response]);
 
     return (
-        <Button
-            disabled={!request}
-            title="Login"
-            onPress={() => {
-                promptAsync();
-                console.log("Login")
-            }}
-        />
+        <View style={{backgroundColor: "blue", flex: 1 ,  justifyContent: 'center', alignItems: 'center', }}>
+            <Button
+                disabled={!request}
+                title="Login"
+                onPress={() => {
+                    promptAsync();
+                    console.log("Login")
+                }}
+            />
+        </View>
     );
 }
