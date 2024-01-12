@@ -27,6 +27,11 @@ const authenticateUserDiscord = async (code: string, mobile: boolean): Promise<O
     }
     const DISCORD_SERVICE_ID: number = Number(process.env.DISCORD_SERVICE_ID)
     const DISCORD_REDIRECT_URI: string = getRedirectUri(mobile) ?? '127.0.0.1';
+
+    if (!code) {
+        console.error("authenticateUser : No code provided");
+        throw new Error('No code provided');
+    }
     try {
         const discordResponse = await fetch(`${process.env.DISCORD_API_ENDPOINT}/oauth2/token`, {
             method: 'POST',
@@ -42,7 +47,7 @@ const authenticateUserDiscord = async (code: string, mobile: boolean): Promise<O
         });
         const data = await discordResponse.json();
         if (!discordResponse.ok || !data.access_token || !data.refresh_token || !data.expires_in) {
-            console.error("authenticateUser : Failed to authenticate with Discord");
+            console.error("authenticateUser : Failed to authenticate with Discord " + discordResponse.statusText + " " + data.error_description);
             throw new Error('Failed to authenticate with Discord');
         }
         const oauthData: OAuthData = {
