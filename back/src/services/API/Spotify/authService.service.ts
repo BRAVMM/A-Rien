@@ -97,7 +97,7 @@ const authenticateUserMicrosoft = async (code: string, mobile: boolean): Promise
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
             expiresIn: data.expires_in,
-            serviceId: 2, // TODO: replace by correct services ID's
+            serviceId: Number(process.env.SPOTIFY_SERVICE_ID)
         }
         console.log("\x1b[32mUser successfully connected to microsoft, access token = \x1b[0m", oauthData.accessToken)
         return oauthData

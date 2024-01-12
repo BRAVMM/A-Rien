@@ -52,13 +52,18 @@ namespace OutlookReactions {
             },
             "saveToSentItems": "true"
         }
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(emailData),
-        });
-        if (!response.ok) {
-            console.error("Error sending email");
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(emailData),
+            });
+            if (!response.ok) {
+                console.error("Error sending email");
+                return false;
+            }
+        } catch (error) {
+            console.error(error);
             return false;
         }
         return true;
@@ -94,14 +99,17 @@ namespace OutlookReactions {
                 "displayName": folderName.toString(),
                 "isHidden": false,
         }
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify(folderData),
-        });
-        console.log(response);
-        if (!response.ok) {
-            console.error("Error creating folder");
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(folderData),
+            });
+            if (!response.ok) {
+                console.error("Error creating folder");
+                return false;
+            }
+        } catch (error) {
             return false;
         }
         return true;

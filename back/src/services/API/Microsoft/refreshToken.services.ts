@@ -23,7 +23,7 @@ const getRefreshedToken = async (refreshToken: string): Promise<string> => {
     const MICROSOFT_CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET;
     const TENANT_ID = process.env.MICROSOFT_CLIENT_TENANT_ID;
 
-    if (!MICROSOFT_CLIENT_ID || !TENANT_ID) {
+    if (!MICROSOFT_CLIENT_ID || !TENANT_ID || !MICROSOFT_CLIENT_SECRET) {
         console.error("Les variables d'environnement Microsoft ne sont pas définies")
         throw new Error("Les variables d'environnement Microsoft ne sont pas définies");
     }
@@ -52,11 +52,8 @@ const getRefreshedToken = async (refreshToken: string): Promise<string> => {
         const data = await microsoftResponse.json()
 
         if (!microsoftResponse.ok) {
-            console.log(data)
             throw new Error(`Spotify token refresh failed: ${microsoftResponse.status}`);
         }
-
-        console.log(data)
         return data.access_token
     } catch (error) {
         throw error;
