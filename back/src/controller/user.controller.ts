@@ -204,10 +204,6 @@ const modifyUsername = async (req: Request, res: Response): Promise<void> => {
 
         const {username, newUsername} = req.body;
 
-        console.log(username, newUsername);
-        console.log(user)
-        console.log(req.body)
-
         if (!username || !newUsername) {
             res.status(400).json({error: "Please provide username and newUsername"});
             return;
