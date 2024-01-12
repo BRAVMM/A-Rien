@@ -44,6 +44,7 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
 
 const userHasToken = async (req: Request, res: Response): Promise<Response> => {
     const userInfo : TokenData = (req as CustomRequest).user
+    
     try {
         const OAuthData = await OAuth.findOne({where: {ownerId: userInfo.userId, serviceId: process.env.MICROSOFT_SERVICE_ID}})
         if (!OAuthData) {

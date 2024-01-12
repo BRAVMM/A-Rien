@@ -23,7 +23,8 @@ namespace OutlookTriggers {
         if (!oauthToken) {
             throw new Error("No token found");
         }
-        const response: Response = await fetch(url, {
+        try {
+            const response: Response = await fetch(url, {
             method: "GET",
             headers: {
                 "Authorization": "Bearer " + oauthToken,
@@ -33,7 +34,12 @@ namespace OutlookTriggers {
         if (!response.ok) {
             throw new Error("Error fetching data from Microsoft Graph API");
         }
-        return response.json();
+            const json: any = await response.json();
+            return json;
+        } catch (error) {
+            console.error(error);
+            return {};
+        }
     }
 
     function getOrCreateUserData(ownerId: number): { userData: OutlookTriggerData, isNew: boolean } {
@@ -85,4 +91,3 @@ namespace OutlookTriggers {
 }
 
 export { OutlookTriggers };
-

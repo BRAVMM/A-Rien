@@ -181,12 +181,6 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
  * @param {Response} res - This is the response object
  * @returns {Promise<void>} This returns the updated user info if successful or an error message if unsuccessful
  */
-/**
- * Modify user username
- * @param {Request} req - This is the request object
- * @param {Response} res - This is the response object
- * @returns {Promise<void>} This returns the updated user info if successful or an error message if unsuccessful
- */
 const modifyUsername = async (req: Request, res: Response): Promise<void> => {
     if (!(req as any).user) {
         res.status(401).json({error: "Unauthorized"});

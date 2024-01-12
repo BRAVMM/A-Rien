@@ -29,18 +29,20 @@ const ServiceConnection: React.FC<ServiceConnectionProps> = ({ user, service, on
       if (!token) {
         return;
       }
-      const response = await fetch(process.env.NEXT_PUBLIC_API + "/services/microsoft/userHasToken", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-      if (response) {
+      try {
+        const response = await fetch(process.env.NEXT_PUBLIC_API + "/services/microsoft/userHasToken", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
         if (data?.OAuthData?.ownerId) {
           setMicrosoftLogin(true);
         }
+      } catch (error) {
+        console.log(error);
       }
     }
     checkHasToken();

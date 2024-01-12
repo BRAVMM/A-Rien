@@ -30,25 +30,29 @@ namespace TeamsReactions {
                 return element.topic === convName;
             });
             if (elem) {
-                const urlSend = `https://graph.microsoft.com/v1.0/me/chats/${elem.id}/messages`
-                const messageBody = {
-                    "body": {
-                        "contentType": "Text",
-                        "content": message.toString()
+                try {
+                    const urlSend = `https://graph.microsoft.com/v1.0/me/chats/${elem.id}/messages`
+                    const messageBody = {
+                        "body": {
+                            "contentType": "Text",
+                            "content": message.toString()
+                        }
                     }
-                }
-                const responseSend = await fetch(urlSend, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${oauthToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(messageBody)
-                });
-
-                if (!responseSend.ok) {
-                    console.log(await responseSend.text())
-                    throw new Error(`Error: ${responseSend.status}`);
+                    const responseSend = await fetch(urlSend, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${oauthToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(messageBody)
+                    });
+                    if (!responseSend.ok) {
+                        console.log(await responseSend.text())
+                        throw new Error(`Error: ${responseSend.status}`);
+                    }
+                } catch (error) {
+                    console.error(error);
+                    return false;
                 }
             }
         }
