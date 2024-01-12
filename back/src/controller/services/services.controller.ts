@@ -12,10 +12,11 @@ const removeOauthTokenByServiceId = async (req: Request, res: Response): Promise
     try {
         const { serviceId } = req.body
         await OAuth.destroy({where: {serviceId: serviceId, ownerId: userInfo.userId}})
+        res.status(200).json({ message: "Token deleted" })
     } catch (error) {
         console.error(error)
+        return res.status(500).json({ message: "Failed to delete token" })
     }
-    return res.status(200).json({ message: "Token deleted" })
 }
 
 export { removeOauthTokenByServiceId }
