@@ -194,6 +194,7 @@ export async function toggleArea(areaId: number): Promise<boolean> {
             return false;
         }
     } catch (error) {
+        console.error(error);
         return false;
     }
     return true;

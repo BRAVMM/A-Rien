@@ -32,14 +32,13 @@ const RenderDropdown = ({data, setVisible, visible, elementAction}: {
                 onPress={() => setVisible(false)}
                 className="flex-1"
             >
-                {/*<View style={[styles.dropdown, { top: dropdownTop }]}>*/}
                 <StyledView
                     className="absolute z-30 rounded-lg shadow-lg"
                     style={{
-                        width: 150, // Set the width of the dropdown
-                        height: 100, // Set the height of the dropdown
-                        top: "15%", // Adjust the top position
-                        right: "5%", // Adjust the right position
+                        width: 150,
+                        height: 100,
+                        top: "15%",
+                        right: "5%",
                         backgroundColor: colors.light.secondary
                     }}
                 >

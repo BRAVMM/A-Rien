@@ -23,6 +23,7 @@ import {Ionicons} from "@expo/vector-icons";
 import BravmmModal from "./BravmmModal";
 import {eraseArea, toggleArea} from "../Utils/callApi";
 import {FadeLoading} from 'react-native-fade-loading';
+import {ImageSourcePropType} from "react-native";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -30,7 +31,7 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledImage = styled(Image);
 const StyledScrollView = styled(ScrollView);
 
-const servicePicture: { [key: string]: string } = {
+const servicePicture: { [key: string]: ImageSourcePropType } = {
     Discord: require("./../../assets/images/logos/Discord_logo.png"),
     Twitch: require("./../../assets/images/logos/Twitch_logo.png"),
     Spotify: require("./../../assets/images/logos/Spotify_logo.png"),
@@ -42,6 +43,15 @@ const servicePicture: { [key: string]: string } = {
     Weather: require("./../../assets/images/logos/Weather_logo.png"),
     Timer: require("./../../assets/images/logos/Timer_logo.png"),
 };
+
+const getServicePicture = (serviceName: string) : ImageSourcePropType => {
+    const picture = servicePicture[serviceName];
+    if (picture) {
+        return picture;
+    } else {
+        return require("./../../assets/images/logobravm.png");
+    }
+}
 
 const EditArea = ({area, setNeedRefresh, setIsModalOpen}: {
     area: AreaDetailsInterface | undefined,
@@ -201,8 +211,7 @@ const AreasList = ({search}: { search: string }) => {
                             <StyledView className="flex-row items-center justify-between px-8 py-4 w-full">
                                 <StyledImage
                                     style={{width: 80, height: 80, marginRight: 20}}
-                                    // @ts-ignore
-                                    source={servicePicture[area.serviceName]}
+                                    source={getServicePicture(area.serviceName)}
                                 ></StyledImage>
                                 <StyledText
                                     numberOfLines={1}
