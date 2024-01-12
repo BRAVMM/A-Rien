@@ -52,7 +52,7 @@ const getRefreshedToken = async (refreshToken: string): Promise<string> => {
         const data = await microsoftResponse.json()
 
         if (!microsoftResponse.ok) {
-            throw new Error(`Spotify token refresh failed: ${microsoftResponse.status}`);
+            throw new Error(`Microsoft token refresh failed: ${microsoftResponse.status}`);
         }
         return data.access_token
     } catch (error) {
