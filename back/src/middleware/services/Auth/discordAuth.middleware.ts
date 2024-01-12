@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import authenticateUser from "../../../services/API/Discord/authService.service";
+import authenticateUserDiscord from "../../../services/API/Discord/authService.service";
 
 /**
  * Middleware that authenticates with Discord using an authorization code.
@@ -36,7 +36,7 @@ const discordAuth = async (req: Request, res: Response, next: NextFunction): Pro
             res.status(400).json({ error: "Guild ID not found in the request." })
             return;
         }
-        req.body = await authenticateUser(code, (mobile !== undefined && mobile))
+        req.body = await authenticateUserDiscord(code, (mobile !== undefined && mobile))
         req.params.guildId = guildId
         next()
     } catch (error) {

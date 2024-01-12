@@ -26,7 +26,7 @@ class OAuth extends Model {
                 OAuthEmail: {
                     type: DataTypes.STRING,
                     allowNull: true,
-                    unique: true,
+                    unique: false,
                 },
                 serviceId: {
                     type: DataTypes.INTEGER,

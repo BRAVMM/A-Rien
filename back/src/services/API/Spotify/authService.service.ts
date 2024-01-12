@@ -50,9 +50,9 @@ const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthDat
         console.log("\x1b[32mUser successfully connected to spotify, access token = \x1b[0m", oauthData.accessToken)
         return oauthData
     } catch (error) {
+        console.error("\x1b[31mAn error was caught in authenticateUserSpotify\x1b[0m", error)
         throw error;
     }
 }
-
 
 export default authenticateUser
