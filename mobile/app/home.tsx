@@ -99,16 +99,15 @@ const Home = () => {
                         rightIconContainerStyle={{}}
                         loadingProps={{animating: true}}
                         onChangeText={newVal => {
-                            console.log("onChangeText", newVal);
                             setSearch(newVal);
                         }}
-                        onClear={() => console.log("onClear")}
+                        onClear={() => {setSearch("")}}
                         placeholder="Search an area..."
                         placeholderTextColor={colors.light.fourthly}
                         showCancel
                         cancelButtonTitle="Cancel"
                         cancelButtonProps={{}}
-                        onCancel={() => console.log("onCancel")}
+                        onCancel={() => {setSearch("")}}
                         value={search}
                     />
 

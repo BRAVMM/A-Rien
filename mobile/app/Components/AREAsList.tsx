@@ -29,19 +29,17 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledImage = styled(Image);
 const StyledScrollView = styled(ScrollView);
 
-const IMAGE_PATH: string = "./../../assets/images";
-
 const servicePicture: { [key: string]: string } = {
-    Discord: require(IMAGE_PATH + "/logos/Discord_logo.png"),
-    Twitch: require(IMAGE_PATH + "/logos/Twitch_logo.png"),
-    Spotify: require(IMAGE_PATH + "/logos/Spotify_logo.png"),
-    Teams: require(IMAGE_PATH + "/logos/Teams_logo.png"),
-    Gmail: require(IMAGE_PATH + "/logos/Gmail_logo.png"),
-    Outlook: require(IMAGE_PATH + "/logos/Outlook_logo.png"),
-    TrackerGG: require(IMAGE_PATH + "/logos/TrackerGG_logo.png"),
-    Onedrive: require(IMAGE_PATH + "/logos/Onedrive_logo.png"),
-    Weather: require(IMAGE_PATH + "/logos/Weather_logo.png"),
-    Timer: require(IMAGE_PATH + "/logos/Timer_logo.png"),
+    Discord: require("./../../assets/images/logos/Discord_logo.png"),
+    Twitch: require("./../../assets/images/logos/Twitch_logo.png"),
+    Spotify: require("./../../assets/images/logos/Spotify_logo.png"),
+    Teams: require("./../../assets/images/logos/Teams_logo.png"),
+    Gmail: require("./../../assets/images/logos/Gmail_logo.png"),
+    Outlook: require("./../../assets/images/logos/Outlook_logo.png"),
+    TrackerGG: require("./../../assets/images/logos/TrackerGG_logo.png"),
+    Onedrive: require("./../../assets/images/logos/Onedrive_logo.png"),
+    Weather: require("./../../assets/images/logos/Weather_logo.png"),
+    Timer: require("./../../assets/images/logos/Timer_logo.png"),
 };
 
 const EditArea = ({area, setNeedRefresh, setIsModalOpen}: {
@@ -133,6 +131,7 @@ const EditArea = ({area, setNeedRefresh, setIsModalOpen}: {
 
 const AreasList = ({search}: { search: string }) => {
     const [areas, setAreas] = useState<AreaDetailsInterface[]>([]);
+    const [areasToDisplay, setAreasToDisplay] = useState<AreaDetailsInterface[]>([]);
     const router = useNavigation();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [areaToEdit, setAreaToEdit] = useState<AreaDetailsInterface>();
@@ -142,6 +141,7 @@ const AreasList = ({search}: { search: string }) => {
     async function fetchAreas() {
         const areaData = await actionReactionJsonDataService.getAreas(router);
         setAreas(areaData);
+        setAreasToDisplay(areaData);
     }
 
     useEffect(() => {
@@ -161,7 +161,7 @@ const AreasList = ({search}: { search: string }) => {
             const filteredAreas = areas.filter((area) => {
                 return area.title.toLowerCase().includes(search.toLowerCase());
             });
-            setAreas(filteredAreas);
+            setAreasToDisplay(filteredAreas);
         } else {
             fetchAreas();
         }
@@ -186,7 +186,7 @@ const AreasList = ({search}: { search: string }) => {
                                                   tintColor={colors.light.superlight}/>
                               }
             >
-                {areas.map((area: any) => (
+                {areasToDisplay.map((area: any) => (
                     <StyledTouchableOpacity
                         key={area.id}
                         className="flex-row items-center justify-between px-4 py-4 border-b border-gray-200"
