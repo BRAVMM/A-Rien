@@ -24,7 +24,6 @@ const authenticateUser  = async (code: string, mobile: boolean): Promise<OAuthDa
     const GOOGLE_REDIRECT_URI : string = getRedirectUri(mobile) ?? ''
 
     try {
-        console.log("code : ", code)
         const googleResponse = await fetch('https://oauth2.googleapis.com/token', {
             method: 'POST',
             headers: {
@@ -48,7 +47,7 @@ const authenticateUser  = async (code: string, mobile: boolean): Promise<OAuthDa
             expiresIn: data.expires_in,
             serviceId: GOOGLE_SERVICE_ID,
         }
-        console.log("\x1b[32mUser successfully connected to spotify, access token = \x1b[0m", oauthData.accessToken)
+        console.log("\x1b[32mUser successfully connected to google, access token = \x1b[0m", oauthData.accessToken)
         return oauthData
     } catch (error) {
         console.error("\x1b[31mAn error was caught in authenticateUser of Google\x1b[0m", error)
