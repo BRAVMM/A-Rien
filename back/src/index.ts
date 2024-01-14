@@ -113,7 +113,7 @@ const addServicesToDB = async () => {
                 reactionsId: [6, 7],
             });
         } catch (error) {
-            console.error("Error while loading Microsoft service: " + error);
+            console.error("Error while loading Outlook service: " + error);
         }
         
     }
@@ -126,9 +126,22 @@ const addServicesToDB = async () => {
                 reactionsId: [4, 5],
             });
         } catch (error) {
-            console.error("Error while loading Microsoft service: " + error);
+            console.error("Error while loading Teams service: " + error);
         }
     }
+    if (process.env.MICROSOFT_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.MICROSOFT_SERVICE_ID),
+                name: 'OneDrive',
+                actionsId: [11],
+                reactionsId: [],
+            });
+        } catch (error) {
+            console.error("Error while loading OneDrive service: " + error);
+        }
+    }
+
 
     for (const service of SERVICES) {
         if (await Service.findOne({where: {name: service.name}})) {
@@ -256,6 +269,18 @@ const addActionsToDB = async () => {
                     description: 'When a new email is received',
                     args: [],
                     reactionsIds: [6],
+                },
+            ]
+        },
+        {
+            name: 'OneDrive',
+            actions: [
+                {
+                    id: 11,
+                    name: 'When a new drive is created',
+                    description: 'When a new drive is created',
+                    args: [],
+                    reactionsIds: [7],
                 },
             ]
         }

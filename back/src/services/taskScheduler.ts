@@ -22,6 +22,7 @@ import { OutlookReactions } from './servicesApps/reactions/outlook.reactions.ser
 import { TeamsReactions } from './servicesApps/reactions/teams.reactions.servicesApp';
 import {DiscordReactions} from "./servicesApps/reactions/discord.reactions.servicesApp";
 import { OutlookTriggers } from './servicesApps/triggers/outlook.triggers.services';
+import { OneDriveTriggers } from './servicesApps/triggers/onedrive.triggers.services';
 
 /* Constants */
 const ACTIONS_FUNCTIONS: actionFunction = {
@@ -33,7 +34,8 @@ const ACTIONS_FUNCTIONS: actionFunction = {
     6: SpotifyTriggers.checkSpotifyNewSavedSongFromGenre,
     7: SpotifyTriggers.checkSpotifyNewSavedSongFromArtist,
     8: TimerTriggers.actionWhenXTimeStamped,
-    10: OutlookTriggers.checkOutlookNewEmail
+    10: OutlookTriggers.checkOutlookNewEmail,
+    11: OneDriveTriggers.getTriggerData,
 };
 
 const REACTIONS_FUNCTIONS: reactionFunction = {

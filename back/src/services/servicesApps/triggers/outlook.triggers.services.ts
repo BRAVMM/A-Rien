@@ -1,5 +1,5 @@
 /**
- * @fileOverview Spotify Triggers ServicesApp
+ * @fileOverview Outlook Triggers ServicesApp
  */
 
 
