@@ -25,7 +25,7 @@ if (isNaN(INTERVAL)) {
 }
 
 // Initialize the database connection
-db.sequelize.sync({force: true})// {force: true} to drop the tables and recreate them
+db.sequelize.sync({force: false})// {force: true} to drop the tables and recreate them
     .then(() => {
         console.log('Database sync completed.');
 
