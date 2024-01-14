@@ -31,7 +31,7 @@ namespace UserMiddleware {
      */
     export const getUserFromEmail = async (email: string): Promise<User | null> => {
         const hashedEmail: string = await EncryptionService.bcryptHash(email);
-        return await User.findOne({where: {email: hashedEmail}});
+        return await User.findOne({where: {encryptedEmail: hashedEmail}});
     }
     
 
@@ -55,6 +55,19 @@ namespace UserMiddleware {
         const user: User | null = await User.findOne({where: {[Op.or]: [{username: username}, {encryptedEmail: encryptedEmail.content}]}});
 
         return user !== null;
+    }
+
+    export const checkIfUserLoggedOauthUsername = async (username: string): Promise<boolean> => {
+        const user: User | null = await User.findOne({where: {username: username}});
+
+        return user !== null && user.isOauthLogged
+    }
+
+    export const checkIfUserLoggedOauthEmail = async (email: string): Promise<boolean> => {
+        const encryptedEmail = EncryptionService.encrypt(email);
+        const user: User | null = await User.findOne({where: {encryptedEmail: encryptedEmail.content}});
+
+        return user !== null && user.isOauthLogged
     }
 }
 

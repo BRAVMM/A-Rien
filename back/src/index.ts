@@ -24,7 +24,8 @@ if (isNaN(INTERVAL)) {
     throw new Error('Invalid INTERVAL value. Please check your environment variable.');
 }
 
-db.sequelize.sync({force: false})
+// Initialize the database connection
+db.sequelize.sync({force: true})// {force: true} to drop the tables and recreate them
     .then(() => {
         console.log('Database sync completed.');
 

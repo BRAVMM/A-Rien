@@ -32,6 +32,28 @@ class SpotifyDataBody implements DataBody {
 }
 
 /**
+ * Represents the Google data body.
+ */
+class GoogleDataBody implements DataBody {
+    readonly code: string;
+    /**
+     * Creates a new instance of GoogleDataBody.
+     * @param code - The code.
+     */
+    constructor(code: string) {
+        this.code = code
+    }
+
+    /**
+     * Gets the string representation of the Google data body.
+     * @returns The string representation.
+     */
+    getString(): string {
+        return JSON.stringify({ code: this.code })
+    }
+}
+
+/**
  * Represents the Discord data body.
  */
 class DiscordDataBody implements DataBody {
@@ -69,4 +91,4 @@ class MicroSoftDataBody implements DataBody {
 
 export type { DataBody };
 
-export { SpotifyDataBody, MicroSoftDataBody, DiscordDataBody };
+export { SpotifyDataBody, MicroSoftDataBody, DiscordDataBody, GoogleDataBody };

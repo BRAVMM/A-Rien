@@ -12,8 +12,6 @@ const SCOPE = "user-read-private user-read-email playlist-read-private playlist-
 const SHOWDIALOG = true
 
 const SpotifyButtonOAuth: React.FC = () => {
-    const [code, setCode] = useState<string>('');
-
     const doAsync = async () => {
         const queryParams = new URLSearchParams(window.location.search);
         const queryCode: string | null = queryParams.get('code');

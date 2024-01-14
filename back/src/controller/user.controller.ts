@@ -12,7 +12,10 @@ import {JwtService} from "../services/jwt.service";
 import {EncryptionService} from "../services/encryption.service";
 import {UserService} from "../services/user.service";
 import { Op } from 'sequelize';
-
+import { authenticateUser } from '../services/API/Google/authService.service';
+import { OAuthData } from '../interfaces/token.interface';
+import { GoogleUserInfo } from '../interfaces/googleInfo.interface';
+import {getGoogleUserInfo} from '../services/API/Google/getUserEmail.service'
 
 /**
  * Login user
@@ -35,6 +38,11 @@ const register = async (req: Request, res: Response): Promise<void> => {
         }
         if (await UserMiddleware.checkIfUserExists(username, email)) {
             res.status(400).json({error: "Username or email already exists"});
+            return;
+        }
+
+        if (await UserMiddleware.checkIfUserLoggedOauthEmail(email)) {
+            res.status(400).json({error: "Email already exists for an Oauth access"});
             return;
         }
 
@@ -77,6 +85,10 @@ const login = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
+        if (await UserMiddleware.checkIfUserLoggedOauthUsername(username)) {
+            res.status(400).json({error: "Username already exists for an Oauth access"});
+            return;
+        }
         // check if password matches
         const match: boolean = await EncryptionService.bcryptCompare(password, user.password);;
         if (!match) {
@@ -85,6 +97,54 @@ const login = async (req: Request, res: Response): Promise<void> => {
         }
 
         // create token
+        const token: string = JwtService.generateToken(user.id);
+        res.status(200).json({token});
+    } catch (error: any) {
+        console.error(error)
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
+/**
+ * Login user
+ * @param {Request} req - This is the request object
+ * @param {Response} res - This is the response object
+ * @returns {Promise<void>} This returns the token if successful or an error message if unsuccessful
+ */
+const loginGoogle = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { code, mobile } = req.body;
+
+        // check if username and password are provided
+        if (!code) {
+            res.status(400).json({error: "Cannot found code in request body."});
+            return;
+        }
+        const oauthData : OAuthData = await authenticateUser(code, mobile ? mobile : false);
+        
+        if (!oauthData.accessToken) {
+            res.status(404).json({error: "OAuth google access token not found."})
+        }
+        const userInfo: GoogleUserInfo = await getGoogleUserInfo(oauthData.accessToken);
+
+        if (!userInfo) {
+            res.status(401).json({error: "User not found"});
+            return;
+        }
+        const user: User | null = await UserMiddleware.getUserFromUsername(userInfo.name);
+
+        if (!user) {
+            const encryptedEmail: {iv: string, content: string} = EncryptionService.encrypt(userInfo.email);
+            const newOauthUser: User = await User.create({
+                username: userInfo.name,
+                encryptedEmail: encryptedEmail.content,
+                ivEmail: encryptedEmail.iv,
+                password: "",
+            });
+            const token: string = JwtService.generateToken(newOauthUser.id);
+            res.status(201).json({token})
+            return;
+        }
         const token: string = JwtService.generateToken(user.id);
         res.status(200).json({token});
     } catch (error: any) {
@@ -224,9 +284,4 @@ const modifyUsername = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-
-
-
-
-
-export {register, login, logout, getUserInfo, deleteAccount, modifyUsername};
+export {register, login, loginGoogle, logout, getUserInfo, deleteAccount, modifyUsername};

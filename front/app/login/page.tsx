@@ -24,6 +24,7 @@ export default function Login() {
         }
     }, [loginSuccess, router]);
 
+    
     useEffect(() => {
             if (token) {
                 Cookies.set('token', token);

@@ -47,7 +47,7 @@ const RenderDropdown = ({data, setVisible, visible, elementAction}: {
                         renderItem={({item}) => (
                             <StyledTouchableOpacity
                                 onPress={() => elementAction(item)}
-                                className="flex-row items-center justify-between px-4 py-4 border-b border-gray-200"
+                                className="flex-row items-center justify-between px-4 py-4 border-gray-200"
                             >
                                 <StyledText className="text-white">{item.name}</StyledText>
                             </StyledTouchableOpacity>
