@@ -22,6 +22,7 @@ namespace OneDriveTriggers {
             if (!oauthToken) {
                 throw new Error("No token found");
             }
+            console.log('url', url);
             try {
                 const response: Response = await fetch(url, {
                 method: "GET",
@@ -30,6 +31,7 @@ namespace OneDriveTriggers {
                     "Content-Type": "application/json"
                 }
             });
+            console.log(response);
             if (!response.ok) {
                 throw new Error("Error fetching data from Microsoft Graph API");
             }
@@ -54,21 +56,29 @@ namespace OneDriveTriggers {
         }
     
         async function getOneDriveFileFromGraphAPI(oauthId: number, ownerId: number): Promise<string> {
-            let value: string = ""
-            let json: any;
-    
+            let value: string = "";
+            
             try {
-                json = await fetchWithOAuth(oauthId, MICROSFT_GRAPH_API_URL + "me/drive/root/children", ownerId);
+                const response = await fetchWithOAuth(oauthId, "https://graph.microsoft.com/v1.0/me/drive/root/children", ownerId);
+                
+                if (!response.ok) {
+                    console.error('Error:', response.statusText);
+                    return value;
+                }
+        
+                const json = await response.json();
+        
+                if (json.value && json.value.length > 0) {
+                    // Utilisez la dernière valeur plutôt que la première
+                    value = json.value[json.value.length - 1].id;
+                }
             } catch (error) {
-                console.error(error);
-                return value;
+                console.error('Error:', error);
             }
-            console.log(json);
-            if (json.value) {
-                value = json.value[0].id;
-            }
+        
             return value;
         }
+        
     
         
         /**
