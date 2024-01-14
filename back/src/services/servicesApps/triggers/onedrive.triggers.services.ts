@@ -22,7 +22,6 @@ namespace OneDriveTriggers {
             if (!oauthToken) {
                 throw new Error("No token found");
             }
-            console.log('url', url);
             try {
                 const response: Response = await fetch(url, {
                 method: "GET",
@@ -31,7 +30,6 @@ namespace OneDriveTriggers {
                     "Content-Type": "application/json"
                 }
             });
-            console.log(response);
             if (!response.ok) {
                 throw new Error("Error fetching data from Microsoft Graph API");
             }
@@ -56,28 +54,27 @@ namespace OneDriveTriggers {
         }
     
         async function getOneDriveFileFromGraphAPI(oauthId: number, ownerId: number): Promise<string> {
-            let value: string = "";
-            
+            let fileId: string = "";
+        
             try {
                 const response = await fetchWithOAuth(oauthId, "https://graph.microsoft.com/v1.0/me/drive/root/children", ownerId);
-                
-                if (!response.ok) {
-                    console.error('Error:', response.statusText);
-                    return value;
-                }
-        
-                const json = await response.json();
+                const json = response;
         
                 if (json.value && json.value.length > 0) {
-                    // Utilisez la dernière valeur plutôt que la première
-                    value = json.value[json.value.length - 1].id;
+                    const sortedFiles = json.value.sort((a: any, b: any) => {
+                        return new Date(b.createdDateTime).getTime() - new Date(a.createdDateTime).getTime();
+                    });
+        
+                    fileId = sortedFiles[0].id;
+        
                 }
             } catch (error) {
                 console.error('Error:', error);
             }
         
-            return value;
+            return fileId;
         }
+        
         
     
         
@@ -89,7 +86,6 @@ namespace OneDriveTriggers {
             try {
                 const { userData, isNew } = getOrCreateUserData(ownerId);
                 const newId = await getOneDriveFileFromGraphAPI(oauthId, ownerId);
-                console.log("je passe par las");
                 if (isNew || userData.id !== newId) {
                     userData.id = newId;
                     return { result: true, data: userData };

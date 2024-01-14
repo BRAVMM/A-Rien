@@ -19,19 +19,6 @@ export default function Services() {
   const [servicesList, setServicesList] = useState<ModalDataInterface[]>();
   const [service, setService] = useState<ModalDataInterface>();
 
-  const servicePicture: { [key: string]: string } = {
-    "Discord": "./Discord_logo.svg",
-    "Twitch": "./Twitch_logo.svg",
-    "Spotify": "./Spotify_logo.svg",
-    "Teams": "./Teams_logo.svg",
-    "Gmail": "./Gmail_logo.svg",
-    "Outlook": "./Outlook_logo.svg",
-    "TrackerGG": "./TrackerGG_logo.svg",
-    "Onedrive": "./OneDrive_logo.svg",
-    "Weather": "./Weather_logo.svg",
-    "Timer": "./Timer_logo.svg",
-  }
-
   const [areas, setAreas] = useState<AreaDetailsInterface[]>([]);
   const router = useRouter();
 
@@ -112,7 +99,7 @@ export default function Services() {
         return "./Outlook_logo.svg";
       case "TrackerGG":
         return "./TrackerGG_logo.svg";
-      case "Onedrive":
+      case "OneDrive":
         return "./Onedrive_logo.svg";
       case "Weather":
         return "./Weather_logo.svg";

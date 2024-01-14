@@ -30,6 +30,7 @@ namespace OutlookReactions {
         const reactionDataParsed: any = JSON.parse(reactionData.toString());
         const emailPayload = reactionDataParsed[0].emailPayload;
         const message = reactionDataParsed[1].message;
+        const object = reactionDataParsed[2].object;
 
         const headers = new Headers({
             'Authorization': `Bearer ${oauthToken}`,
@@ -37,7 +38,7 @@ namespace OutlookReactions {
         });
         const emailData = {
             "message": {
-                "subject": "Meet for lunch?",
+                "subject": object.toString(),
                 "body": {
                     "contentType": "Text",
                     "content": message.toString()

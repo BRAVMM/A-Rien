@@ -24,8 +24,7 @@ if (isNaN(INTERVAL)) {
     throw new Error('Invalid INTERVAL value. Please check your environment variable.');
 }
 
-// Initialize the database connection
-db.sequelize.sync({force: true}) // {force: true} to drop the tables and recreate them
+db.sequelize.sync({force: false})
     .then(() => {
         console.log('Database sync completed.');
 
@@ -288,7 +287,7 @@ const addActionsToDB = async () => {
                     name: 'When a new drive is created',
                     description: 'When a new drive is created',
                     args: [],
-                    reactionsIds: [7],
+                    reactionsIds: [6],
                 },
             ]
         }
@@ -420,6 +419,11 @@ const addReactionsToDB = async () => {
                             title: "message",
                             type: 'string',
                             description: "Enter a message",
+                        },
+                        {
+                            title: "object",
+                            type: 'string',
+                            description: "Enter a object",
                         }
                     ],
                 },

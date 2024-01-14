@@ -7,15 +7,33 @@ interface ServiceConnectionProps {
   user: any;
   service: string;
   onClick: () => void;
+  serviceID: number;
 }
 
-const ServiceConnection: React.FC<ServiceConnectionProps> = ({ user, service, onClick }) => {
+const ServiceConnection: React.FC<ServiceConnectionProps> = ({ user, service, onClick, serviceID }) => {
 
   const [microsoftLogin, setMicrosoftLogin] = useState<boolean>(false);
 
-  const handleLogout = () => {
-    Cookies.remove("token");
-  };
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(process.env.NEXT_PUBLIC_API + "/services/removetoken", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + Cookies.get("token"),
+        },
+        body: JSON.stringify({
+          serviceId: serviceID,
+        }),
+      });
+      if (response.ok) {
+        setMicrosoftLogin(false);
+      }
+    } catch (error) {
+      console.log(error);
+
+    }
+    };
 
   const handleLogin = () => {
     // Redirect to the login page or perform login logic
