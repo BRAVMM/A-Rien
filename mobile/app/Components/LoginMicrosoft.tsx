@@ -1,35 +1,38 @@
 import * as React from 'react';
-import { AuthSessionResult, makeRedirectUri, useAuthRequest } from 'expo-auth-session';
-import { Button, Text, View } from 'react-native';
+import {
+  makeRedirectUri,
+  useAuthRequest,
+  useAutoDiscovery,
+} from 'expo-auth-session';
+import { Button, Linking, Text, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { styled, withExpoSnack } from 'nativewind';
-
-const REGISTER_TOKEN_ROUTE = "/services/spotify/registerToken";
-
-const discovery = {
-  authorizationEndpoint: "https://accounts.spotify.com/authorize",
-  tokenEndpoint: "https://accounts.spotify.com/api/token",
-};
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
-const LoginSpotify = () => {
-    const clientID: string = process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_ID ?? ''
-    const [fetchError, setFetchError] = React.useState<boolean>(false)
+const LoginMicrosoft = () => {
+// Endpoint
+  const discovery = useAutoDiscovery(
+    process.env.EXPO_PUBLIC_MICROSOFT_AUTHORIZE ?? '',
+  );
+  const redirectUri = makeRedirectUri({
+    scheme: 'myapp',
+    path: 'profile',
+  });
+  const clientId = process.env.EXPO_PUBLIC_MICROSOFT_CLIENT_ID ?? '';
+  const REGISTER_TOKEN_ROUTE = "/services/microsoft/registerToken";
+  const [fetchError, setFetchError] = React.useState<boolean>(false)
 
-  const [request, _, promptAsync] = useAuthRequest(
+  const [request, response, promptAsync] = useAuthRequest(
     {
-      clientId: clientID,
-      scopes: ["user-read-email", "playlist-modify-public"],
+      clientId,
+      scopes: ['openid', 'profile', 'email', 'offline_access'],
+      redirectUri,
       usePKCE: false,
       extraParams: {
-        show_dialog: "true",
+        prompt: 'select_account'
       },
-      redirectUri: makeRedirectUri({
-        scheme: "myapp",
-        path: "profile",
-      }),
     },
     discovery,
   );
@@ -57,7 +60,7 @@ const LoginSpotify = () => {
         console.error(error)
         return false
       }
-  };
+  }
 
   const handleLogin = (async () => {
     const response = await promptAsync();
@@ -84,4 +87,4 @@ const LoginSpotify = () => {
     );
 }
 
-export default withExpoSnack(LoginSpotify);
+export default withExpoSnack(LoginMicrosoft);

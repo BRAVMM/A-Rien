@@ -46,7 +46,7 @@ namespace OneDriveTriggers {
             if (!userMicrosoftTriggerData[ownerId]) {
                 userMicrosoftTriggerData[ownerId] = {
                     userId: userId,
-                    id: ""
+                    id: "",
                 };
                 return { userData: userMicrosoftTriggerData[ownerId], isNew: true };
             }
@@ -86,6 +86,7 @@ namespace OneDriveTriggers {
             try {
                 const { userData, isNew } = getOrCreateUserData(ownerId);
                 const newId = await getOneDriveFileFromGraphAPI(oauthId, ownerId);
+                
                 if (isNew || userData.id !== newId) {
                     userData.id = newId;
                     return { result: true, data: userData };
