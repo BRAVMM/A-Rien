@@ -33,6 +33,7 @@ namespace UserMiddleware {
         const hashedEmail: string = await EncryptionService.bcryptHash(email);
         return await User.findOne({where: {email: hashedEmail}});
     }
+    
 
     /**
      * @description Get user from id

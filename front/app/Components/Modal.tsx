@@ -82,7 +82,7 @@ const ModalUI: React.FC<{
       console.error("ModalData is undefined");
       return;
     }
-    const actionJsonData_: Promise<ServiceActionInterface[]> = actionReactionJsonDataService.getActionJsonData(ModalData.id);
+    const actionJsonData_: Promise<ServiceActionInterface[]> = actionReactionJsonDataService.getActionJsonData(ModalData.serviceId);
 
     actionJsonData_.then((actionJsonData_) => {
       setActionJsonDatas(actionJsonData_);

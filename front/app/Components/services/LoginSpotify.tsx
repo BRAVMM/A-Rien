@@ -34,12 +34,11 @@ const SpotifyButtonOAuth: React.FC = () => {
     }, []);
 
     return (
-        <div className="App">
-            <header className="App-header">
-                <button>
-                    <a href={`${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}&show_dialog=${SHOWDIALOG}`}>Login to Spotify</a>
-                </button>
-            </header>
+        <div className="mt-4 text-white text-center">
+            <p>Service: Spotify</p>
+            <button className="text-white text-xl font-bold mt-2 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-fourthly rounded-md px-4 hover:bg-indigo-500 focus-visible:outline-indigo-600">
+                <a href={`${AUTH_ENDPOINT}?client_id=${process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}&show_dialog=${SHOWDIALOG}`}>Login</a>
+            </button>
         </div>
     );
 };

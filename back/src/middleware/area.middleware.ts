@@ -141,24 +141,32 @@ namespace AreaMiddleware {
      */
     export const getActionsFromServiceId = async (serviceId: number): Promise<Action[] | null> => {
         try {
-            const service: Service | null = await Service.findOne(
+            const actionsResult: Action[] = [];
+            const services: Service[] | null = await Service.findAll(
                 {
                     where: {
-                        id: serviceId
+                        serviceId: serviceId
                     },
                 }
             );
-            if (!service) {
+            if (!services || services.length === 0) {
                 return null;
             }
-            const actions: number[] = service.actionsIds;
-            return await Action.findAll(
-                {
-                    where: {
-                        id: actions
+            for (let service of services) {
+                const actionsIds: number[] = service.actionsIds;
+                const actions = await Action.findAll(
+                    {
+                        where: {
+                            id: actionsIds
+                        }
                     }
+                );
+                if (!actions) {
+                    continue;
                 }
-            );
+                actionsResult.push(...actions);
+            }
+            return actionsResult;
         } catch (error) {
             console.error(`Error retrieving actions with service ID ${serviceId}:`, error);
             return null;

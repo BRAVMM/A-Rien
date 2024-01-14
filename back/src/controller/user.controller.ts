@@ -11,6 +11,7 @@ import {UserMiddleware} from "../middleware/user.middleware";
 import {JwtService} from "../services/jwt.service";
 import {EncryptionService} from "../services/encryption.service";
 import {UserService} from "../services/user.service";
+import { Op } from 'sequelize';
 
 
 /**
@@ -128,4 +129,104 @@ const getUserInfo = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
-export {register, login, logout, getUserInfo};
+/**
+ * Delete user account
+ * @param {Request} req - This is the request object
+ * @param {Response} res - This is the response object
+ * @returns {Promise<void>} This returns a success message if the account is deleted or an error message if unsuccessful
+ */
+const deleteAccount = async (req: Request, res: Response): Promise<void> => {
+    if (!(req as any).user) {
+        res.status(401).json({error: "Unauthorized"});
+        return;
+    }
+
+    try {
+        const userId: number = (req as any).user.userId;
+        const user: User | null = await UserMiddleware.getUserFromId(userId);
+
+        // check if user exists
+        if (!user) {
+            res.status(404).json({error: "User not found"});
+            return;
+        }
+
+        // check if no other user has the same username
+        const otherUsersWithSameUsername = await User.findAll({
+            where: {
+                username: user.username,
+                id: { [Op.not]: userId } // exclude the current user from the search
+            }
+        });
+
+        if (otherUsersWithSameUsername.length > 0) {
+            res.status(400).json({error: "Cannot delete account, other user(s) have the same username"});
+            return;
+        }
+
+        await User.destroy({
+            where: { id: userId }
+        });
+
+        res.status(200).json({success: "Account deleted successfully"});
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+};
+
+/**
+ * Modify user username
+ * @param {Request} req - This is the request object
+ * @param {Response} res - This is the response object
+ * @returns {Promise<void>} This returns the updated user info if successful or an error message if unsuccessful
+ */
+const modifyUsername = async (req: Request, res: Response): Promise<void> => {
+    if (!(req as any).user) {
+        res.status(401).json({error: "Unauthorized"});
+        return;
+    }
+
+    try {
+        const userId: number = (req as any).user.userId;
+        const user: User | null = await UserMiddleware.getUserFromId(userId);
+
+        if (!user) {
+            res.status(404).json({error: "User not found"});
+            return;
+        }
+
+        const {username, newUsername} = req.body;
+
+        if (!username || !newUsername) {
+            res.status(400).json({error: "Please provide username and newUsername"});
+            return;
+        }
+        if (username === newUsername) {
+            res.status(400).json({error: "Please provide a new username"});
+            return;
+        }
+        if (username !== user.username) {
+            res.status(400).json({error: "Please provide the correct username"});
+            return;
+        }
+        if (await UserMiddleware.getUserFromUsername(newUsername)) {
+            res.status(400).json({error: "Username already taken"});
+            return;
+        }
+
+        await User.update({username: newUsername}, {where: {id: userId}});
+        res.status(200).json({username: newUsername});
+
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+};
+
+
+
+
+
+
+export {register, login, logout, getUserInfo, deleteAccount, modifyUsername};
