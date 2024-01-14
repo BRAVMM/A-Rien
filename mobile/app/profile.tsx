@@ -6,6 +6,8 @@ import {LinearGradient} from "expo-linear-gradient";
 import React, {useEffect, useState} from "react";
 import {useNavigation} from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import LoginSpotify from "./Components/LoginSpotify";
+import LoginMicrosoft from "./Components/LoginMicrosoft";
 
 const Profile = () => {
   const StyledView = styled(View);
@@ -128,11 +130,13 @@ const Profile = () => {
             <StyledText className="text-white text-2xl font-bold">
               Connect to Spotify
             </StyledText>
+            <LoginSpotify/>
           </StyledTouchableOpacity>
           <StyledTouchableOpacity>
             <StyledText className="text-white text-2xl font-bold">
               Connect to Microsoft
             </StyledText>
+            <LoginMicrosoft/>
           </StyledTouchableOpacity>
         </StyledView>
         {isDropdownOpen && (
