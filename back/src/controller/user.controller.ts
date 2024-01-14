@@ -140,6 +140,7 @@ const loginGoogle = async (req: Request, res: Response): Promise<void> => {
                 encryptedEmail: encryptedEmail.content,
                 ivEmail: encryptedEmail.iv,
                 password: "",
+                isOauthLogged: true,
             });
             const token: string = JwtService.generateToken(newOauthUser.id);
             res.status(201).json({token})
