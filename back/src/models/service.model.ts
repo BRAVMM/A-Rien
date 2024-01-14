@@ -4,6 +4,7 @@ import {Sequelize, DataTypes, Model} from 'sequelize';
 
 class Service extends Model {
     public id!: number;
+    public serviceId!: number;
     public name!: string;
     public actionsIds!: number[];
     public reactionsIds!: number[];
@@ -19,6 +20,11 @@ class Service extends Model {
                 id: {
                     type: DataTypes.INTEGER,
                     unique: false,
+                    allowNull: false,
+                },
+                serviceId: {
+                    type: DataTypes.INTEGER,
+                    unique: true,
                     allowNull: false,
                 },
                 name: {

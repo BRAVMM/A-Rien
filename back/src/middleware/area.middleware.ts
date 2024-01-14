@@ -145,7 +145,7 @@ namespace AreaMiddleware {
             const services: Service[] | null = await Service.findAll(
                 {
                     where: {
-                        id: serviceId
+                        serviceId: serviceId
                     },
                 }
             );

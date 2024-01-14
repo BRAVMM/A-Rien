@@ -113,7 +113,7 @@ export default function Services() {
       case "TrackerGG":
         return "./TrackerGG_logo.svg";
       case "Onedrive":
-        return "./OneDrive_logo.svg";
+        return "./Onedrive_logo.svg";
       case "Weather":
         return "./Weather_logo.svg";
       case "Timer":
@@ -148,9 +148,9 @@ export default function Services() {
           <p>Select a service</p>
         </div>
         <div className="overflow-hidden flex flex-col justify-center items-center space-y-5">
-          {servicesList !== undefined && (servicesList?.map((service) => (
+          {servicesList !== undefined && (servicesList?.map((service, index) => (
             <button
-              key={service.id}
+              key={index}
               className="w-full h-1/2 flex items-center justify-center"
               onClick={() => handleModal(service)}            >
               <IconService
