@@ -1,6 +1,5 @@
 "use client"
 import { useMsal } from "@azure/msal-react";
-import MicrosoftButtonLogin from "./Components/MicrosoftLoginButton";
 import Navbar from "./Components/Navbar";
 import TextSection from "./Components/TextSection";
 import {  useRouter } from 'next/navigation';
@@ -53,7 +52,6 @@ export default function Home() {
         <div className="flex items-center justify-center h-1/3 mt-10">
           <div className="snake-container">
           </div>
-            {/* <MicrosoftButtonLogin /> */}
         </div>
       </div>
     </div>
