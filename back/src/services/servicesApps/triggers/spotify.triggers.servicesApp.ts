@@ -39,6 +39,37 @@ namespace SpotifyTriggers {
         return {length, json};
     }
 
+    async function getSpotifyTrackInfos(oauthId: number, ownerId: number, trackId: string): Promise<{
+        trackInfos: any
+    }> {
+        let trackInfos: any;
+
+        trackInfos = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + "/tracks/" + trackId);
+        return {trackInfos};
+    }
+
+    async function getSpotifyArtistInfos(oauthId: number, ownerId: number, artistId: string): Promise<{
+        artistInfos: any
+    }> {
+        let artistInfos: any;
+
+        artistInfos = await fetchWithOAuth(oauthId, ownerId, SPOTIFY_API_BASE_URL + "/artists/" + artistId);
+        return {artistInfos};
+    }
+
+    async function getSpotifyArtistsGenres(oauthId: number, ownerId: number, artists: any): Promise<{
+        genres: string[]
+    }> {
+        let genres: string[] = [];
+
+        for (const artist of artists) {
+            const {artistInfos} = await getSpotifyArtistInfos(oauthId, ownerId, artist.id);
+            genres = genres.concat(artistInfos.genres);
+        }
+        console.log("genres", genres);
+        return {genres};
+    }
+
     async function getSpotifyFollowedSongsLength(oauthId: number, ownerId: number): Promise<{
         length: number,
         json: any
@@ -237,18 +268,15 @@ namespace SpotifyTriggers {
                 userData.trackLikedFromGenreLength = length;
                 return {result: false, data: null};
             }
-            console.log("json", json);
             let track = json.items[0];
-            console.log("track", track);
-            console.log("artists", track.track.artists);
+            const {genres} = await getSpotifyArtistsGenres(oauthId, ownerId, track.track.artists);
+
             track.dataType = TRIGGER_DATA_TYPE.SPOTIFY_TRACK;
             track.trackId = track.track.id;
             track.trackUri = track.track.uri;
-            for (const artist of track.track.artists) {
-                for (const genre of artist.genres) {
-                    if (genre.toLowerCase().includes(data.genre.toLowerCase())) {
-                        return {result: true, data: track};
-                    }
+            for (const genre of genres) {
+                if (genre.toLowerCase().includes(data.genre.toLowerCase())) {
+                    return {result: true, data: track};
                 }
             }
             return {result: false, data: null};
@@ -274,8 +302,13 @@ namespace SpotifyTriggers {
             const {userData} = getOrCreateUserData(ownerId);
             const isNew = userData.trackLikedFromArtistLength === -1;
 
-            userData.trackLikedFromArtistLength = length;
-            if (userData.trackLikedFromArtistLength >= length || (userData.trackLikedFromArtistLength < length && isNew)) {
+            if (userData.trackLikedFromArtistLength < length) {
+                userData.trackLikedFromArtistLength = length;
+                if (isNew) {
+                    return {result: false, data: null};
+                }
+            } else {
+                userData.trackLikedFromArtistLength = length;
                 return {result: false, data: null};
             }
             if (!json.items[0]) {

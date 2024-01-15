@@ -74,7 +74,7 @@ const addServicesToDB = async () => {
                 id: Number(process.env.SPOTIFY_SERVICE_ID),
                 serviceId: 1,
                 name: 'Spotify',
-                actionsId: [1, 2, 3, 4, 5, 6, 7],
+                actionsId: [1, 2, 3, 4, 5, 6],
                 reactionsId: [1, 2],
             });
         } catch (error) {
@@ -87,7 +87,7 @@ const addServicesToDB = async () => {
                 id: Number(process.env.TIMER_SERVICE_ID),
                 serviceId: 2,
                 name: 'Timer',
-                actionsId: [8],
+                actionsId: [7],
                 reactionsId: [],
             });
         } catch (error) {
@@ -113,7 +113,7 @@ const addServicesToDB = async () => {
                 id: Number(process.env.MICROSOFT_SERVICE_ID),
                 serviceId: 4,
                 name: 'Outlook',
-                actionsId: [10],
+                actionsId: [8],
                 reactionsId: [6, 7],
             });
         } catch (error) {
@@ -140,7 +140,7 @@ const addServicesToDB = async () => {
                 id: Number(process.env.MICROSOFT_SERVICE_ID),
                 serviceId: 6,
                 name: 'OneDrive',
-                actionsId: [11],
+                actionsId: [9],
                 reactionsId: [],
             });
         } catch (error) {
