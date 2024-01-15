@@ -1,7 +1,11 @@
-import * as React from 'react';
-import {AuthSessionResult, makeRedirectUri, useAuthRequest} from 'expo-auth-session';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {makeRedirectUri, useAuthRequest} from "expo-auth-session";
+import * as React from "react";
+import {FadeLoading} from "react-native-fade-loading";
+import BravvmButton from "./BravvmButton";
+import AnimatedBackground from "./AnimatedBackground";
+import colors from "../../constants/Colors";
 import {Button, Text, View} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {styled, withExpoSnack} from 'nativewind';
 
 const REGISTER_TOKEN_ROUTE = "/services/spotify/registerToken";
@@ -21,7 +25,7 @@ const LoginSpotify = () => {
   const [request, _, promptAsync] = useAuthRequest(
     {
       clientId: clientID,
-      scopes: ["user-read-email", "playlist-modify-public"],
+      scopes: ["user-read-private", "user-read-email", "playlist-read-private", "playlist-read-collaborative", "playlist-modify-private", "playlist-modify-public", "user-follow-read", "user-library-read", "user-library-modify", "user-top-read", "user-read-recently-played"],
       usePKCE: false,
       extraParams: {
         show_dialog: "true",
@@ -63,7 +67,7 @@ const LoginSpotify = () => {
     const response = await promptAsync();
 
     if (response?.type === "success") {
-      const { code } = response.params;
+      const {code} = response.params;
       if (code) {
         if (!(await apiCall(code))) {
           setFetchError(false);
@@ -73,14 +77,14 @@ const LoginSpotify = () => {
   })
 
   return (
-    <StyledView>
-      <Button
-        /* @end */
-        title="Login"
-        onPress={handleLogin}
-      />
-      {fetchError && <StyledText className="text-red-600">Error login failed.</StyledText>}
-    </StyledView>
+    <BravvmButton
+      title="Connect to Spotify"
+      onPress={handleLogin}
+      color={colors.app.spotifyDarkColor}
+      fontSize={20}
+      img={require("../../assets/images/logos/Spotify_logo.png")}
+      iconOrImgSize={40}
+    />
   );
 }
 

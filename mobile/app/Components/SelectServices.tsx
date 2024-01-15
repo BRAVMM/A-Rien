@@ -17,6 +17,7 @@ const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledSafeAreaView = styled(SafeAreaView);
+const StyledScrollView = styled(ScrollView);
 
 const SelectServices = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -32,7 +33,7 @@ const SelectServices = () => {
     Gmail: require("./../../assets/images/logos/Gmail_logo.png"),
     Outlook: require("./../../assets/images/logos/Outlook_logo.png"),
     TrackerGG: require("./../../assets/images/logos/TrackerGG_logo.png"),
-    Onedrive: require("./../../assets/images/logos/Onedrive_logo.png"),
+    OneDrive: require("./../../assets/images/logos/Onedrive_logo.png"),
     Weather: require("./../../assets/images/logos/Weather_logo.png"),
     Timer: require("./../../assets/images/logos/Timer_logo.png"),
   };
@@ -81,19 +82,13 @@ const SelectServices = () => {
           Select a service
         </StyledText>
       </StyledView>
-      <ScrollView
-        style={{ flex: 1 }}
-        contentContainerStyle={{
-          flex: 1,
-          justifyContent: "center",
-        }}
-      >
+      <StyledScrollView className="flex-1">
         <StyledView className="mb-[70%]">
           {servicesList !== undefined &&
             servicesList?.map((service, index) => (
               <StyledTouchableOpacity
                 key={index}
-                className="flex items-center justify-center w-[30%] h-[30%] m-5"
+                className="flex items-center justify-center w-[30%] h-[20%]"
                 onPress={() => handleModal(service)}
               >
                 <Image
@@ -107,7 +102,7 @@ const SelectServices = () => {
               </StyledTouchableOpacity>
             ))}
         </StyledView>
-      </ScrollView>
+      </StyledScrollView>
     </StyledSafeAreaView>
   );
 };
