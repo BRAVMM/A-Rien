@@ -43,7 +43,7 @@ const getServices = async (req: Request, res: Response): Promise<void> => {
  */
 const getActionsFromServiceId = async (req: Request, res: Response): Promise<void> => {
     try {
-        const serviceId = parseInt(req.params.serviceId, 10);
+        const serviceId = parseInt(req.params.serviceId);
 
         if (isNaN(serviceId)) {
             res.status(400).json({error: "Please provide a valid serviceId"});

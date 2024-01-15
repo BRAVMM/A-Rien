@@ -5,6 +5,8 @@ import {FadeLoading} from "react-native-fade-loading";
 import BravvmButton from "./BravvmButton";
 import AnimatedBackground from "./AnimatedBackground";
 import colors from "../../constants/Colors";
+import { Button, Text, View } from 'react-native';
+import { styled, withExpoSnack } from 'nativewind';
 
 const REGISTER_TOKEN_ROUTE = "/services/spotify/registerToken";
 
@@ -13,87 +15,77 @@ const discovery = {
     tokenEndpoint: "https://accounts.spotify.com/api/token",
 };
 
+const StyledView = styled(View);
+const StyledText = styled(Text);
+
 const LoginSpotify = () => {
-    const clientID: string = process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_ID ?? "";
+    const clientID: string = process.env.EXPO_PUBLIC_SPOTIFY_CLIENT_ID ?? ''
+    const [fetchError, setFetchError] = React.useState<boolean>(false)
 
-    const [request, response, promptAsync] = useAuthRequest(
+  const [request, _, promptAsync] = useAuthRequest(
+    {
+      clientId: clientID,
+        scopes: ["user-read-private", "user-read-email", "playlist-read-private", "playlist-read-collaborative", "playlist-modify-private", "playlist-modify-public", "user-follow-read", "user-library-read", "user-library-modify", "user-top-read", "user-read-recently-played"],
+      usePKCE: false,
+      extraParams: {
+        show_dialog: "true",
+      },
+      redirectUri: makeRedirectUri({
+        scheme: "myapp",
+        path: "profile",
+      }),
+    },
+    discovery,
+  );
+
+  const apiCall = async (code: string) => {
+    try {
+      const bearer = await AsyncStorage.getItem("token");
+
+      const response = await fetch(
+        process.env.EXPO_PUBLIC_API_URL + REGISTER_TOKEN_ROUTE,
         {
-            clientId: clientID,
-            scopes: ["user-read-email", "playlist-modify-public"],
-            usePKCE: false,
-            extraParams: {
-                show_dialog: "true",
-            },
-            redirectUri: makeRedirectUri({
-                scheme: "myapp",
-                path: "home",
-            }),
-        },
-        discovery,
-    );
-
-    const apiCall = async (code: string) => {
-        try {
-            const bearer = await AsyncStorage.getItem("token");
-
-            const response = await fetch(
-                process.env.EXPO_PUBLIC_API_URL + REGISTER_TOKEN_ROUTE,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${bearer}`,
-                    },
-                    body: JSON.stringify({code, mobile: true}),
-                },
-            );
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error);
-            }
-        } catch (error) {
-            console.log(error);
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${bearer}`,
+          },
+          body: JSON.stringify({code: code, mobile: true}),
+        });
+        if (!response.ok) {
+          const error = await response.json();
+          return false
         }
-    };
+        return true
+      } catch (error) {
+        console.error(error)
+        return false
+      }
+  };
 
-    React.useEffect(() => {
-        if (response?.type === "success") {
-            const {code} = response.params;
+  const handleLogin = (async () => {
+    const response = await promptAsync();
 
-            apiCall(code).then((r) => r);
+    if (response?.type === "success") {
+      const { code } = response.params
+        if (code) {
+          if (!await apiCall(code)) {
+            setFetchError(false)
+          }
         }
-    }, [response]);
+      }
+  })
 
     return (
-        request ? (
-            <BravvmButton
-                title="Connect to Spotify"
-                onPress={() => {
-                    promptAsync();
-                }}
-                color={colors.app.spotifyDarkColor}
-                fontSize={20}
-                img={require("../../assets/images/logos/Spotify_logo.png")}
-                iconOrImgSize={40}
-            />
-        ) : (
-            <FadeLoading primaryColor={colors.light.primary} secondaryColor={colors.light.fourthly}
-                         animated={true}
-                         duration={20000}
-                         style={{
-                             flex: 1,
-                             width: "100%",
-                             height: "100%",
-                             position: "absolute",
-                             top: 0,
-                             left: 0,
-                             opacity: 0.3
-                         }}
-                         visible={true}
-                         children={<></>}
-            />
-        )
+        <BravvmButton
+            title="Connect to Spotify"
+            onPress={handleLogin}
+            color={colors.app.spotifyDarkColor}
+            fontSize={20}
+            img={require("../../assets/images/logos/Spotify_logo.png")}
+            iconOrImgSize={40}
+        />
     );
 }
 
-export default LoginSpotify;
+export default withExpoSnack(LoginSpotify);

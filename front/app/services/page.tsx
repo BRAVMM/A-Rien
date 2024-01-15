@@ -15,23 +15,9 @@ import DiscordButtonOAuth from "../Components/services/CreateWebhookDiscord";
 import Cookies from 'js-cookie';
 
 export default function Services() {
-
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [servicesList, setServicesList] = useState<ModalDataInterface[]>();
   const [service, setService] = useState<ModalDataInterface>();
-
-  const servicePicture: { [key: string]: string } = {
-    "Discord": "./Discord_logo.svg",
-    "Twitch": "./Twitch_logo.svg",
-    "Spotify": "./Spotify_logo.svg",
-    "Teams": "./Teams_logo.svg",
-    "Gmail": "./Gmail_logo.svg",
-    "Outlook": "./Outlook_logo.svg",
-    "TrackerGG": "./TrackerGG_logo.svg",
-    "Onedrive": "./OneDrive_logo.svg",
-    "Weather": "./Weather_logo.svg",
-    "Timer": "./Timer_logo.svg",
-  }
 
   const [areas, setAreas] = useState<AreaDetailsInterface[]>([]);
   const router = useRouter();
@@ -113,8 +99,8 @@ export default function Services() {
         return "./Outlook_logo.svg";
       case "TrackerGG":
         return "./TrackerGG_logo.svg";
-      case "Onedrive":
-        return "./OneDrive_logo.svg";
+      case "OneDrive":
+        return "./Onedrive_logo.svg";
       case "Weather":
         return "./Weather_logo.svg";
       case "Timer":
@@ -145,15 +131,13 @@ export default function Services() {
         <div className="flex items-center justify-start ml-[8%] mt-[5%] h-1/6 w-full">
           <Image src="/logo1.svg" alt="Logo" width={70} height={70} />
         </div>
-        <SpotifyButtonOAuth/>
-        <DiscordButtonOAuth/>
         <div className="flex items-center justify-center h-1/6 text-white text-3xl truncate">
           <p>Select a service</p>
         </div>
         <div className="overflow-hidden flex flex-col justify-center items-center space-y-5">
-          {servicesList !== undefined && (servicesList?.map((service) => (
+          {servicesList !== undefined && (servicesList?.map((service, index) => (
             <button
-              key={service.id}
+              key={index}
               className="w-full h-1/2 flex items-center justify-center"
               onClick={() => handleModal(service)}            >
               <IconService
@@ -172,8 +156,13 @@ export default function Services() {
           <div className="w-full h-full flex flex-col flex-none">
             <div className="feh-full basis-1/6 justify-between items-center">
               <TextSection title="Services" content="" />
+              <div className="basis-1/6 flex justify-end items-center mr-5">
+                <button
+                  className="rounded-full h-20 w-20 bg-white flex justify-center items-center"
+                  onClick={() => router.push("/profile")}
+                ></button>
+              </div>
             </div>
-
             <div className="basis-5/6 pl-3 overflow-y-scroll">
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-20">
                 {areas.length > 0 ? areas.map((area: AreaDetailsInterface) => (

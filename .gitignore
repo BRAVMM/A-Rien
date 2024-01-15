@@ -54,6 +54,7 @@ xcuserdata
 
 # Android
 *.apk
+!front/app/client.apk
 *.hprof
 /android/**/build
 /android/**/.cxx

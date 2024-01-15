@@ -24,8 +24,7 @@ if (isNaN(INTERVAL)) {
     throw new Error('Invalid INTERVAL value. Please check your environment variable.');
 }
 
-// Initialize the database connection
-db.sequelize.sync({force: false})// {force: true} to drop the tables and recreate them
+db.sequelize.sync({force: true})
     .then(() => {
         console.log('Database sync completed.');
 
@@ -62,6 +61,7 @@ app.use('/services', ServicesRouter);
 const addServicesToDB = async () => {
     interface ServiceEntry {
         id: number;
+        serviceId: number;
         name: string;
         actionsId: number[];
         reactionsId: number[];
@@ -72,6 +72,7 @@ const addServicesToDB = async () => {
         try {
             SERVICES.push({
                 id: Number(process.env.SPOTIFY_SERVICE_ID),
+                serviceId: 1,
                 name: 'Spotify',
                 actionsId: [1, 2, 3, 4, 5, 6, 7],
                 reactionsId: [1, 2],
@@ -84,6 +85,7 @@ const addServicesToDB = async () => {
         try {
             SERVICES.push({
                 id: Number(process.env.TIMER_SERVICE_ID),
+                serviceId: 2,
                 name: 'Timer',
                 actionsId: [8],
                 reactionsId: [],
@@ -96,6 +98,7 @@ const addServicesToDB = async () => {
         try {
             SERVICES.push({
                 id: Number(process.env.DISCORD_SERVICE_ID),
+                serviceId: 3,
                 name: 'Discord',
                 actionsId: [],
                 reactionsId: [3],
@@ -108,14 +111,43 @@ const addServicesToDB = async () => {
         try {
             SERVICES.push({
                 id: Number(process.env.MICROSOFT_SERVICE_ID),
-                name: 'Microsoft',
+                serviceId: 4,
+                name: 'Outlook',
+                actionsId: [10],
+                reactionsId: [6, 7],
+            });
+        } catch (error) {
+            console.error("Error while loading Outlook service: " + error);
+        }
+        
+    }
+    if (process.env.MICROSOFT_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.MICROSOFT_SERVICE_ID),
+                serviceId: 5,
+                name: 'Teams',
                 actionsId: [],
+                reactionsId: [4, 5],
+            });
+        } catch (error) {
+            console.error("Error while loading Teams service: " + error);
+        }
+    }
+    if (process.env.MICROSOFT_SERVICE_ID) {
+        try {
+            SERVICES.push({
+                id: Number(process.env.MICROSOFT_SERVICE_ID),
+                serviceId: 6,
+                name: 'OneDrive',
+                actionsId: [11],
                 reactionsId: [],
             });
         } catch (error) {
-            console.error("Error while loading Microsoft service: " + error);
+            console.error("Error while loading OneDrive service: " + error);
         }
     }
+
 
     for (const service of SERVICES) {
         if (await Service.findOne({where: {name: service.name}})) {
@@ -123,6 +155,7 @@ const addServicesToDB = async () => {
         }
         await Service.create({
             id: service.id,
+            serviceId: service.serviceId,
             name: service.name,
             actionsIds: service.actionsId,
             reactionsIds: service.reactionsId,
@@ -218,7 +251,43 @@ const addActionsToDB = async () => {
                         description: 'Enter a number (in minutes)',
                         range: [1, 1440],
                     }],
-                    reactionsIds: [2],
+                    reactionsIds: [2, 3, 4, 5, 6, 7],
+                },
+            ]
+        },
+        {
+            name: 'Teams',
+            actions: [
+                {
+                    id: 9,
+                    name: 'When a new message is received',
+                    description: 'When a new message is received',
+                    args: [],
+                    reactionsIds: [3],
+                },
+            ]
+        },
+        {
+            name: 'Outlook',
+            actions: [
+                {
+                    id: 10,
+                    name: 'When a new email is received',
+                    description: 'When a new email is received',
+                    args: [],
+                    reactionsIds: [6],
+                },
+            ]
+        },
+        {
+            name: 'OneDrive',
+            actions: [
+                {
+                    id: 11,
+                    name: 'When a new drive is created',
+                    description: 'When a new drive is created',
+                    args: [],
+                    reactionsIds: [6],
                 },
             ]
         }
@@ -293,7 +362,85 @@ const addReactionsToDB = async () => {
                     ],
                 },
             ]
-        }
+        },
+        {
+            name: 'Teams',
+            reactions: [
+                {
+                    id: 4,
+                    name: 'Send group message',
+                    description: 'Send a message to the group choosen',
+                    args: [
+                        {
+                            title: "convName",
+                            type: 'string',
+                            description: "Enter a group conversation name",
+                        },
+                        {
+                            title: "message",
+                            type: 'string',
+                            description: "Enter the message you want to send",
+                        }
+                    ],
+                },
+                {
+                    id: 5,
+                    name: 'Send message to team channel',
+                    description: 'Send a message to the channel of a team chosen',
+                    args: [
+                        {
+                            title: "convName",
+                            type: 'string',
+                            description: "Link of the channel",
+                        },
+                        {
+                            title: "message",
+                            type: 'string',
+                            description: "Enter the message you want to send",
+                        }
+                    ],
+                }
+            ]
+        },
+        {
+            name: 'Outlook',
+            reactions: [
+                {
+                    id: 6,
+                    name: 'Send email',
+                    description: 'Send an email',
+                    args: [
+                        {
+                            title: "emailPayload",
+                            type: 'string',
+                            description: "Enter an email where to send the message",
+                        },
+                        {
+                            title: "message",
+                            type: 'string',
+                            description: "Enter a message",
+                        },
+                        {
+                            title: "object",
+                            type: 'string',
+                            description: "Enter a object",
+                        }
+                    ],
+                },
+                {
+                    id: 7,
+                    name: 'Create Folder',
+                    description: 'Create a folder',
+                    args: [
+                        {
+                            title: "folderName",
+                            type: 'string',
+                            description: "Enter a folder name",
+                        }
+                    ],
+                }
+            ]
+        },
     ];
 
     for (const service of REACTIONS) {

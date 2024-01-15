@@ -1,12 +1,14 @@
 "use client"
-import { useRouter } from 'next/router';
+
 import { useEffect, useState } from "react";
 import { registerTokenService } from '../Utils/callApi';
 import { MicroSoftDataBody } from '../Interfaces/dataBody.interface';
+import { useRouter } from "next/navigation";
 
 export default function Redirect() {
 
     const [code, setCode] = useState<string>("null");
+    const router = useRouter();
 
     useEffect(() => {
       const queryParams = new URLSearchParams(window.location.search); // remove the '#' at start
@@ -15,7 +17,11 @@ export default function Redirect() {
       const callApi = async () => {
         await registerTokenService(new MicroSoftDataBody(codeFound), "/services/microsoft/registerToken")
       }
-      callApi()
+      if (codeFound) {
+        setCode(codeFound);
+        callApi();
+        router.push("/profile");
+      }
     }, []);
 
 
