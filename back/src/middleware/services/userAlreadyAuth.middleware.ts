@@ -89,7 +89,9 @@ const userAlreadyAuthMicrosoft = async (req: Request, res: Response, next: NextF
         const userEmail = await getUserEmailMicrosoft(accessToken)
         const token : OAuth | null = await OAuth.findOne({
             where: {
-                OAuthEmail: userEmail
+                OAuthEmail: userEmail,
+                serviceId: process.env.MICROSOFT_SERVICE_ID,
+                ownerId: userInfo.userId
             }
         });
 
