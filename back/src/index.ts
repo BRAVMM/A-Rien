@@ -328,7 +328,7 @@ const addReactionsToDB = async () => {
             reactions: [
                 {
                     id: 3,
-                    name: 'Send message',
+                    name: 'Send discord message',
                     description: 'Send a message to a channel',
                     args: [
                         {

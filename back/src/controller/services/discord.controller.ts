@@ -41,6 +41,9 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
     const userInfo: TokenData = (req as CustomRequest).user
     const { accessToken, refreshToken, expiresIn, serviceId } = req.body;
     const guildId = req.params.guildId;
+    const webhookId = req.params.webhookId;
+    const token = req.params.token;
+    const url = req.params.url;
 
     if (!process.env.DISCORD_SERVICE_ID || Number(process.env.DISCORD_SERVICE_ID) !== serviceId) {
         return res.status(400).json({ error: "Wrong service id" });
@@ -65,7 +68,7 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
             expiresIn: expiresIn,
             ownerId: userInfo.userId,
             OAuthEmail: "",
-            datas: { guildId: req.params.guildId }
+            datas: { guildId, webhookId, token, url }
         });
         return res.status(201).json({ id: OAuthData.id })
     } catch (error) {
