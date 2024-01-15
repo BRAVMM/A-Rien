@@ -24,7 +24,7 @@ if (isNaN(INTERVAL)) {
     throw new Error('Invalid INTERVAL value. Please check your environment variable.');
 }
 
-db.sequelize.sync({force: true})
+db.sequelize.sync({force: false})
     .then(() => {
         console.log('Database sync completed.');
 
@@ -328,7 +328,7 @@ const addReactionsToDB = async () => {
             reactions: [
                 {
                     id: 3,
-                    name: 'Send message',
+                    name: 'Send discord message',
                     description: 'Send a message to a channel',
                     args: [
                         {
