@@ -4,13 +4,11 @@ import {
   useAuthRequest,
   useAutoDiscovery,
 } from "expo-auth-session";
-import { styled, withExpoSnack } from "nativewind";
+import { withExpoSnack } from "nativewind";
 import * as React from "react";
-import { Text, View } from "react-native";
 
 import BravmmButton from "./BravmmButton";
 import colors from "../../constants/Colors";
-import BravvmButton from "./BravmmButton";
 
 const LoginMicrosoft = () => {
   // Endpoint
@@ -23,7 +21,7 @@ const LoginMicrosoft = () => {
   });
   const clientId = process.env.EXPO_PUBLIC_MICROSOFT_CLIENT_ID ?? "";
   const REGISTER_TOKEN_ROUTE = "/services/microsoft/registerToken";
-  const [fetchError, setFetchError] = React.useState<boolean>(false)
+  const [, setFetchError] = React.useState<boolean>(false);
 
   const [, , promptAsync] = useAuthRequest(
     {
@@ -74,7 +72,7 @@ const LoginMicrosoft = () => {
   };
 
   return (
-    <BravvmButton
+    <BravmmButton
       title="Connect to Microsoft"
       onPress={handleLogin}
       color={colors.app.spotifyDarkColor}

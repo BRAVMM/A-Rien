@@ -9,6 +9,7 @@ const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthDat
     const MICROSOFT_CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET;
     const MICROSOFT_REDIRECT_URI = getRedirectUri(mobile);
     const TENANT_ID = process.env.MICROSOFT_CLIENT_TENANT_ID;
+    const MICROSOFT_SERVICE_ID = Number(process.env.MICROSOFT_SERVICE_ID);
 
     if (!MICROSOFT_CLIENT_ID || !MICROSOFT_REDIRECT_URI || !TENANT_ID) {
         console.error("Les variables d'environnement Microsoft ne sont pas définies")
@@ -46,7 +47,7 @@ const authenticateUser = async (code: string, mobile: boolean): Promise<OAuthDat
             accessToken: data.access_token,
             refreshToken: data.refresh_token,
             expiresIn: data.expires_in,
-            serviceId: 10, // TODO: replace by correct services ID's
+            serviceId: MICROSOFT_SERVICE_ID,
         }
         console.log("\x1b[32mUser successfully connected to microsoft, access token = \x1b[0m", oauthData.accessToken)
         return oauthData
