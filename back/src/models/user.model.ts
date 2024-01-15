@@ -8,6 +8,7 @@ class User extends Model {
     public password!: string;
     public encryptedEmail!: string;
     public ivEmail!: string;
+    public isOauthLogged!: boolean;
 
     public static initialize(sequelize: Sequelize) {
         User.init(
@@ -34,6 +35,11 @@ class User extends Model {
                 },
                 password: {
                     type: DataTypes.STRING,
+                    allowNull: false,
+                },
+                isOauthLogged: {
+                    type: DataTypes.BOOLEAN,
+                    defaultValue: false,
                     allowNull: false,
                 }
             },
