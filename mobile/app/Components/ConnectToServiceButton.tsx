@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 
 import LoginMicrosoft from "./LoginMicrosoft";
 import LoginSpotify from "./LoginSpotify";
+import LoginDiscord from "./LoginDiscord";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -18,6 +19,10 @@ const ServiceList: { key: string; view: JSX.Element }[] = [
     key: "Microsoft",
     view: <LoginMicrosoft />,
   },
+  {
+    key: "Discord",
+    view: <LoginDiscord/>
+  }
 ];
 
 const ConnectToServiceButton = ({ serviceName }: { serviceName: string }) => {

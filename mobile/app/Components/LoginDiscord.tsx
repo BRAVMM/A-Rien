@@ -5,6 +5,8 @@ import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
+import BravvmButton from "./BravmmButton";
+import colors from "../../constants/Colors";
 
 const AUTH_ENDPOINT = "https://discord.com/oauth2/authorize";
 const RESPONSE_TYPE = "code";
@@ -73,15 +75,13 @@ export default function App() {
     }
 
     return (
-        <View style={{ backgroundColor: "blue", flex: 1, justifyContent: 'center', alignItems: 'center', }}>
-            <Button
-                // disabled={!request}
-                title="Login"
-                onPress={() => {
-                    handlePress();
-                    console.log("Login")
-                }}
-            />
-        </View>
+        <BravvmButton
+            title="Connect to Discord"
+            onPress={handlePress}
+            color={colors.app.spotifyDarkColor}
+            fontSize={20}
+            img={require("../../assets/images/logos/Discord_logo.png")}
+            iconOrImgSize={40}
+        />
     );
 }
