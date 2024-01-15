@@ -73,9 +73,6 @@ namespace OutlookTriggers {
         if (!json.value) {
             return {numberOfMails: 0, subjectOfLastEmail: ""};
         }
-        console.log(json);
-        console.log(json["@odata.count"]);
-
         numberOfMails = json["@odata.count"];
         subject = json.value[0].subject;
         return {numberOfMails: numberOfMails, subjectOfLastEmail: subject};
@@ -90,8 +87,6 @@ namespace OutlookTriggers {
             const {userData} = getOrCreateUserData(ownerId);
             const {numberOfMails, subjectOfLastEmail}  = await getOutlookNumberOfMailsFromGraphAPI(oauthId, ownerId);
 
-            console.log("newLength", numberOfMails);
-            console.log("userData.subjectOfEmail", userData.subjectOfEmail);
             if (userData.numberOfMails < numberOfMails) {
                 userData.numberOfMails = numberOfMails;
                 userData.subjectOfEmail = subjectOfLastEmail;

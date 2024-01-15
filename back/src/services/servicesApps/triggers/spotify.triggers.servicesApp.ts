@@ -66,7 +66,6 @@ namespace SpotifyTriggers {
             const {artistInfos} = await getSpotifyArtistInfos(oauthId, ownerId, artist.id);
             genres = genres.concat(artistInfos.genres);
         }
-        console.log("genres", genres);
         return {genres};
     }
 
@@ -384,11 +383,8 @@ namespace SpotifyTriggers {
             const {userData} = getOrCreateUserData(ownerId);
             const isNew = userData.artistLikedLength === -1;
 
-            console.log("length", length);
-            console.log("userData.artistLikedLength", userData.artistLikedLength)
             if (userData.artistLikedLength < length) {
                 userData.artistLikedLength = length;
-                console.log("isNew", isNew);
                 if (isNew) {
                     return {result: false, data: null};
                 }
@@ -397,7 +393,6 @@ namespace SpotifyTriggers {
                 return {result: false, data: null};
             }
             const {lastArtist} = await getLastSpotifyFollowedArtist(oauthId, ownerId);
-            console.log("lastArtist", lastArtist);
             if (!lastArtist.artists.items[0]) {
                 return {result: false, data: null};
             }

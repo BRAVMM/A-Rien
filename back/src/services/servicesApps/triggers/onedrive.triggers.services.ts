@@ -41,38 +41,32 @@ namespace OneDriveTriggers {
             }
         }
     
-        function getOrCreateUserData(ownerId: number): { userData: OneDriveTriggerData, isNew: boolean } {
+        function getOrCreateUserData(ownerId: number): { userData: OneDriveTriggerData } {
             const userId = ownerId.toString();
             if (!userMicrosoftTriggerData[ownerId]) {
                 userMicrosoftTriggerData[ownerId] = {
                     userId: userId,
                     id: "",
+                    folderLength: 0,
+                    isNew: true
                 };
-                return { userData: userMicrosoftTriggerData[ownerId], isNew: true };
             }
-            return { userData: userMicrosoftTriggerData[ownerId], isNew: false };
+            return { userData: userMicrosoftTriggerData[ownerId]};
         }
     
-        async function getOneDriveFileFromGraphAPI(oauthId: number, ownerId: number): Promise<string> {
-            let fileId: string = "";
+        async function getOneDriveNumberOfChildsFromGraphAPI(oauthId: number, ownerId: number): Promise<number> {
+            let numberOfChilds: number = 0;
         
             try {
-                const response = await fetchWithOAuth(oauthId, "https://graph.microsoft.com/v1.0/me/drive/root/children", ownerId);
+                const response = await fetchWithOAuth(oauthId, "https://graph.microsoft.com/v1.0/me/drive/root", ownerId);
                 const json = response;
-        
-                if (json.value && json.value.length > 0) {
-                    const sortedFiles = json.value.sort((a: any, b: any) => {
-                        return new Date(b.createdDateTime).getTime() - new Date(a.createdDateTime).getTime();
-                    });
-        
-                    fileId = sortedFiles[0].id;
-        
-                }
+
+                numberOfChilds = json.folder.childCount;
             } catch (error) {
                 console.error('Error:', error);
             }
         
-            return fileId;
+            return numberOfChilds;
         }
         
         
@@ -84,14 +78,20 @@ namespace OneDriveTriggers {
         */
         export const getTriggerData = async (ownerId: number, oauthId: number): Promise<{ result: boolean, data: any }> => {
             try {
-                const { userData, isNew } = getOrCreateUserData(ownerId);
-                const newId = await getOneDriveFileFromGraphAPI(oauthId, ownerId);
-                
-                if (isNew || userData.id !== newId) {
-                    userData.id = newId;
-                    return { result: true, data: userData };
+                const { userData } = getOrCreateUserData(ownerId);
+                const length = await getOneDriveNumberOfChildsFromGraphAPI(oauthId, ownerId);
+
+                if (userData.folderLength < length) {
+                    userData.folderLength = length;
+                    if (userData.isNew) {
+                        userData.isNew = false;
+                        return {result: false, data: null};
+                    }
+                } else {
+                    userData.folderLength = length;
+                    return {result: false, data: null};
                 }
-                return { result: false, data: userData };
+                return { result: true, data: userData };
             }
             catch (error) {
                 console.error(error);

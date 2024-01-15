@@ -261,8 +261,8 @@ const addActionsToDB = async () => {
             actions: [
                 {
                     id: 9,
-                    name: 'When a new drive is created',
-                    description: 'When a new drive is created',
+                    name: 'When a new document or folder is created',
+                    description: 'When a new document or folder is created',
                     args: [],
                     reactionsIds: [6],
                 },

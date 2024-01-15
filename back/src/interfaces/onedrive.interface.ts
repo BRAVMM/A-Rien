@@ -9,6 +9,8 @@
 interface OneDriveTriggerData {
     userId: string;
     id: string;
+    folderLength: number;
+    isNew: boolean;
 }
 
 export {OneDriveTriggerData};
