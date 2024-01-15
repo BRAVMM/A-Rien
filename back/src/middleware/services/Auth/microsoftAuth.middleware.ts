@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { OAuthData } from "../../../interfaces/token.interface";
 import { OAuth } from "../../../models/oauth.model";
 import { EncryptionService } from "../../../services/encryption.service";
-import { authenticateUserMicrosoft } from "../../../services/API/Spotify/authService.service";
+import authenticateUser from "../../../services/API/Microsoft/authService.services";
 // import getUserEmail from "../../../services/API/microsoft/getUserEmail.service";
 
 /**
@@ -35,7 +35,7 @@ const microsoftAuth = async (req: Request, res: Response, next: NextFunction): P
             res.status(400).json({error: "Code not found in the request."})
             return;
         }
-        req.body = await authenticateUserMicrosoft(code, (mobile !== undefined && mobile));
+        req.body = await authenticateUser(code, (mobile !== undefined && mobile));
         next()
     } catch (error) {
         res.status(500).json({error: 'microsoft authentication failed.'})

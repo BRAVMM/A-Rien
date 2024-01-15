@@ -34,7 +34,7 @@ namespace OAuthService {
         }
         // check if the access token is expired
         const now = new Date();
-        let expiresAt = new Date();
+        let expiresAt = EncryptedOAuth.updatedAt;
         expiresAt.setSeconds(expiresAt.getSeconds() + EncryptedOAuth.expiresIn);
         expiresAt.setMinutes(expiresAt.getMinutes() - 1);
         if (now > expiresAt) {

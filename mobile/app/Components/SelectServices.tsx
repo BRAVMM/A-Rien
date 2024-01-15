@@ -102,9 +102,9 @@ const SelectServices = () => {
       >
         <StyledView className="mb-[70%]">
           {servicesList !== undefined &&
-            servicesList?.map((service) => (
+            servicesList?.map((service, index) => (
               <StyledTouchableOpacity
-                key={service.id}
+                key={index}
                 className="flex items-center justify-center w-[30%] h-[30%] m-5"
                 onPress={() => handleModal(service)}
               >

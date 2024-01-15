@@ -1,8 +1,8 @@
 "use client";
 
-import { registerTokenService } from '@/app/Utils/callApi';
-import { DiscordDataBody } from '@/app/Interfaces/dataBody.interface';
-import React, { useEffect, useRef, useState } from 'react';
+import {registerTokenService} from '@/app/Utils/callApi';
+import {DiscordDataBody} from '@/app/Interfaces/dataBody.interface';
+import React, {useEffect, useRef, useState} from 'react';
 import generateRandomString from '@/app/Utils/generateRandomString';
 import Cookies from 'js-cookie';
 
@@ -47,7 +47,7 @@ const DiscordButtonOAuth: React.FC = () => {
             } else {
                 console.error('Token not registered...')
             }
-        } catch(error) {
+        } catch (error) {
             console.log(error)
         }
     };
@@ -65,12 +65,15 @@ const DiscordButtonOAuth: React.FC = () => {
     }, []);
 
     return (
-        <div className="App">
-            <header className="App-header">
-                <a href={`${AUTH_ENDPOINT}?response_type=${RESPONSE_TYPE}&client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&scope=${SCOPE}&state=${state.current}&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}`}>Login to Discord</a>
-            </header>
+        <div className="mt-4 text-white text-center">
+            <p>Service: Discord</p>
+            <button
+                className="text-white text-xl font-bold mt-2 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-fourthly rounded-md px-4 hover:bg-indigo-500 focus-visible:outline-indigo-600">
+                <a href={`${AUTH_ENDPOINT}?response_type=${RESPONSE_TYPE}&client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&scope=${SCOPE}&state=${state.current}&redirect_uri=${process.env.NEXT_PUBLIC_DISCORD_REDIRECT_URI}`}>Login</a>
+            </button>
         </div>
-    );
+    )
+        ;
 };
 
 export default DiscordButtonOAuth;

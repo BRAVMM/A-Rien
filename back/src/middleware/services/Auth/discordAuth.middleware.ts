@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import authenticateUser from "../../../services/API/Discord/authService.service";
+import authenticateUserDiscord from "../../../services/API/Discord/authService.service";
+import {OAuthData} from "../../../interfaces/token.interface";
 
 /**
  * Middleware that authenticates with Discord using an authorization code.
@@ -36,8 +37,12 @@ const discordAuth = async (req: Request, res: Response, next: NextFunction): Pro
             res.status(400).json({ error: "Guild ID not found in the request." })
             return;
         }
-        req.body = await authenticateUser(code, (mobile !== undefined && mobile))
+        const {oauthData, webhookId, token, url} = await authenticateUserDiscord(code, (mobile !== undefined && mobile))
+        req.body = oauthData
         req.params.guildId = guildId
+        req.params.webhookId = webhookId
+        req.params.token = token
+        req.params.url = url
         next()
     } catch (error) {
         if (error instanceof Error) {

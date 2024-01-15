@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationProp } from "@react-navigation/native";
 
 import {ModalDataInterface, ServiceActionInterface, ServiceReactionInterface,} from "../Interfaces/ModalData.interface";
+import {AreaDetailsInterface} from "../Interfaces/areaData.interface";
 
 /**
  * @namespace actionReactionJsonDataService
@@ -14,31 +15,38 @@ import {ModalDataInterface, ServiceActionInterface, ServiceReactionInterface,} f
  */
 namespace actionReactionJsonDataService {
   const requestApi = async (url: string, method: string, body: any, router: NavigationProp<ReactNavigation.RootParamList>) => {
-    const bearer = await AsyncStorage.getItem("token")
     let response: Response;
 
-    if (method === "GET") {
-      response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${bearer}`,
-        },
-      });
-    } else {
-      response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${bearer}`,
-        },
-        body: JSON.stringify(body),
-      });
+    try {
+      const bearer = await AsyncStorage.getItem("token")
+
+      if (method === "GET") {
+        response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${bearer}`,
+          },
+        });
+      } else {
+        response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${bearer}`,
+          },
+          body: JSON.stringify(body),
+        });
+      }
+      if (response.status === 401) {
+        router.navigate("login" as never);
+      }
+      return response;
+    } catch (error) {
+        console.log(error);
+        response = new Response(JSON.stringify({error: "error"}));
+        return response;
     }
-    if (response.status === 401) {
-      router.navigate("login" as never);
-    }
-    return response;
   };
 
   /**
@@ -224,6 +232,39 @@ namespace actionReactionJsonDataService {
       return [];
     }
   };
+
+  /**
+   * Retrieves the areas from the server.
+   * @returns An array of AreaDetailsInterface representing the areas.
+   */
+  export const getAreas = async (router: NavigationProp<ReactNavigation.RootParamList>): Promise<AreaDetailsInterface[]> => {
+    const _areas: AreaDetailsInterface[] = [];
+    const token: string | null = await AsyncStorage.getItem("token");
+
+    if (!token) {
+      return _areas;
+    }
+    try {
+      const response: Response = await requestApi(
+          `${process.env.EXPO_PUBLIC_API_URL}/area/getAreas`,
+          "GET",
+          null,
+          router
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        console.error(data.error);
+        return _areas;
+      }
+      if (data) {
+        data.forEach((area: AreaDetailsInterface) => {
+          _areas.push(area);
+        });
+      }
+    } catch (error) {
+    }
+    return _areas;
+  }
 }
 
 export default actionReactionJsonDataService;

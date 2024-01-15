@@ -24,32 +24,38 @@ namespace DiscordReactions {
                 console.error("Discord API endpoint not found");
                 return false;
             }
-
             const oAuthData: any | undefined = await OAuthService.getOAuthDataFromId(oauthId, ownerId);
-            const guildId: string | null = oAuthData?.datas?.guildId;
+            const guildId: string | null = oAuthData?.guildId;
+            const webhookId: string | null = oAuthData?.webhookId;
+            const token: string | null = oAuthData?.token;
+            const url: string | null = oAuthData?.url;
+            const reactionDataParsed: any = JSON.parse(reactionData.toString())[0];
+            console.log("reactionDataParsed = ", reactionDataParsed)
 
-            if (!guildId) {
-                console.error("Guild ID not found");
+            if (!guildId || !webhookId || !token || !url) {
                 return false;
             }
 
-            const response = await fetch(`${process.env.DISCORD_API_ENDPOINT}/${guildId}/${oauthToken}`, {
+            console.log(`${process.env.DISCORD_API_ENDPOINT}/webhooks/${webhookId}/${token}`);
+            console.log("url = ", url)
+            const message: string = reactionDataParsed.message;
+            console.log("message = ", message);
+            const response = await fetch(url, {
                 method: "POST",
                 headers: {
-                    "Authorization": "Bearer " + oauthToken
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    content: "ping"
+                    content: message
                 })
             });
+            console.log("response: ", response);
             if (!response.ok) {
                 const error = await response.json();
                 throw new Error(error.error);
             }
-            const json = await response.json();
-            console.log("success adding random song to playlist: ", json);
         } catch (e) {
-            console.error("Error in reactionSpotifyAddToPlaylist:", e);
+            console.error("Error in discord:", e);
             return false;
         }
         return true;
