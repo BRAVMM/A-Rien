@@ -7,6 +7,7 @@ import Image from "next/image";
 import Cookies from "js-cookie";
 import ServiceConnection from "../Components/ServiceOauthButton";
 import SpotifyButtonOAuth from "../Components/services/LoginSpotify";
+import CreateWebhookDiscord from "@/app/Components/services/CreateWebhookDiscord";
 
 export default function Profile() {
   const [user, setUser] = useState<any | null>(null);
@@ -127,6 +128,7 @@ export default function Profile() {
             serviceID={4}
           />
           <SpotifyButtonOAuth/>
+          <CreateWebhookDiscord/>
         </div>
       </div>
       <div className="flex-1 relative h-full">

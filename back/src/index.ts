@@ -180,42 +180,31 @@ const addActionsToDB = async () => {
                     name: 'New saved song',
                     description: 'When a new song is saved',
                     args: [],
-                    reactionsIds: [1],
+                    reactionsIds: [1, 2],
                 },
                 {
                     id: 2,
                     name: 'New saved album',
                     description: 'When a new album is saved',
                     args: [],
-                    reactionsIds: [1],
+                    reactionsIds: [1, 2],
                 },
                 {
                     id: 3,
-                    name: 'New saved artist',
-                    description: 'When a new artist is saved',
-                    args: [{
-                        title: "gender",
-                        type: 'string',
-                        description: "Enter a gender",
-                    }],
-                    reactionsIds: [1],
-                },
-                {
-                    id: 4,
                     name: 'New created playlist',
                     description: 'When a new playlist is created',
                     args: [],
-                    reactionsIds: [1],
+                    reactionsIds: [1, 2],
                 },
                 {
-                    id: 5,
+                    id: 4,
                     name: 'New saved playlist',
                     description: 'When a new playlist is saved',
                     args: [],
-                    reactionsIds: [1],
+                    reactionsIds: [1, 2],
                 },
                 {
-                    id: 6,
+                    id: 5,
                     name: 'New saved song from genre',
                     description: 'When a new song is saved from a genre',
                     args: [{
@@ -223,10 +212,10 @@ const addActionsToDB = async () => {
                         type: 'string',
                         description: 'Enter a genre',
                     }],
-                    reactionsIds: [1],
+                    reactionsIds: [1, 2],
                 },
                 {
-                    id: 7,
+                    id: 6,
                     name: 'New saved song from artist',
                     description: 'When a new song is saved from an artist',
                     args: [{
@@ -234,7 +223,7 @@ const addActionsToDB = async () => {
                         type: 'string',
                         description: 'Enter an artist id',
                     }],
-                    reactionsIds: [1],
+                    reactionsIds: [1, 2],
                 },
             ]
         },
@@ -242,7 +231,7 @@ const addActionsToDB = async () => {
             name: 'Timer',
             actions: [
                 {
-                    id: 8,
+                    id: 7,
                     name: 'When X time stamped',
                     description: 'When X time is stamped (in minutes)',
                     args: [{
@@ -256,22 +245,10 @@ const addActionsToDB = async () => {
             ]
         },
         {
-            name: 'Teams',
-            actions: [
-                {
-                    id: 9,
-                    name: 'When a new message is received',
-                    description: 'When a new message is received',
-                    args: [],
-                    reactionsIds: [3],
-                },
-            ]
-        },
-        {
             name: 'Outlook',
             actions: [
                 {
-                    id: 10,
+                    id: 8,
                     name: 'When a new email is received',
                     description: 'When a new email is received',
                     args: [],
@@ -283,7 +260,7 @@ const addActionsToDB = async () => {
             name: 'OneDrive',
             actions: [
                 {
-                    id: 11,
+                    id: 9,
                     name: 'When a new drive is created',
                     description: 'When a new drive is created',
                     args: [],
