@@ -13,6 +13,8 @@ class OAuth extends Model {
     public expiresIn!: number;
     public ownerId!: number;
     public datas!: JSON;
+    public createdAt!: Date;
+    public updatedAt!: Date;
 
     public static initialize(sequelize: Sequelize) {
         OAuth.init(

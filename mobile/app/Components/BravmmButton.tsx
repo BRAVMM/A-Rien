@@ -8,7 +8,7 @@ const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 
-const BravvmButton = ({title, onPress, fontSize, textColor, color, icon, iconColor, iconOrImgSize, img}: {
+const BravmmButton = ({title, onPress, fontSize, textColor, color, icon, iconColor, iconOrImgSize, img}: {
     title: string,
     onPress: any,
     fontSize?: number,
@@ -56,4 +56,4 @@ const BravvmButton = ({title, onPress, fontSize, textColor, color, icon, iconCol
     )
 }
 
-export default BravvmButton;
+export default BravmmButton;

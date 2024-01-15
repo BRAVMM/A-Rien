@@ -7,6 +7,7 @@ import Image from "next/image";
 import Cookies from "js-cookie";
 import ServiceConnection from "../Components/ServiceOauthButton";
 import SpotifyButtonOAuth from "../Components/services/LoginSpotify";
+import CreateWebhookDiscord from "@/app/Components/services/CreateWebhookDiscord";
 
 export default function Profile() {
   const [user, setUser] = useState<any | null>(null);
@@ -18,7 +19,7 @@ export default function Profile() {
 
   const AUTH_ENDPOINT = `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_MICROSOFT_TENANT_ID}/oauth2/v2.0/authorize`;
   const RESPONSE_TYPE = "code";
-  const SCOPE = "openid profile offline_access email user.read mail.read mail.send ChannelMessage.Send mail.readwrite files.read";
+  const SCOPE = "openid profile offline_access email user.read mail.read mail.send ChannelMessage.Send mail.readwrite files.read chat.readbasic chat.read chat.readwrite";
 
   useEffect(() => {
     const checkToken = async () => {
@@ -127,6 +128,7 @@ export default function Profile() {
             serviceID={4}
           />
           <SpotifyButtonOAuth/>
+          <CreateWebhookDiscord/>
         </div>
       </div>
       <div className="flex-1 relative h-full">

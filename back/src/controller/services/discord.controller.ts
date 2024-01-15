@@ -41,6 +41,9 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
     const userInfo: TokenData = (req as CustomRequest).user
     const { accessToken, refreshToken, expiresIn, serviceId } = req.body;
     const guildId = req.params.guildId;
+    const webhookId = req.params.webhookId;
+    const token = req.params.token;
+    const url = req.params.url;
 
     if (!process.env.DISCORD_SERVICE_ID || Number(process.env.DISCORD_SERVICE_ID) !== serviceId) {
         return res.status(400).json({ error: "Wrong service id" });
@@ -65,7 +68,7 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
             expiresIn: expiresIn,
             ownerId: userInfo.userId,
             OAuthEmail: "",
-            datas: { guildId: req.params.guildId }
+            datas: { guildId, webhookId, token, url }
         });
         return res.status(201).json({ id: OAuthData.id })
     } catch (error) {
@@ -74,4 +77,29 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
     }
 }
 
-export { registerToken };
+
+async function getCode(req: Request, res: Response) {
+    const code = req.query.code;
+    const guildId = req.query.guild_id;
+
+    try {
+        if (!code) {
+            res.send(`<script>window.location.replace("exp://?error=No code provided")</script>`)
+            return
+        }
+        if (!guildId) {
+            res.send(`<script>window.location.replace("exp://?error=No guild ID provided")</script>`)
+            return
+        }
+        res.send(`<script>window.location.replace("exp://?code=${code}&guild_id=${guildId}")</script>`)
+    } catch (error) {
+        console.error(error)
+        res.send(`<script>window.location.replace("exp://?error=An unexpected error occurred")</script>`)
+    }
+}
+
+async function getToken(req: Request, res: Response) {
+    res.send(`<script>window.location.replace("exp://")</script>`);
+}
+
+export { registerToken, getCode, getToken };

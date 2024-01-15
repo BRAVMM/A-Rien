@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import {useNavigation} from "expo-router";
+import {ImageSourcePropType} from "react-native";
 
 import AREACreationModal from "./AREACreation";
 import { ModalDataInterface } from "../Interfaces/ModalData.interface";
@@ -24,7 +25,7 @@ const SelectServices = () => {
   const [service, setService] = useState<ModalDataInterface>();
   const router = useNavigation();
 
-  const servicePicture: { [key: string]: string } = {
+  const servicePicture: { [key: string]: ImageSourcePropType } = {
     Discord: require("./../../assets/images/logos/Discord_logo.png"),
     Twitch: require("./../../assets/images/logos/Twitch_logo.png"),
     Spotify: require("./../../assets/images/logos/Spotify_logo.png"),
@@ -36,6 +37,17 @@ const SelectServices = () => {
     Weather: require("./../../assets/images/logos/Weather_logo.png"),
     Timer: require("./../../assets/images/logos/Timer_logo.png"),
   };
+  /**
+   * Get the image source for a given service name.
+   * @param serviceName - The name of the service.
+   * @returns The image source for the service.
+   */
+  function getServicePicture(serviceName: string): ImageSourcePropType {
+    if (servicePicture[serviceName] === undefined) {
+      return require('./../../assets/images/logo1.svg');
+    }
+    return servicePicture[serviceName];
+  }
 
   /**
    * @function useEffect
@@ -90,15 +102,15 @@ const SelectServices = () => {
       >
         <StyledView className="mb-[70%]">
           {servicesList !== undefined &&
-            servicesList?.map((service) => (
+            servicesList?.map((service, index) => (
               <StyledTouchableOpacity
-                key={service.id}
+                key={index}
                 className="flex items-center justify-center w-[30%] h-[30%] m-5"
                 onPress={() => handleModal(service)}
               >
                 <Image
                   // @ts-ignore
-                  source={servicePicture[service.name]}
+                  source={getServicePicture(service.name)}
                   style={{ width: 100, height: 100 }}
                 />
                 <StyledText className="text-white text-2xl font-bold absolute left-[150%]">

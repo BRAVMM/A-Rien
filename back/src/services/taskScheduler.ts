@@ -28,14 +28,13 @@ import { OneDriveTriggers } from './servicesApps/triggers/onedrive.triggers.serv
 const ACTIONS_FUNCTIONS: actionFunction = {
     1: SpotifyTriggers.checkSpotifyNewSavedSong,
     2: SpotifyTriggers.checkSpotifyNewSavedAlbum,
-    3: SpotifyTriggers.checkSpotifyNewSavedArtist,
-    4: SpotifyTriggers.checkSpotifyNewPlaylistCreated,
-    5: SpotifyTriggers.checkSpotifyNewSavedPlaylist,
-    6: SpotifyTriggers.checkSpotifyNewSavedSongFromGenre,
-    7: SpotifyTriggers.checkSpotifyNewSavedSongFromArtist,
-    8: TimerTriggers.actionWhenXTimeStamped,
-    10: OutlookTriggers.checkOutlookNewEmail,
-    11: OneDriveTriggers.getTriggerData,
+    3: SpotifyTriggers.checkSpotifyNewPlaylistCreated,
+    4: SpotifyTriggers.checkSpotifyNewSavedPlaylist,
+    5: SpotifyTriggers.checkSpotifyNewSavedSongFromGenre,
+    6: SpotifyTriggers.checkSpotifyNewSavedSongFromArtist,
+    7: TimerTriggers.actionWhenXTimeStamped,
+    8: OutlookTriggers.checkOutlookNewEmail,
+    9: OneDriveTriggers.getTriggerData,
 };
 
 const REACTIONS_FUNCTIONS: reactionFunction = {

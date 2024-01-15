@@ -20,7 +20,6 @@ namespace TeamsReactions {
                 'Content-Type': 'application/json'
             },
         });
-
         if (!responseChat.ok) {
             throw new Error(`Error: ${responseChat.status}`);
         }
@@ -47,7 +46,6 @@ namespace TeamsReactions {
                         body: JSON.stringify(messageBody)
                     });
                     if (!responseSend.ok) {
-                        console.log(await responseSend.text())
                         throw new Error(`Error: ${responseSend.status}`);
                     }
                 } catch (error) {
@@ -55,6 +53,8 @@ namespace TeamsReactions {
                     return false;
                 }
             }
+        } else {
+            return false;
         }
         return true;
     }

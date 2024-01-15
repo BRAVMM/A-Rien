@@ -178,9 +178,11 @@ docs/pages/versions/*/react-native/*.diff
 **/.env
 package-lock.json
 
-.env.me
 .env
+.env.me
+.env.development
+.env.previous
+
 .flaskenv*
 !.env.project
 !.env.vault
-.env*

@@ -20,7 +20,7 @@ const getRedirectUri = (mobile: boolean): string | undefined => {
  * @returns {Promise<OAuthData>} - A promise that resolves to an `OAuthData` object containing the access token, refresh token, and expiry time.
  * @throws {Error} - Throws an error if the request to Discord's API fails or if the response cannot be parsed as JSON.
  */
-const authenticateUserDiscord = async (code: string, mobile: boolean): Promise<OAuthData> => {
+const authenticateUserDiscord = async (code: string, mobile: boolean): Promise<{oauthData: OAuthData, webhookId: string, token: string, url: string}> => {
     if (!process.env.DISCORD_REDIRECT_URI_WEB || !process.env.DISCORD_REDIRECT_URI_MOBILE || !process.env.DISCORD_CLIENT_ID || !process.env.DISCORD_SERVICE_ID || !process.env.DISCORD_API_ENDPOINT) {
         console.error("error : Bad env configuration");
         throw new Error("Bad env configuration");
@@ -41,8 +41,8 @@ const authenticateUserDiscord = async (code: string, mobile: boolean): Promise<O
             }).toString()
         });
         const data = await discordResponse.json();
-        if (!discordResponse.ok || !data.access_token || !data.refresh_token || !data.expires_in) {
-            console.error("authenticateUser : Failed to authenticate with Discord");
+        if (!discordResponse.ok || !data.access_token || !data.refresh_token || !data.expires_in || !data.webhook.id || !data.webhook.token || !data.webhook.url) {
+            console.error("authenticateUser : Failed to authenticate with Discord", data.error, data.error_description);
             throw new Error('Failed to authenticate with Discord');
         }
         const oauthData: OAuthData = {
@@ -52,7 +52,7 @@ const authenticateUserDiscord = async (code: string, mobile: boolean): Promise<O
             serviceId: DISCORD_SERVICE_ID,
         }
         console.log("\x1b[32mUser successfully connected to discord, access token = \x1b[0m", oauthData.accessToken)
-        return oauthData
+        return {oauthData, webhookId: data.webhook.id, token: data.webhook.token, url: data.webhook.url}
     } catch (error) {
         console.error("\x1b[31mAn error was caught in authenticateUserDiscord\x1b[0m", error)
         throw error;
