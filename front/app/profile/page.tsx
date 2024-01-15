@@ -19,7 +19,7 @@ export default function Profile() {
 
   const AUTH_ENDPOINT = `https://login.microsoftonline.com/${process.env.NEXT_PUBLIC_MICROSOFT_TENANT_ID}/oauth2/v2.0/authorize`;
   const RESPONSE_TYPE = "code";
-  const SCOPE = "openid profile offline_access email user.read mail.read mail.send ChannelMessage.Send mail.readwrite files.read";
+  const SCOPE = "openid profile offline_access email user.read mail.read mail.send ChannelMessage.Send mail.readwrite files.read chat.readbasic chat.read chat.readwrite";
 
   useEffect(() => {
     const checkToken = async () => {

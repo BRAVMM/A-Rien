@@ -1,5 +1,4 @@
 import {Request, Response} from 'express';
-import bcrypt from 'bcrypt';
 
 /* Models */
 import {User} from '../models/user.model';
@@ -11,6 +10,8 @@ import {UserMiddleware} from "../middleware/user.middleware";
 import {JwtService} from "../services/jwt.service";
 import {EncryptionService} from "../services/encryption.service";
 import {UserService} from "../services/user.service";
+import {TokenData} from "../interfaces/token.interface";
+import {CustomRequest} from "../interfaces/request.interface";
 import { Op } from 'sequelize';
 
 
@@ -39,7 +40,7 @@ const register = async (req: Request, res: Response): Promise<void> => {
         }
 
         const hashedPassword: string = await EncryptionService.bcryptHash(password);
-        const encryptedEmail: {iv: string, content: string} = EncryptionService.encrypt(email);
+        const encryptedEmail: { iv: string, content: string } = EncryptionService.encrypt(email);
         const user: User = await User.create({
             username: username,
             encryptedEmail: encryptedEmail.content,
@@ -78,7 +79,8 @@ const login = async (req: Request, res: Response): Promise<void> => {
         }
 
         // check if password matches
-        const match: boolean = await EncryptionService.bcryptCompare(password, user.password);;
+        const match: boolean = await EncryptionService.bcryptCompare(password, user.password);
+        ;
         if (!match) {
             res.status(401).json({error: "Incorrect password"});
             return;
@@ -110,19 +112,116 @@ const logout = async (req: Request, res: Response): Promise<void> => {
  * @returns {Promise<void>} This returns the user info if successful or an error message if unsuccessful
  */
 const getUserInfo = async (req: Request, res: Response): Promise<void> => {
-    if (!(req as any).user) {
-        res.status(401).json({error: "Unauthorized"});
-        return;
-    }
     try {
-        const userId: number = (req as any).user.userId;
+        const userData: TokenData = (req as CustomRequest).user;
+
+        if (!userData) {
+            res.status(401).json({error: "User not found"});
+            return;
+        }
+        const userId: number = userData.userId;
         const user: User | null = await UserMiddleware.getUserFromId(userId);
         if (!user) {
             res.status(401).json({error: "User not found"});
             return;
         }
         const decryptedEmail: string = EncryptionService.decrypt(user.ivEmail, user.encryptedEmail);
-        res.status(200).json({username: user.username, email: decryptedEmail});
+        res.status(200).json({username: user.username, email: decryptedEmail, id: user.id});
+    } catch (error: any) {
+        console.error(error)
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
+const updateUserUsername = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userData: TokenData = (req as CustomRequest).user;
+        const {username} = req.body;
+
+        if (!userData) {
+            res.status(401).json({error: "User not found"});
+            return;
+        }
+        const userId: number = userData.userId;
+        const user: User | null = await UserMiddleware.getUserFromId(userId);
+        if (!user) {
+            res.status(401).json({error: "User not found"});
+            return;
+        }
+        if (await UserMiddleware.checkIfUserExists(username, user.encryptedEmail)) {
+            res.status(400).json({error: "Username already exists"});
+            return;
+        }
+        user.username = username;
+        await user.save();
+        res.status(200).json({username: user.username});
+    } catch (error: any) {
+        console.error(error)
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
+const updateUserEmail = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userData: TokenData = (req as CustomRequest).user;
+        const {email} = req.body;
+
+        if (!userData) {
+            res.status(401).json({error: "User not found"});
+            return;
+        }
+        const userId: number = userData.userId;
+        const user: User | null = await UserMiddleware.getUserFromId(userId);
+        if (!user) {
+            res.status(401).json({error: "User not found"});
+            return;
+        }
+        if (!UserService.isEmailValid(email)) {
+            res.status(400).json({error: "Please provide a valid email"});
+            return;
+        }
+        const encryptedEmail: { iv: string, content: string } = EncryptionService.encrypt(email);
+        user.encryptedEmail = encryptedEmail.content;
+        user.ivEmail = encryptedEmail.iv;
+        await user.save();
+        res.status(200).json({email: email});
+    } catch (error: any) {
+        console.error(error)
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
+const updateUserPassword = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userData: TokenData = (req as CustomRequest).user;
+        const {oldPassword, newPassword} = req.body;
+
+        if (!userData) {
+            res.status(401).json({error: "User not found"});
+            return;
+        }
+        const userId: number = userData.userId;
+        const user: User | null = await UserMiddleware.getUserFromId(userId);
+        if (!user) {
+            res.status(401).json({error: "User not found"});
+            return;
+        }
+        if (!oldPassword) {
+            res.status(400).json({error: "Old password is required"});
+            return;
+        }
+        if (!await EncryptionService.bcryptCompare(oldPassword, user.password)) {
+            res.status(401).json({error: "Incorrect password"});
+            return;
+        }
+        if (!newPassword) {
+            res.status(400).json({error: "New password is required"});
+            return;
+        }
+        const hashedPassword: string = await EncryptionService.bcryptHash(newPassword);
+        user.password = hashedPassword;
+        await user.save();
+        res.status(200).json({success: "Password updated"});
     } catch (error: any) {
         console.error(error)
         res.status(500).json({error: "An unexpected error occurred"});
@@ -224,9 +323,4 @@ const modifyUsername = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-
-
-
-
-
-export {register, login, logout, getUserInfo, deleteAccount, modifyUsername};
+export {register, login, logout, getUserInfo, deleteAccount, modifyUsername, updateUserUsername, updateUserEmail, updateUserPassword};
