@@ -24,6 +24,7 @@ jobs:
           script: |
             git clone https://github.com/BRAVMM/A-Rien.git
             cd A-Rien
+            git pull
             git switch main
             git pull origin main
             cp -r ./* /home/beafowl/A-Rien

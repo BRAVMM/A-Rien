@@ -71,7 +71,7 @@ const LoginSpotify = () => {
     const response = await promptAsync();
 
     if (response?.type === "success") {
-      const { code } = response.params;
+      const {code} = response.params;
       if (code) {
         if (!(await apiCall(code))) {
           setFetchError(false);
