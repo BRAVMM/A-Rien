@@ -3,7 +3,6 @@ on:
     branches:
       - main
       - dev
-      - FRONT/AR-120/en-tant-qu-utilisateur-je-souhaite-avoir-un-environement-de-production-mobile
 
 name: 🚀 Deploy Server on push
 jobs:
@@ -25,22 +24,26 @@ jobs:
           script: |
             git clone https://github.com/BRAVMM/A-Rien.git
             cd A-Rien
+            git pull
             git switch main
             git pull origin main
             cp -r ./* /home/beafowl/A-Rien
             cd /home/beafowl/A-Rien/back
             npx dotenv-vault login ${{ secrets.DOTENV_ME_BACK }}
             npx dotenv-vault pull production
+            mv .env.production .env
             cd /home/beafowl/A-Rien/front
             npx dotenv-vault login ${{ secrets.DOTENV_ME_FRONT }}
             npx dotenv-vault pull production
+            mv .env.production .env
             cd /home/beafowl/A-Rien/mobile
             npx dotenv-vault login ${{ secrets.DOTENV_ME_MOBILE }}
             npx dotenv-vault pull production
+            mv .env.production .env
             sh /home/beafowl/re.sh &
 
       - name: executing remote ssh commands using ssh key
-        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/FRONT/AR-120/en-tant-qu-utilisateur-je-souhaite-avoir-un-environement-de-production-mobile'
+        if: github.ref == 'refs/heads/dev'
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.FTP_SERVER }}
@@ -52,16 +55,19 @@ jobs:
             git clone https://github.com/BRAVMM/A-Rien.git
             cd A-Rien
             git pull
-            git switch FRONT/AR-120/en-tant-qu-utilisateur-je-souhaite-avoir-un-environement-de-production-mobile
-            git pull origin FRONT/AR-120/en-tant-qu-utilisateur-je-souhaite-avoir-un-environement-de-production-mobile
+            git switch dev
+            git pull origin dev
             cp -r ./* /home/beafowl/A-Rien
             cd /home/beafowl/A-Rien/back
             npx dotenv-vault login ${{ secrets.DOTENV_ME_BACK }}
             npx dotenv-vault pull production
+            mv .env.production .env
             cd /home/beafowl/A-Rien/front
             npx dotenv-vault login ${{ secrets.DOTENV_ME_FRONT }}
             npx dotenv-vault pull production
+            mv .env.production .env
             cd /home/beafowl/A-Rien/mobile
             npx dotenv-vault login ${{ secrets.DOTENV_ME_MOBILE }}
             npx dotenv-vault pull production
+            mv .env.production .env
             sh /home/beafowl/re.sh &
