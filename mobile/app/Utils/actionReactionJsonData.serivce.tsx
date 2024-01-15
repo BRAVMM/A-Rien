@@ -15,31 +15,38 @@ import {AreaDetailsInterface} from "../Interfaces/areaData.interface";
  */
 namespace actionReactionJsonDataService {
   const requestApi = async (url: string, method: string, body: any, router: NavigationProp<ReactNavigation.RootParamList>) => {
-    const bearer = await AsyncStorage.getItem("token")
     let response: Response;
 
-    if (method === "GET") {
-      response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${bearer}`,
-        },
-      });
-    } else {
-      response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${bearer}`,
-        },
-        body: JSON.stringify(body),
-      });
+    try {
+      const bearer = await AsyncStorage.getItem("token")
+
+      if (method === "GET") {
+        response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${bearer}`,
+          },
+        });
+      } else {
+        response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${bearer}`,
+          },
+          body: JSON.stringify(body),
+        });
+      }
+      if (response.status === 401) {
+        router.navigate("login" as never);
+      }
+      return response;
+    } catch (error) {
+        console.log(error);
+        response = new Response(JSON.stringify({error: "error"}));
+        return response;
     }
-    if (response.status === 401) {
-      router.navigate("login" as never);
-    }
-    return response;
   };
 
   /**

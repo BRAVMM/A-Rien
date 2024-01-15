@@ -78,7 +78,7 @@ const TopBar = ({title, router}: { title: string, router: NavigationProp<any> })
                 paddingVertical: 10,
             }}
         >
-            <StyledText style={{color: "white", fontSize: 20, fontWeight: "bold"}}>
+            <StyledText style={{color: "white", fontSize: 30, fontWeight: "bold"}}>
                 {title}
             </StyledText>
 
