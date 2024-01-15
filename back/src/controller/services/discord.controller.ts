@@ -77,4 +77,29 @@ const registerToken = async (req: Request, res: Response): Promise<Response> => 
     }
 }
 
-export { registerToken };
+
+async function getCode(req: Request, res: Response) {
+    const code = req.query.code;
+    const guildId = req.query.guild_id;
+
+    try {
+        if (!code) {
+            res.send(`<script>window.location.replace("exp://?error=No code provided")</script>`)
+            return
+        }
+        if (!guildId) {
+            res.send(`<script>window.location.replace("exp://?error=No guild ID provided")</script>`)
+            return
+        }
+        res.send(`<script>window.location.replace("exp://?code=${code}&guild_id=${guildId}")</script>`)
+    } catch (error) {
+        console.error(error)
+        res.send(`<script>window.location.replace("exp://?error=An unexpected error occurred")</script>`)
+    }
+}
+
+async function getToken(req: Request, res: Response) {
+    res.send(`<script>window.location.replace("exp://")</script>`);
+}
+
+export { registerToken, getCode, getToken };

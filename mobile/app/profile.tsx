@@ -271,8 +271,11 @@ const Profile = () => {
               <StyledView className="flex justify-center items-center w-[75%] h-[18%]" style={{ marginBottom: "10%" }}>
                 <ConnectToServiceButton serviceName="Spotify" />
               </StyledView>
-              <StyledView className="flex justify-center items-center w-[75%] h-[18%]">
+              <StyledView className="flex justify-center items-center w-[75%] h-[18%]" style={{ marginBottom: "10%" }}>
                 <ConnectToServiceButton serviceName="Microsoft" />
+              </StyledView>
+              <StyledView className="flex justify-center items-center w-[75%] h-[18%]">
+                <ConnectToServiceButton serviceName="Discord" />
               </StyledView>
             </StyledView>
             <StyledView className="flex-grow flex flex-col justify-end items-center mt-[5%] mb-[5%]">

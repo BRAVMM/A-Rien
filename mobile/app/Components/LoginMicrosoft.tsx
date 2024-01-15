@@ -12,9 +12,6 @@ import BravmmButton from "./BravmmButton";
 import colors from "../../constants/Colors";
 import BravvmButton from "./BravmmButton";
 
-const StyledView = styled(View);
-const StyledText = styled(Text);
-
 const LoginMicrosoft = () => {
   // Endpoint
   const discovery = useAutoDiscovery(
@@ -84,7 +81,6 @@ const LoginMicrosoft = () => {
       fontSize={20}
       img={require("../../assets/images/logos/Microsoft_logo.png")}
       iconOrImgSize={40}
-      style={{marginBottom: 10}}
     />
   );
 };

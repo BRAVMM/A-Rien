@@ -14,6 +14,8 @@ import { microsoftAuth } from '../middleware/services/Auth/microsoftAuth.middlew
 /** Definitions of routes */
 router.post('/spotify/registerToken', verifyToken, spotifyAuth, refreshTokens, userAlreadyAuth, spotifyController.registerToken)
 router.post('/discord/registerToken', verifyToken, discordAuth, discordController.registerToken)
+router.get('/discord/getCode', discordController.getCode);
+router.get('/discord/getToken', discordController.getToken);
 router.post('/microsoft/registerToken', verifyToken, microsoftAuth, userAlreadyAuthMicrosoft, microsoftController.registerToken)
 router.get('/microsoft/userHasToken', verifyToken, microsoftController.userHasToken)
 router.delete('/removetoken', verifyToken, servicesController.removeOauthTokenByServiceId)

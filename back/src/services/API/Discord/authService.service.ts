@@ -41,9 +41,8 @@ const authenticateUserDiscord = async (code: string, mobile: boolean): Promise<{
             }).toString()
         });
         const data = await discordResponse.json();
-        console.log("data : " + JSON.stringify(data));
         if (!discordResponse.ok || !data.access_token || !data.refresh_token || !data.expires_in || !data.webhook.id || !data.webhook.token || !data.webhook.url) {
-            console.error("authenticateUser : Failed to authenticate with Discord");
+            console.error("authenticateUser : Failed to authenticate with Discord", data.error, data.error_description);
             throw new Error('Failed to authenticate with Discord');
         }
         const oauthData: OAuthData = {
