@@ -51,7 +51,7 @@ jobs:
           script: |
             git clone https://github.com/BRAVMM/A-Rien.git
             cd A-Rien
-            git switch dev
+            git switch FRONT/AR-120/en-tant-qu-utilisateur-je-souhaite-avoir-un-environement-de-production-mobile
             git pull origin dev
             cp -r ./* /home/beafowl/A-Rien
             cd /home/beafowl/A-Rien/back
