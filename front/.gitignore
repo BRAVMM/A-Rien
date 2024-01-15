@@ -35,12 +35,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 package-lock.json
-.env
 
+.env
 .env.me
 .env.development
+.env.previous
+
 .flaskenv*
 !.env.project
 !.env.vault
-
-.env*
