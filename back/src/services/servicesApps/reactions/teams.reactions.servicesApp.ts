@@ -20,13 +20,16 @@ namespace TeamsReactions {
                 'Content-Type': 'application/json'
             },
         });
-
+        console.log("responseChat = ", responseChat);
         if (!responseChat.ok) {
             throw new Error(`Error: ${responseChat.status}`);
         }
         const data = await responseChat.json();
+        console.log("data = ", data);
         if (data.value) {
+            console.log(data.value);
             const elem = data.value.find((element: { topic: string; }) => {
+                console.log(element.topic, convName);
                 return element.topic === convName;
             });
             if (elem) {
@@ -55,6 +58,8 @@ namespace TeamsReactions {
                     return false;
                 }
             }
+        } else {
+            return false;
         }
         return true;
     }

@@ -24,7 +24,7 @@ if (isNaN(INTERVAL)) {
     throw new Error('Invalid INTERVAL value. Please check your environment variable.');
 }
 
-db.sequelize.sync({force: false})
+db.sequelize.sync({force: true})
     .then(() => {
         console.log('Database sync completed.');
 
