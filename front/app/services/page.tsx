@@ -167,7 +167,7 @@ export default function Services() {
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-20">
                 {areas.length > 0 ? areas.map((area: AreaDetailsInterface) => (
                   <div key={area.id} className="h-56 w-56">
-                    <AreaIcon image={getImageFromName(area.serviceName)} name={area.title} status={area.isActivated} />
+                    <AreaIcon image={getImageFromName(area.serviceName)} name={area.title} status={area.isActivated} id={area.id} />
                   </div>
                 ))
                   : <p className="font-bold justify-center" >No areas</p>
