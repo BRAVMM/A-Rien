@@ -37,6 +37,7 @@ const AREACreationModal: React.FC<{
   const StyledText = styled(Text);
   const StyledTouchableOpacity = styled(TouchableOpacity);
   const StyledView = styled(View);
+  const StyledScrollView = styled(ScrollView);
 
   const [isThereAnOauthToken, setIsThereAnOauthToken] = useState<JSX.Element>();
   const [actionJsonData, setActionJsonDatas] =
@@ -186,7 +187,7 @@ const AREACreationModal: React.FC<{
       return isThereAnOauthToken;
     }
     return (
-      <StyledView className="flex flex-col justify-center top-[50%]">
+      <StyledView className="flex flex-col justify-center">
         <StyledView className="flex flex-col justify-center">
           {actionJsonData?.map((action) => (
             <StyledView
@@ -505,9 +506,9 @@ const AREACreationModal: React.FC<{
             </StyledText>
           ) : null}
         </StyledView>
-        <ScrollView style={{ marginTop: "15%" }}>
+        <StyledScrollView className="flex-1 top-[10%]">
           <RenderContent />
-        </ScrollView>
+        </StyledScrollView>
       </SafeAreaView>
     </BravmmModal>
   );
