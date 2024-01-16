@@ -106,7 +106,7 @@ const AREACreationModal: React.FC<{
       return;
     }
     const actionJsonData_: Promise<ServiceActionInterface[]> =
-      actionReactionJsonDataService.getActionJsonData(router, ModalData.id);
+      actionReactionJsonDataService.getActionJsonData(router, ModalData.serviceId);
 
     actionJsonData_.then((actionJsonData_) => {
       setActionJsonDatas(actionJsonData_);
