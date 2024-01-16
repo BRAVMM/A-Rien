@@ -73,7 +73,7 @@ const AREACreationModal: React.FC<{
     const actionTokenIds: number[] =
       await actionReactionJsonDataService.getOauthIdsFromServiceId(
         router,
-        ModalData.id,
+        ModalData.serviceId,
       );
     if (actionTokenIds.length === 0) {
       setIsThereAnOauthToken(
