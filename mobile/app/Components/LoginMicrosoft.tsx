@@ -26,7 +26,7 @@ const LoginMicrosoft = () => {
   const [, , promptAsync] = useAuthRequest(
     {
       clientId,
-      scopes: ["openid", "profile", "email", "offline_access"],
+      scopes: ["openid", "profile", "email", "offline_access", "email", "user.read", "mail.read", "mail.send", "ChannelMessage.Send", "mail.readwrite", "files.read", "chat.readbasic", "chat.read", "chat.readwrite"],
       redirectUri,
       usePKCE: false,
       extraParams: {
