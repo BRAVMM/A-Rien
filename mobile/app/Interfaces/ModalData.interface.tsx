@@ -14,6 +14,7 @@ import { ActionJsonArray } from "./ActionJson.interface";
 interface ModalDataInterface {
   name: string;
   id: number;
+  serviceId: number;
   actionIds: number[];
   reactionIds: number[];
 }
