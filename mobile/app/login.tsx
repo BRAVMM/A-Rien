@@ -70,9 +70,9 @@ const Login = () => {
         },
       );
       if (response.ok) {
-        setLoginSuccess(true);
         const token = await response.json();
         await AsyncStorage.setItem("token", token["token"]);
+        setLoginSuccess(true);
       } else {
         const errorResponse = await response.json();
         handleError(errorResponse);

@@ -7,6 +7,8 @@ import {Service} from "../models/service.model";
 import {Action} from "../models/action.model";
 import {Reaction} from "../models/reaction.model";
 import {OAuth} from "../models/oauth.model";
+import {ActionData} from "../models/actionData.model";
+import db from "../models";
 
 /**
  * @namespace AreaMiddleware
@@ -139,24 +141,32 @@ namespace AreaMiddleware {
      */
     export const getActionsFromServiceId = async (serviceId: number): Promise<Action[] | null> => {
         try {
-            const service: Service | null = await Service.findOne(
+            const actionsResult: Action[] = [];
+            const services: Service[] | null = await Service.findAll(
                 {
                     where: {
-                        id: serviceId
+                        serviceId: serviceId
                     },
                 }
             );
-            if (!service) {
+            if (!services || services.length === 0) {
                 return null;
             }
-            const actions: number[] = service.actionsIds;
-            return await Action.findAll(
-                {
-                    where: {
-                        id: actions
+            for (let service of services) {
+                const actionsIds: number[] = service.actionsIds;
+                const actions = await Action.findAll(
+                    {
+                        where: {
+                            id: actionsIds
+                        }
                     }
+                );
+                if (!actions) {
+                    continue;
                 }
-            );
+                actionsResult.push(...actions);
+            }
+            return actionsResult;
         } catch (error) {
             console.error(`Error retrieving actions with service ID ${serviceId}:`, error);
             return null;
@@ -166,17 +176,33 @@ namespace AreaMiddleware {
     /**
      * Get reactions from ids
      * @param reactionsIds - The ids of the reactions
-     * @returns {Promise<Reaction[] | null>}
+     * @param ownerId - The id of the owner
+     * @returns {Promise<Reaction[] | null>} - The reactions compatible with the action
      */
-    export const getReactionsFromIds = async (reactionsIds: number[]): Promise<Reaction[] | null> => {
+    export const getReactionsFromIds = async (reactionsIds: number[], ownerId?: number): Promise<Reaction[] | null> => {
         try {
-            return await Reaction.findAll(
+            const reactions = await Reaction.findAll(
                 {
                     where: {
                         id: reactionsIds
                     }
                 }
             );
+            console.log("ownerId : " + ownerId);
+            if (ownerId) {
+                const availableReactions: Reaction[] = [];
+                if (!reactions) {
+                    return null;
+                }
+                for (const reaction of reactions) {
+                    const oauthIds: number[] | null = await getOauthIdsFromReactionId(reaction.id, ownerId);
+                    if (oauthIds && oauthIds.length > 0) {
+                        availableReactions.push(reaction);
+                    }
+                }
+                return availableReactions;
+            }
+            return reactions;
         } catch (error) {
             console.error(`Error retrieving reactions with IDs ${reactionsIds}:`, error);
             return null;
@@ -234,6 +260,69 @@ namespace AreaMiddleware {
             console.error(`Error retrieving oauthIds with service ID ${serviceId}:`, error);
             return null;
         }
+    }
+
+    export const eraseArea = async (actionId: number, ownerId: number): Promise<boolean> => {
+        const dbTransaction = await db.sequelize.transaction();
+
+        try {
+            const action = await ActionData.findByPk(actionId);
+            if (!action || action.ownerId !== ownerId) {
+                return false;
+            }
+            for (const reactionId of action.reactionsDataIds || []) {
+                const reaction = await Reaction.findByPk(reactionId);
+                if (reaction) {
+                    await reaction.destroy({transaction: dbTransaction});
+                }
+            }
+            await action.destroy({transaction: dbTransaction});
+            await dbTransaction.commit();
+            return true;
+        } catch (error) {
+            console.error(`Error erasing area with ID ${actionId}:`, error);
+            await dbTransaction.rollback();
+            return false;
+        }
+    }
+
+    export const toggleArea = async (actionId: number, ownerId: number): Promise<boolean> => {
+        const dbTransaction = await db.sequelize.transaction();
+
+        try {
+            const action = await ActionData.findByPk(actionId);
+            if (!action || action.ownerId !== ownerId) {
+                return false;
+            }
+            action.isActivated = !action.isActivated;
+            await action.save({transaction: dbTransaction});
+            await dbTransaction.commit();
+            return true;
+        } catch (error) {
+            await dbTransaction.rollback();
+            console.error(`Error toggling area with ID ${actionId}:`, error);
+            return false;
+        }
+    }
+}
+
+/**
+ * Get Oauth ids from action id
+ * @param reactionId - The id of the reaction
+ * @param ownerId - The id of the owner
+ * @returns {Promise<number[] | null>} - The oauth ids
+ */
+const getOauthIdsFromReactionId = async (reactionId: number, ownerId: number): Promise<number[] | null> => {
+    try {
+        const service: Service | null = await AreaMiddleware.getServiceFromReactionId(reactionId);
+
+        if (!service) {
+            throw new Error(`Service not found for reaction ID ${reactionId}`);
+        }
+        return await AreaMiddleware.getOauthIdsFromServiceId(service.id, ownerId);
+    } catch (error) {
+        console.error(`Error retrieving oauthIds with reaction ID ${reactionId}:`, error);
+        return null;
     }
 }
 

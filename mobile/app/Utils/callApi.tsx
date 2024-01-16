@@ -1,5 +1,7 @@
-import {DataBody} from '../Interfaces/dataBody.interface';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import {DataBody} from "../Interfaces/dataBody.interface";
+import {UserDataInterface} from "../Interfaces/UserData.interface";
 
 /**
  * loginUser - Function to perform a user login by making an API call.
@@ -20,22 +22,28 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
  * }
  * ```
  */
-export async function loginUser(username: string, password: string): Promise<any> {
+export async function loginUser(
+    username: string,
+    password: string,
+): Promise<any> {
     // Prepare the request data
     const data = {
-        username: username,
-        password: password,
+        username,
+        password,
     };
 
     try {
         // Make a POST request to the login endpoint with the provided data
-        const response = await fetch(process.env.EXPO_PUBLIC_API_URL + "/users/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        const response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/users/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
             },
-            body: JSON.stringify(data),
-        });
+        );
 
         // Check if the response is OK (HTTP status code 2xx)
         if (response.ok) {
@@ -44,8 +52,7 @@ export async function loginUser(username: string, password: string): Promise<any
         } else {
             // If the response is not OK, throw an error with a message
             //   throw the error
-            const error = await response.json();
-            throw new Error(error.error);
+            throw await response.json();
         }
     } catch (error) {
         // Handle any exceptions that may occur during the request
@@ -72,52 +79,242 @@ export async function loginUser(username: string, password: string): Promise<any
  * }
  * ```
  */
-export async function registerTokenService(data : DataBody, serviceRoute : string): Promise<any> {
+export async function registerTokenService(
+    data: DataBody,
+    serviceRoute: string,
+): Promise<any> {
     try {
-        const bearer = await AsyncStorage.getItem("token")
+        const bearer = await AsyncStorage.getItem("token");
 
-        const response = await fetch(process.env.EXPO_PUBLIC_API_URL + serviceRoute, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${bearer}`,
+        const response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + serviceRoute,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${bearer}`,
+                },
+                body: data.getString(),
             },
-            body: data.getString(),
-        });
+        );
         if (!response.ok) {
             const error = await response.json();
             console.error(error.error);
-            throw new Error(error.error);
         }
     } catch (error) {
         throw error;
     }
 }
 
-export async function storeArea(name: string, actionId: number, reactionIds: number[], actionData: any, reactionData: any, oauthTokens: number[]): Promise<any> {
+export async function storeArea(
+    name: string,
+    actionId: number,
+    reactionIds: number[],
+    actionData: any,
+    reactionData: any,
+    oauthTokens: number[],
+): Promise<any> {
     try {
-        const bearer = await AsyncStorage.getItem("token")
+        const bearer = await AsyncStorage.getItem("token");
 
-        const response = await fetch(process.env.EXPO_PUBLIC_API_URL + "/area/storeArea", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${bearer}`,
+        const response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/area/storeArea",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${bearer}`,
+                },
+                body: JSON.stringify({
+                    name,
+                    actionId,
+                    reactionIds,
+                    actionData,
+                    reactionsData: reactionData,
+                    oauthTokens,
+                }),
             },
-            body: JSON.stringify({
-                name: name,
-                actionId: actionId,
-                reactionIds: reactionIds,
-                actionData: actionData,
-                reactionsData: reactionData,
-                oauthTokens: oauthTokens,
-            }),
-        });
+        );
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.error);
         }
     } catch (error) {
-        return
+        return error;
+    }
+}
+
+export async function eraseArea(areaId: number): Promise<boolean> {
+    try {
+        const bearer = await AsyncStorage.getItem("token");
+
+        const response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/area/eraseArea",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${bearer}`,
+                },
+                body: JSON.stringify({
+                    areaId,
+                }),
+            },
+        );
+        if (!response.ok) {
+            const error = await response.json();
+            console.error(error.error);
+            return false;
+        }
+    } catch (error) {
+        return false;
+    }
+    return true;
+}
+
+export async function toggleArea(areaId: number): Promise<boolean> {
+    try {
+        const bearer = await AsyncStorage.getItem("token");
+
+        const response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/area/toggleArea",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${bearer}`,
+                },
+                body: JSON.stringify({
+                    areaId,
+                }),
+            },
+        );
+        if (!response.ok) {
+            const error = await response.json();
+            console.error(error.error);
+            return false;
+        }
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+    return true;
+}
+
+export async function getUserInfo(): Promise<UserDataInterface | null> {
+    let response: Response;
+
+    try {
+        const token = await AsyncStorage.getItem("token");
+        response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/users/me",
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            },
+        );
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error);
+        }
+        return data;
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
+};
+
+export async function updateUserUsername(username: string): Promise<any> {
+    try {
+        const bearer = await AsyncStorage.getItem("token");
+
+        const response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/users/me/username",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${bearer}`,
+                },
+                body: JSON.stringify({
+                    username,
+                }),
+            },
+        );
+        if (!response.ok) {
+            const error = await response.json();
+            console.error(error.error);
+            return error;
+        }
+        return response;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+export async function updateUserEmail(email: string): Promise<any> {
+    try {
+        const bearer = await AsyncStorage.getItem("token");
+
+        const response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/users/me/email",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${bearer}`,
+                },
+                body: JSON.stringify({
+                    email,
+                }),
+            },
+        );
+        if (!response.ok) {
+            const error = await response.json();
+            console.error(error.error);
+            return error;
+        }
+        return response;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
+
+export async function updateUserPassword(
+    oldPassword: string,
+    newPassword: string,
+): Promise<any> {
+    try {
+        const bearer = await AsyncStorage.getItem("token");
+
+        const body = {
+            oldPassword,
+            newPassword,
+        }
+        const response = await fetch(
+            process.env.EXPO_PUBLIC_API_URL + "/users/me/password",
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${bearer}`,
+                },
+                body: JSON.stringify(body),
+            },
+        );
+        if (!response.ok) {
+            const error = await response.json();
+            console.error(error.error);
+            return error;
+        }
+        return response;
+    } catch (error) {
+        console.error(error);
+        return null;
     }
 }

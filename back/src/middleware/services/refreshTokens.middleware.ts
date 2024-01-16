@@ -4,6 +4,8 @@ import { CustomRequest } from "../../interfaces/request.interface";
 import { OAuth } from "../../models/oauth.model";
 import { EncryptionService } from "../../services/encryption.service";
 import refreshSpotifyTokens from "./refreshCallback/spotifyRefresh.middleware";
+import refreshDiscordTokens from "./refreshCallback/discordRefresh.middleware";
+import refreshMicrosoftTokens from "./refreshCallback/microsoftRefresh.middleware";
 
 /**
  * Type definition for a callback function used to refresh OAuth tokens.
@@ -17,10 +19,10 @@ type RefreshTokenCallback = (tokens: OAuth[]) => Promise<void>;
 /**
  * A map associating service IDs with their respective token refresh callback functions.
  * Each service ID is mapped to a `RefreshTokenCallback` function that contains the specific logic to refresh tokens for that service.
- * 
+ *
  * Currently implemented services:
  *  - Service ID 1: A callback for the Spotify service, implemented in the `refreshSpotifyTokens` function.
- * 
+ *
  * Additional services and their corresponding callback functions can be added to this map as needed.
  *
  * @example
@@ -28,9 +30,9 @@ type RefreshTokenCallback = (tokens: OAuth[]) => Promise<void>;
  * const serviceId = 1;
  * const tokens = await OAuth.findAll({ where: { serviceId }});
  * await refreshTokenCallbacks[serviceId](tokens);
- * 
+ *
  * // Successful execution (No direct response, but forwards control to the next middleware)
- * 
+ *
  * // Error response for missing user or serviceId
  * Status: 401
  * Response Body: { "error": "User not found" } or { "error": "Unknown service" } or { "error": "Unknown service" }
@@ -39,20 +41,43 @@ type RefreshTokenCallback = (tokens: OAuth[]) => Promise<void>;
  * Status: 500
  * Response Body: { "error": "Unexpected error was caught" }
  */
-const refreshTokenCallbacks: { [serviceId: number]: RefreshTokenCallback } = {
-    1: async (tokens) => { 
-        await refreshSpotifyTokens(tokens); 
-    },
-};
+const refreshTokenCallbacks: { [serviceId: number]: RefreshTokenCallback } = {};
+if (process.env.SPOTIFY_SERVICE_ID) {
+    try {
+        refreshTokenCallbacks[Number(process.env.SPOTIFY_SERVICE_ID)] = async (tokens: OAuth[]) => {
+            await refreshSpotifyTokens(tokens);
+        };
+    } catch (error) {
+        console.error("Error while loading Spotify refresh callback: " + error);
+    }
+}
+if (process.env.DISCORD_SERVICE_ID) {
+    try {
+        refreshTokenCallbacks[Number(process.env.DISCORD_SERVICE_ID)] = async (tokens: OAuth[]) => {
+            await refreshDiscordTokens(tokens);
+        };
+    } catch (error) {
+        console.error("Error while loading Discord refresh callback: " + error);
+    }
+}
+if (process.env.MICROSOFT_SERVICE_ID) {
+    try {
+        refreshTokenCallbacks[Number(process.env.MICROSOFT_SERVICE_ID)] = async (tokens: OAuth[]) => {
+            await refreshMicrosoftTokens(tokens);
+        };
+    } catch (error) {
+        console.error("Error while loading Microsoft refresh callback: " + error);
+    }
+}
 
 /**
  * Function that refreshes OAuth tokens for a specific service identified by the serviceId.
  * This function retrieves all OAuth tokens associated with the specified serviceId
  * and executes a callback function defined in `refreshTokenCallbacks` to refresh these tokens.
- * 
+ *
  * @param {number} serviceId - The ID of the service for which to refresh tokens.
  * @param {number} ownerId - The ID of the owner of the token.
- * 
+ *
  * @throws Throws an error if no callback is defined for the provided serviceId or if an unexpected error occurs during the token refresh process.
  *
  * @example
@@ -83,20 +108,20 @@ const refreshTokensOfUserByServiceID = async (serviceId: number, ownerId: number
  * Middleware that refreshes OAuth tokens for a service specified in the request body.
  * It checks for user authentication and the presence of a valid 'serviceId' in the request body.
  * Then, it invokes the `refreshTokensByServiceID` function to perform the token refresh.
- * 
+ *
  * @param {Request} req - The Express request object. It must contain 'serviceId' in the body and user info in the custom request property.
  * @param {Response} res - The Express response object used for sending error responses.
  * @param {NextFunction} next - The callback function to pass control to the next middleware.
- * 
+ *
  * @throws Will send a 401 (Unauthorized) response if the user is not found or if the 'serviceId' is not provided.
  * @throws Will send a 500 (Internal Server Error) response if an unexpected error occurs during the token refresh process.
  *
  * @example
  * POST /api/refreshTokens
  * Body: { "serviceId": 1 }
- * 
+ *
  * // Successful execution forwards control to the next middleware
- * 
+ *
  * // Error responses for missing user or serviceId
  * Status: 401
  * Response Body: { "error": "User not found" } or { "error": "Service not defined" }

@@ -12,6 +12,9 @@ class OAuth extends Model {
     public OAuthEmail!: string;
     public expiresIn!: number;
     public ownerId!: number;
+    public datas!: JSON;
+    public createdAt!: Date;
+    public updatedAt!: Date;
 
     public static initialize(sequelize: Sequelize) {
         OAuth.init(
@@ -24,18 +27,19 @@ class OAuth extends Model {
                 },
                 OAuthEmail: {
                     type: DataTypes.STRING,
-                    allowNull: false,
+                    allowNull: true,
+                    unique: false,
                 },
                 serviceId: {
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },
                 encryptedAccessToken: {
-                    type: DataTypes.STRING(1024),
+                    type: DataTypes.TEXT,
                     allowNull: false,
                 },
                 encryptedRefreshToken: {
-                    type: DataTypes.STRING(1024),
+                    type: DataTypes.TEXT,
                     allowNull: false,
                 },
                 ivAccess: {
@@ -54,6 +58,10 @@ class OAuth extends Model {
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },
+                datas: {
+                    type: DataTypes.JSON,
+                    allowNull: true,
+                }
             },
             {
                 sequelize,

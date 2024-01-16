@@ -18,6 +18,7 @@
     - [Area Operations](#area-operations)
     - [Services Information](#services-information)
     - [Spotify Integration](#spotify-integration)
+    - [Discord Integration](#discord-integration)
     - [About Information](#about-information)
 
 ## Introduction
@@ -119,6 +120,7 @@ This API provides various endpoints to manage user authentication, retrieve info
 | GET    | /area/getOauthIdsFromReactionId/:reactionId | Get the oauth ids from a reaction id |
 | POST   | /area/storeArea                             | Store an area                        |
 | POST   | /services/spotify/registerToken             | Register a Spotify token             |
+| POST   | /services/discord/registerToken             | Register a Discord token             |
 | GET    | /about.json                                 | Get the about.json file              |
 
 ### Endpoints
@@ -337,7 +339,32 @@ For endpoints requiring tokens, I'll include the necessary header:
     }
     Request Body:
     {
-      "token": "spotify_access_token"
+      "code" : "spotify_code",
+      "mobile": false,
+    }
+    ```
+
+#### Discord Integration
+
+- **Register Discord Token**
+  - **Method**: POST
+  - **Route**: `/services/discord/registerToken`
+  - **Description**: Register a Discord access token.
+  - **Token Requirement**: Yes
+  - **Example**:
+
+    ```http
+    POST /services/discord/registerToken
+    Headers:
+    {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer token"
+    }
+    Request Body:
+    {
+      "code": "discord_code",
+      "guildId": "discord_guild_id",
+      "mobile": false,
     }
     ```
 

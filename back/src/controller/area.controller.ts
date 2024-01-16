@@ -7,9 +7,11 @@ import {Action} from "../models/action.model";
 import {Reaction} from "../models/reaction.model";
 import {ActionData} from "../models/actionData.model";
 import {ReactionData} from "../models/reactionData.model";
+import {TriggersMiddleware} from "../middleware/triggers.middleware";
 
 /* Interfaces */
 import {TokenData} from "../interfaces/token.interface";
+import {AreaData} from "../interfaces/areaData.interface";
 
 /* Middleware */
 import {AreaMiddleware} from "../middleware/area.middleware";
@@ -41,7 +43,7 @@ const getServices = async (req: Request, res: Response): Promise<void> => {
  */
 const getActionsFromServiceId = async (req: Request, res: Response): Promise<void> => {
     try {
-        const serviceId = parseInt(req.params.serviceId, 10);
+        const serviceId = parseInt(req.params.serviceId);
 
         if (isNaN(serviceId)) {
             res.status(400).json({error: "Please provide a valid serviceId"});
@@ -85,7 +87,7 @@ const getReactionsFromActionId = async (req: Request, res: Response): Promise<vo
             res.status(400).json({error: "Action not found"});
             return;
         }
-        const reactions: Reaction[] | null = await AreaMiddleware.getReactionsFromIds(action.reactionsIds);
+        const reactions: Reaction[] | null = await AreaMiddleware.getReactionsFromIds(action.reactionsIds, (req as CustomRequest).user.userId);
 
         res.status(200).json(reactions);
     } catch (error: any) {
@@ -94,6 +96,13 @@ const getReactionsFromActionId = async (req: Request, res: Response): Promise<vo
     }
 }
 
+/**
+ * Retrieves the OAuth IDs associated with a service ID and owner ID.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A Promise that resolves to void.
+ */
 const getOauthIdsFromServiceId = async (req: Request, res: Response): Promise<void> => {
     try {
         const {serviceId} = req.params;
@@ -126,6 +135,13 @@ const getOauthIdsFromServiceId = async (req: Request, res: Response): Promise<vo
     }
 }
 
+/**
+ * Retrieves the OAuth IDs associated with a given action ID.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A Promise that resolves to void.
+ */
 const getOauthIdsFromActionId = async (req: Request, res: Response): Promise<void> => {
     try {
         const {actionId} = req.params;
@@ -154,6 +170,13 @@ const getOauthIdsFromActionId = async (req: Request, res: Response): Promise<voi
     }
 }
 
+/**
+ * Retrieves the OAuth IDs associated with a reaction ID.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A Promise that resolves to void.
+ */
 const getOauthIdsFromReactionId = async (req: Request, res: Response): Promise<void> => {
     try {
         const {reactionId} = req.params;
@@ -259,6 +282,103 @@ const storeArea = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
+/**
+ * Retrieves the areas associated with the user.
+ *
+ * @param req - The request object.
+ * @param res - The response object.
+ * @returns A Promise that resolves to void.
+ */
+const getAreas = async (req: Request, res: Response): Promise<void> => {
+    const ownerId = (req as CustomRequest).user.userId;
+
+    if (!ownerId) {
+        res.status(400).json({error: "Please provide ownerId"});
+        return;
+    }
+    try {
+        const userActionsData = await TriggersMiddleware.getActionsDataFromOwnerId(ownerId);
+        let areas: AreaData[] = [];
+
+        if (!userActionsData) {
+            res.status(400).json({error: "No area found"});
+            return;
+        }
+
+        for (let i: number = 0; i < userActionsData.length; i++) {
+            const actionData: ActionData = userActionsData[i];
+            const action: Action | null = await AreaMiddleware.getActionFromId(actionData.actionId);
+
+            if (!action) {
+                res.status(400).json({error: "Action not found"});
+                return;
+            }
+            const service = await AreaMiddleware.getServiceFromActionId(action.id);
+            if (!service) {
+                res.status(400).json({error: "Service not found"});
+                return;
+            }
+
+            const actionTitle = JSON.parse(actionData.title)[0]["AREA name"];
+            const area: AreaData = {
+                id: actionData.id,
+                title: actionTitle,
+                serviceName: service.name,
+                isActivated: actionData.isActivated
+            };
+            areas.push(area);
+        }
+        res.status(200).json(areas);
+    } catch (error: any) {
+        console.error("getAreas: " + error);
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
+const eraseArea = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user: TokenData = (req as CustomRequest).user;
+        const actionDataId: number = req.body.areaId;
+
+        if (!actionDataId) {
+            res.status(400).json({error: "Please provide actionDataId"});
+            return;
+        }
+        const result = await AreaMiddleware.eraseArea(actionDataId, user.userId);
+        if (!result) {
+            res.status(400).json({error: "Area not found, or you are not the owner"});
+            return;
+        }
+        res.status(200).json({message: "Area erased"});
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
+const toggleArea = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const user: TokenData = (req as CustomRequest).user;
+        const actionDataId: number = req.body.areaId;
+
+        console.log("toggleArea: " + actionDataId);
+        console.log("toggleArea: " + user.userId);
+        if (!actionDataId) {
+            res.status(400).json({error: "Please provide actionDataId"});
+            return;
+        }
+        const result = await AreaMiddleware.toggleArea(actionDataId, user.userId);
+        if (!result) {
+            res.status(400).json({error: "Area not found, or you are not the owner"});
+            return;
+        }
+        res.status(200).json({message: "Area toggled"});
+    } catch (error: any) {
+        console.error(error);
+        res.status(500).json({error: "An unexpected error occurred"});
+    }
+}
+
 export {
     getActionsFromServiceId,
     getReactionsFromActionId,
@@ -266,5 +386,8 @@ export {
     storeArea,
     getOauthIdsFromServiceId,
     getOauthIdsFromActionId,
-    getOauthIdsFromReactionId
+    getOauthIdsFromReactionId,
+    getAreas,
+    eraseArea,
+    toggleArea
 };

@@ -8,6 +8,7 @@ import logo from "../../public/logo.svg";
 import TextSection from "../Components/TextSection";
 import {loginUser} from "../Utils/callApi";
 import Cookies from 'js-cookie';
+import GoogleAuth from "../Components/OauthLogin/googleLogin";
 
 export default function Login() {
     const [username, setUsername] = useState<string>("");
@@ -110,6 +111,7 @@ export default function Login() {
                             </button>
                             {error && <p className="text-red text-center mt-2">{error}</p>}
                         </div>
+                        <GoogleAuth/>
                     </form>
                 </div>
             </div>

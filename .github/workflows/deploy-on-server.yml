@@ -24,11 +24,22 @@ jobs:
           script: |
             git clone https://github.com/BRAVMM/A-Rien.git
             cd A-Rien
+            git pull
             git switch main
             git pull origin main
             cp -r ./* /home/beafowl/A-Rien
-            cp /root/.env /home/beafowl/A-Rien/back
-            cp /root/.env.development /home/beafowl/A-Rien/front
+            cd /home/beafowl/A-Rien/back
+            npx dotenv-vault login ${{ secrets.DOTENV_ME_BACK }}
+            npx dotenv-vault pull production
+            mv .env.production .env
+            cd /home/beafowl/A-Rien/front
+            npx dotenv-vault login ${{ secrets.DOTENV_ME_FRONT }}
+            npx dotenv-vault pull production
+            mv .env.production .env
+            cd /home/beafowl/A-Rien/mobile
+            npx dotenv-vault login ${{ secrets.DOTENV_ME_MOBILE }}
+            npx dotenv-vault pull production
+            mv .env.production .env
             sh /home/beafowl/re.sh &
 
       - name: executing remote ssh commands using ssh key
@@ -46,6 +57,16 @@ jobs:
             git switch dev
             git pull origin dev
             cp -r ./* /home/beafowl/A-Rien
-            cp /root/.env /home/beafowl/A-Rien/back
-            cp /root/.env.development /home/beafowl/A-Rien/front
+            cd /home/beafowl/A-Rien/back
+            npx dotenv-vault login ${{ secrets.DOTENV_ME_BACK }}
+            npx dotenv-vault pull production
+            mv .env.production .env
+            cd /home/beafowl/A-Rien/front
+            npx dotenv-vault login ${{ secrets.DOTENV_ME_FRONT }}
+            npx dotenv-vault pull production
+            mv .env.production .env
+            cd /home/beafowl/A-Rien/mobile
+            npx dotenv-vault login ${{ secrets.DOTENV_ME_MOBILE }}
+            npx dotenv-vault pull production
+            mv .env.production .env
             sh /home/beafowl/re.sh &

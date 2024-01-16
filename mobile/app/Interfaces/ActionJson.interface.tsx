@@ -9,14 +9,14 @@
  * @property {string} type
  */
 interface ActionJsonInterface {
-    title: string;
-    type: string;
-    description: string;
-    range?: number[];
+  title: string;
+  type: string;
+  description: string;
+  range?: number[];
 }
 
 /**
- * @interface ActionJsonArrayType
+ * @interface ActionJsonArray
  * @description Interface for ActionJsonArray
  * @extends {Array<ActionJsonInterface>}
  * @see {ActionJsonInterface}
